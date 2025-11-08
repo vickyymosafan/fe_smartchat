@@ -55,11 +55,20 @@ export function ChatBubble({ message }: ChatBubbleProps) {
 		},
 	};
 
+	// Label mapping untuk accessibility
+	const roleLabels = {
+		user: "Pesan Anda",
+		ai: "Balasan AI",
+		error: "Pesan error",
+	};
+
 	const styles = roleStyles[role];
 
 	return (
 		<div className={styles.wrapper}>
-			<div className={styles.bubble}>
+			<div className={styles.bubble} role={role === "error" ? "alert" : undefined}>
+				{/* Screen reader label untuk konteks pesan */}
+				<span className="sr-only">{roleLabels[role]}: </span>
 				<p className={styles.text}>{content}</p>
 				{/* Timestamp hanya untuk user dan ai messages, tidak untuk error */}
 				{(role === "user" || role === "ai") && <Timestamp timestamp={timestamp} />}

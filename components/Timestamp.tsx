@@ -22,6 +22,7 @@ interface TimestampProps {
  * - Format and display timestamp
  * - Use lib/format.ts utility
  * - Apply appropriate styling
+ * - Use semantic time element for accessibility
  *
  * @param props - TimestampProps berisi timestamp
  * @returns Formatted timestamp element
@@ -30,9 +31,16 @@ interface TimestampProps {
  * <Timestamp timestamp={new Date()} />
  */
 export function Timestamp({ timestamp }: TimestampProps) {
+	const formattedTime = formatTimestamp(timestamp);
+	const isoTime = timestamp.toISOString();
+
 	return (
-		<span className="text-xs text-neutral-500 mt-1 block">
-			{formatTimestamp(timestamp)}
-		</span>
+		<time
+			dateTime={isoTime}
+			className="text-xs text-neutral-500 mt-1 block"
+			aria-label={`Dikirim pada ${formattedTime}`}
+		>
+			{formattedTime}
+		</time>
 	);
 }

@@ -17,6 +17,7 @@ import { MessageInput } from "./MessageInput";
  * - Apply max-width, padding, background
  * - Compose MessageList and MessageInput
  * - Use useChat hook for state management
+ * - Provide semantic structure and accessibility
  *
  * @returns Chat container element with messages and input
  *
@@ -28,12 +29,16 @@ export function ChatContainer() {
 	const { messages, isLoading, sendMessage } = useChat();
 
 	return (
-		<div className="w-full max-w-[700px] h-[500px] sm:h-[550px] md:h-[600px] lg:h-[650px] bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden">
+		<section
+			className="w-full max-w-[700px] h-[500px] sm:h-[550px] md:h-[600px] lg:h-[650px] bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden"
+			role="region"
+			aria-label="Area percakapan chat"
+		>
 			{/* Message list dengan auto-scroll */}
 			<MessageList messages={messages} isLoading={isLoading} />
 
 			{/* Input area untuk mengirim pesan */}
 			<MessageInput onSend={sendMessage} isLoading={isLoading} />
-		</div>
+		</section>
 	);
 }

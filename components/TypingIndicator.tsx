@@ -12,6 +12,7 @@
  * - Render three animated dots
  * - Apply consistent styling with AI messages
  * - Create smooth wave animation effect
+ * - Provide accessibility for screen readers
  *
  * @returns Animated typing indicator element
  *
@@ -20,9 +21,9 @@
  */
 export function TypingIndicator() {
 	return (
-		<div className="flex justify-start">
+		<div className="flex justify-start" role="status" aria-live="polite" aria-label="AI sedang mengetik">
 			<div className="bg-neutral-100 rounded-2xl px-4 py-3">
-				<div className="flex gap-1">
+				<div className="flex gap-1" aria-hidden="true">
 					<span
 						className="w-2 h-2 bg-neutral-400 rounded-full animate-bounce"
 						style={{ animationDelay: "0ms" }}
@@ -36,6 +37,8 @@ export function TypingIndicator() {
 						style={{ animationDelay: "300ms" }}
 					/>
 				</div>
+				{/* Screen reader text */}
+				<span className="sr-only">AI sedang mengetik balasan</span>
 			</div>
 		</div>
 	);

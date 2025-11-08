@@ -15,6 +15,7 @@ import { ChatContainer } from "@/components/ChatContainer";
  * - Render ChatContainer component
  * - Provide page-level structure dengan centered layout
  * - Apply background color dan padding
+ * - Provide semantic structure and accessibility
  *
  * @returns Chat page dengan container yang ter-center
  *
@@ -24,8 +25,10 @@ import { ChatContainer } from "@/components/ChatContainer";
  */
 export default function ChatPage() {
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-neutral-50 p-4 sm:p-6 overflow-x-hidden">
+		<main className="min-h-screen flex items-center justify-center bg-neutral-50 p-4 sm:p-6 overflow-x-hidden">
+			{/* Page title untuk screen readers */}
+			<h1 className="sr-only">Aplikasi Chat AI</h1>
 			<ChatContainer />
-		</div>
+		</main>
 	);
 }
