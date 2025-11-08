@@ -30,7 +30,7 @@ export default function ChatbotInterface() {
           ref={scrollRef}
           className="flex-1 overflow-y-auto bg-background px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-8"
         >
-          <div className="mx-auto max-w-3xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl space-y-4 sm:space-y-6">
+          <div className="mx-auto max-w-3xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl space-y-4 sm:space-y-6 h-full">
             {messages.length === 0 ? (
               <EmptyState />
             ) : (
@@ -74,7 +74,7 @@ export default function ChatbotInterface() {
 
 function EmptyState() {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-4 sm:gap-6 py-8 sm:py-12 text-center px-4">
+    <div className="flex min-h-full flex-col items-center justify-center gap-4 sm:gap-6 py-8 sm:py-12 text-center px-4">
       <div className="space-y-1.5 sm:space-y-2">
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">Smartchat Assistant</h1>
         <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-md mx-auto">
