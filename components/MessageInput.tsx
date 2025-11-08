@@ -42,6 +42,16 @@ export function MessageInput({ onSend, isLoading }: MessageInputProps) {
 	// Validasi: cek apakah pesan valid (tidak kosong dan tidak hanya whitespace)
 	const isMessageValid = message.trim().length > 0 && message.length <= 2000;
 
+	// Hitung apakah perlu menampilkan character counter (ketika mendekati limit)
+	const shouldShowCounter = message.length > 1800;
+
+	// Tentukan warna counter berdasarkan jumlah karakter
+	const getCounterColor = () => {
+		if (message.length >= 1990) return "text-red-600";
+		if (message.length >= 1900) return "text-amber-600";
+		return "text-neutral-500";
+	};
+
 	/**
 	 * Handle submit pesan
 	 * Validasi input, panggil callback, clear input, dan focus kembali
@@ -95,6 +105,19 @@ export function MessageInput({ onSend, isLoading }: MessageInputProps) {
 					Kirim
 				</button>
 			</div>
+
+			{/* Character counter - tampil ketika mendekati limit */}
+			{shouldShowCounter && (
+				<div className="flex justify-end mt-1">
+					<span
+						className={`text-xs ${getCounterColor()} transition-colors duration-300`}
+						aria-live="polite"
+					>
+						{message.length}/2000 karakter
+					</span>
+				</div>
+			)}
+
 			{/* Screen reader hint untuk keyboard navigation */}
 			<span id="input-hint" className="sr-only">
 				Tekan Enter untuk mengirim, Shift+Enter untuk baris baru
