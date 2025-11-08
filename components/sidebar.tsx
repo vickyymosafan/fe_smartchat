@@ -69,11 +69,6 @@ export default function Sidebar() {
             </div>
           </div>
         )}
-        {!isOpen && (
-          <div className="hidden md:flex items-center justify-center h-full">
-            <MessageCircle className="h-5 w-5 md:h-6 md:w-6 text-sidebar-foreground/40" />
-          </div>
-        )}
       </div>
 
       {/* Divider */}
