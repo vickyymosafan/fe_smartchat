@@ -13,7 +13,6 @@ import type { ChatMessage } from "@/types/chat";
  */
 interface UseAutoScrollReturn {
 	scrollRef: React.RefObject<HTMLDivElement | null>;
-	isAtBottom: boolean;
 }
 
 /**
@@ -39,39 +38,18 @@ interface UseAutoScrollReturn {
 export function useAutoScroll(messages: ChatMessage[]): UseAutoScrollReturn {
 	// Create ref untuk scroll container
 	const scrollRef = useRef<HTMLDivElement>(null);
-	const [isAtBottom, setIsAtBottom] = useState(true);
 
-	// Check if user is at bottom
+	// Auto scroll ke bottom saat ada pesan baru
 	useEffect(() => {
-		const container = scrollRef.current;
-		if (!container) return;
-
-		const handleScroll = () => {
-			const threshold = 100;
-			const atBottom =
-				container.scrollHeight - container.scrollTop - container.clientHeight <
-				threshold;
-			setIsAtBottom(atBottom);
-		};
-
-		container.addEventListener("scroll", handleScroll);
-		handleScroll();
-
-		return () => container.removeEventListener("scroll", handleScroll);
-	}, []);
-
-	// Auto scroll hanya jika user di bottom
-	useEffect(() => {
-		if (scrollRef.current && isAtBottom) {
+		if (scrollRef.current) {
 			scrollRef.current.scrollTo({
 				top: scrollRef.current.scrollHeight,
 				behavior: "smooth",
 			});
 		}
-	}, [messages, isAtBottom]);
+	}, [messages]);
 
 	return {
 		scrollRef,
-		isAtBottom,
 	};
 }

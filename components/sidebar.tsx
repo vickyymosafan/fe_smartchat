@@ -1,14 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { MessageCircle, Settings, HelpCircle, Search, Plus, ChevronLeft, MoreHorizontal, X } from "lucide-react"
-import { useState } from "react"
-
-interface Conversation {
-  id: string
-  title: string
-  date: string
-}
+import { MessageCircle, Plus, ChevronLeft, MoreHorizontal, X } from "lucide-react"
 
 interface SidebarProps {
   isOpen: boolean
@@ -16,7 +9,6 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
-  const [conversations, setConversations] = useState<Conversation[]>([])
 
   return (
     <>
@@ -73,15 +65,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
           <div>
             <p className="text-[10px] md:text-xs text-sidebar-foreground/60 font-semibold mb-2 md:mb-3 px-2">RIWAYAT</p>
             <div className="space-y-1">
-              {conversations.map((conv) => (
-                <div
-                  key={conv.id}
-                  className="group relative p-2 md:p-2.5 rounded-lg hover:bg-sidebar-accent transition-colors cursor-pointer"
-                >
-                  <p className="text-xs md:text-sm text-sidebar-foreground line-clamp-1">{conv.title}</p>
-                  <p className="text-[10px] md:text-xs text-sidebar-foreground/50">{conv.date}</p>
-                </div>
-              ))}
+              {/* Conversations will be displayed here */}
             </div>
           </div>
         )}
