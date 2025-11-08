@@ -14,13 +14,27 @@ import type {
  * Base URL untuk Backend API
  * Dibaca dari environment variable NEXT_PUBLIC_API_BASE_URL
  */
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
 
 // Validasi environment variable
-if (!API_BASE_URL) {
+if (!API_BASE_URL || API_BASE_URL === "") {
 	throw new Error(
-		"NEXT_PUBLIC_API_BASE_URL tidak dikonfigurasi. " +
-			"Silakan tambahkan variabel ini di file .env.local",
+		"NEXT_PUBLIC_API_BASE_URL tidak dikonfigurasi atau kosong. " +
+			"Silakan tambahkan variabel ini di file .env.local dengan URL backend yang valid. " +
+			"Contoh: NEXT_PUBLIC_API_BASE_URL=http://localhost:3001",
+	);
+}
+
+// Warning untuk production jika tidak menggunakan HTTPS
+if (
+	typeof window !== "undefined" &&
+	process.env.NODE_ENV === "production" &&
+	!API_BASE_URL.startsWith("https://")
+) {
+	console.warn(
+		"⚠️ WARNING: Backend API tidak menggunakan HTTPS di production environment. " +
+			"Ini tidak aman dan dapat menyebabkan masalah keamanan. " +
+			"Gunakan HTTPS untuk production.",
 	);
 }
 
