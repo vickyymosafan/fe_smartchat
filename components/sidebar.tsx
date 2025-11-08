@@ -12,13 +12,7 @@ interface Conversation {
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true)
-  const [conversations, setConversations] = useState<Conversation[]>([
-    { id: "1", title: "Diskusi React Hooks", date: "Hari ini" },
-    { id: "2", title: "Tutorial Next.js", date: "Kemarin" },
-    { id: "3", title: "Tailwind CSS Tips", date: "3 hari lalu" },
-    { id: "4", title: "Database Design", date: "1 minggu lalu" },
-    { id: "5", title: "API REST Best Practices", date: "1 minggu lalu" },
-  ])
+  const [conversations, setConversations] = useState<Conversation[]>([])
 
   return (
     <div
