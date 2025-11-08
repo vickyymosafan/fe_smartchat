@@ -37,7 +37,7 @@ export function Timestamp({ timestamp }: TimestampProps) {
 	return (
 		<time
 			dateTime={isoTime}
-			className="text-[11px] sm:text-xs text-neutral-500 mt-2 block text-right leading-tight"
+			className="text-xs text-neutral-500 mt-2 block text-right leading-tight"
 			aria-label={`Dikirim pada ${formattedTime}`}
 		>
 			{formattedTime}

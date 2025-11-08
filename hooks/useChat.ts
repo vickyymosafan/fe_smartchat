@@ -17,6 +17,8 @@ interface UseChatReturn {
 	isLoading: boolean;
 	error: string | null;
 	sendMessage: (content: string) => Promise<void>;
+	retryLastMessage: () => Promise<void>;
+	resetChat: () => void;
 }
 
 /**
@@ -106,10 +108,41 @@ export function useChat(): UseChatReturn {
 		}
 	};
 
+	/**
+	 * Retry pesan user terakhir
+	 */
+	const retryLastMessage = async (): Promise<void> => {
+		// Cari pesan user terakhir
+		const lastUserMessage = [...messages]
+			.reverse()
+			.find((msg) => msg.role === "user");
+
+		if (!lastUserMessage) return;
+
+		// Hapus pesan error jika ada
+		setMessages((prev) =>
+			prev.filter((msg) => msg.timestamp > lastUserMessage.timestamp || msg.role !== "error"),
+		);
+
+		// Kirim ulang
+		await sendMessage(lastUserMessage.content);
+	};
+
+	/**
+	 * Reset chat (obrolan baru)
+	 */
+	const resetChat = (): void => {
+		setMessages([]);
+		setError(null);
+		setIsLoading(false);
+	};
+
 	return {
 		messages,
 		isLoading,
 		error,
 		sendMessage,
+		retryLastMessage,
+		resetChat,
 	};
 }

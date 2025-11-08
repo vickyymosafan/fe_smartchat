@@ -25,59 +25,27 @@ import { MessageInput } from "./MessageInput";
  * <ChatContainer />
  */
 export function ChatContainer() {
-	// Use chat hook untuk state management
-	const { messages, isLoading, sendMessage } = useChat();
+	const { messages, isLoading, sendMessage, retryLastMessage } = useChat();
 
-	// Empty state check
-	const isEmpty = messages.length === 0;
+	const handleExampleClick = (prompt: string) => {
+		sendMessage(prompt);
+	};
 
 	return (
 		<section
-			className="w-full h-full bg-white rounded-2xl shadow-md flex flex-col overflow-hidden"
+			className="w-full h-full bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden border border-neutral-200"
 			role="region"
 			aria-label="Area percakapan chat"
 		>
-			{/* Message list dengan auto-scroll atau empty state */}
-			{isEmpty ? (
-				<div className="flex-1 flex items-center justify-center px-6 py-8">
-					<div className="max-w-md text-center space-y-6">
-						<div className="space-y-2">
-							<h3 className="text-2xl font-bold text-neutral-900">
-								Mulai Percakapan
-							</h3>
-							<p className="text-base text-neutral-600 leading-relaxed">
-								Tanyakan apa saja yang Anda butuhkan
-							</p>
-						</div>
+			{/* Message list dengan empty state, date separator, dan scroll behavior */}
+			<MessageList
+				messages={messages}
+				isLoading={isLoading}
+				onRetry={retryLastMessage}
+				onExampleClick={handleExampleClick}
+			/>
 
-						{/* Contoh prompt */}
-						<div className="space-y-3">
-							<p className="text-sm font-semibold text-neutral-700">
-								Contoh pertanyaan:
-							</p>
-							<div className="space-y-2">
-								{[
-									"Apa Visi Misi dari Teknik Prodi Informatika?",
-									"Minta contoh surat rasmi untuk kampus",
-									"Siapa Kaprodi dari Teknik Prodi Mesin?",
-								].map((example, index) => (
-									<button
-										key={index}
-										onClick={() => sendMessage(example)}
-										className="w-full text-left px-4 py-3 bg-neutral-50 hover:bg-neutral-100 rounded-xl text-sm text-neutral-700 transition-colors duration-200 border border-neutral-200"
-									>
-										{example}
-									</button>
-								))}
-							</div>
-						</div>
-					</div>
-				</div>
-			) : (
-				<MessageList messages={messages} isLoading={isLoading} />
-			)}
-
-			{/* Input area untuk mengirim pesan - selalu menempel di bawah */}
+			{/* Input area - selalu menempel di bawah */}
 			<MessageInput onSend={sendMessage} isLoading={isLoading} />
 		</section>
 	);

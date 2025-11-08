@@ -39,6 +39,16 @@ export function MessageInput({ onSend, isLoading }: MessageInputProps) {
 	const [message, setMessage] = useState("");
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+	// Auto-expand textarea
+	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setMessage(e.target.value);
+		
+		// Reset height untuk recalculate
+		e.target.style.height = "auto";
+		// Set ke scrollHeight (max 200px)
+		e.target.style.height = `${Math.min(e.target.scrollHeight, 200)}px`;
+	};
+
 	// Validasi: cek apakah pesan valid (tidak kosong dan tidak hanya whitespace)
 	const isMessageValid = message.trim().length > 0 && message.length <= 2000;
 
@@ -80,12 +90,12 @@ export function MessageInput({ onSend, isLoading }: MessageInputProps) {
 	};
 
 	return (
-		<div className="border-t border-neutral-200 p-4 sm:p-5 md:p-6">
-			<div className="flex gap-2 sm:gap-3">
+		<div className="border-t border-neutral-200 p-4 sm:p-5 md:p-6 bg-white">
+			<div className="flex gap-2 sm:gap-3 items-end">
 				<textarea
 					ref={textareaRef}
 					value={message}
-					onChange={(e) => setMessage(e.target.value)}
+					onChange={handleChange}
 					onKeyDown={handleKeyDown}
 					placeholder="Ketik pesan Anda..."
 					rows={1}
@@ -93,16 +103,41 @@ export function MessageInput({ onSend, isLoading }: MessageInputProps) {
 					disabled={isLoading}
 					aria-label="Kolom input pesan"
 					aria-describedby="input-hint"
-					className="flex-1 resize-none border border-neutral-300 rounded-xl px-4 py-3 text-[16px] font-normal leading-[1.7] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-neutral-50"
+					className="flex-1 resize-none border border-neutral-300 rounded-xl px-4 py-3 text-[16px] font-normal leading-[1.7] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-neutral-50 max-h-[200px] overflow-y-auto"
+					style={{ minHeight: "48px" }}
 				/>
 				<button
 					onClick={handleSubmit}
 					disabled={!isMessageValid || isLoading}
 					aria-label={isLoading ? "Mengirim pesan" : "Kirim pesan"}
 					aria-disabled={!isMessageValid || isLoading}
-					className="min-w-[44px] min-h-[44px] sm:min-w-[48px] sm:min-h-[48px] px-4 bg-blue-500 text-white text-sm font-medium rounded-xl hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+					className="min-w-[44px] min-h-[44px] sm:min-w-[48px] sm:min-h-[48px] px-4 bg-blue-500 text-white text-sm font-medium rounded-xl hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md flex-shrink-0"
 				>
-					{isLoading ? "Mengirim..." : "Kirim"}
+					{isLoading ? (
+						<span className="flex items-center gap-2">
+							<svg
+								className="animate-spin h-4 w-4"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<circle
+									className="opacity-25"
+									cx="12"
+									cy="12"
+									r="10"
+									stroke="currentColor"
+									strokeWidth="4"
+								/>
+								<path
+									className="opacity-75"
+									fill="currentColor"
+									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+								/>
+							</svg>
+						</span>
+					) : (
+						"Kirim"
+					)}
 				</button>
 			</div>
 

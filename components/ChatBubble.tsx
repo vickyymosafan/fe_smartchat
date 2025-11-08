@@ -8,6 +8,7 @@
 import { useState } from "react";
 import type { ChatMessage } from "@/types/chat";
 import { Timestamp } from "./Timestamp";
+import { TextRenderer } from "./TextRenderer";
 
 /**
  * Props untuk ChatBubble component
@@ -15,6 +16,10 @@ import { Timestamp } from "./Timestamp";
 interface ChatBubbleProps {
 	/** Message object yang akan ditampilkan */
 	message: ChatMessage;
+	/** Callback untuk retry message */
+	onRetry?: () => void;
+	/** Apakah ini pesan user terakhir */
+	isLastUserMessage?: boolean;
 }
 
 /**
@@ -32,10 +37,14 @@ interface ChatBubbleProps {
  * @example
  * <ChatBubble message={message} />
  */
-export function ChatBubble({ message }: ChatBubbleProps) {
+export function ChatBubble({
+	message,
+	onRetry,
+	isLastUserMessage,
+}: ChatBubbleProps) {
 	const { role, content, timestamp } = message;
 	const [copied, setCopied] = useState(false);
-	const [showCopy, setShowCopy] = useState(false);
+	const [showActions, setShowActions] = useState(false);
 
 	// Handle copy to clipboard
 	const handleCopy = async () => {
@@ -82,38 +91,66 @@ export function ChatBubble({ message }: ChatBubbleProps) {
 	return (
 		<div
 			className={styles.wrapper}
-			onMouseEnter={() => setShowCopy(true)}
-			onMouseLeave={() => setShowCopy(false)}
+			onMouseEnter={() => setShowActions(true)}
+			onMouseLeave={() => setShowActions(false)}
 		>
 			<div className={styles.bubble} role={role === "error" ? "alert" : undefined}>
-				{/* Screen reader label untuk konteks pesan */}
 				<span className="sr-only">{roleLabels[role]}: </span>
 
-				{/* Copy button untuk AI messages */}
-				{role === "ai" && (
-					<button
-						onClick={handleCopy}
-						className={`absolute top-2 right-2 p-1.5 rounded-lg bg-white/80 hover:bg-white border border-neutral-200 transition-all duration-200 ${
-							showCopy || copied ? "opacity-100" : "opacity-0"
-						}`}
-						aria-label="Salin pesan"
-						title={copied ? "Disalin!" : "Salin"}
-					>
-						{copied ? (
-							<svg
-								className="w-4 h-4 text-green-600"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M5 13l4 4L19 7"
-								/>
-							</svg>
-						) : (
+				{/* Action buttons */}
+				<div
+					className={`absolute top-2 right-2 flex gap-1 transition-opacity duration-200 ${
+						showActions || copied ? "opacity-100" : "opacity-0"
+					}`}
+				>
+					{/* Copy button untuk AI */}
+					{role === "ai" && (
+						<button
+							onClick={handleCopy}
+							className="p-1.5 rounded-lg bg-white/90 hover:bg-white border border-neutral-200 transition-all duration-200"
+							aria-label="Salin pesan"
+							title={copied ? "Disalin!" : "Salin"}
+						>
+							{copied ? (
+								<svg
+									className="w-4 h-4 text-green-600"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M5 13l4 4L19 7"
+									/>
+								</svg>
+							) : (
+								<svg
+									className="w-4 h-4 text-neutral-600"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+									/>
+								</svg>
+							)}
+						</button>
+					)}
+
+					{/* Retry button untuk user terakhir */}
+					{role === "user" && isLastUserMessage && onRetry && (
+						<button
+							onClick={onRetry}
+							className="p-1.5 rounded-lg bg-white/90 hover:bg-white border border-neutral-200 transition-all duration-200"
+							aria-label="Kirim ulang"
+							title="Kirim ulang"
+						>
 							<svg
 								className="w-4 h-4 text-neutral-600"
 								fill="none"
@@ -124,30 +161,24 @@ export function ChatBubble({ message }: ChatBubbleProps) {
 									strokeLinecap="round"
 									strokeLinejoin="round"
 									strokeWidth={2}
-									d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+									d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
 								/>
 							</svg>
-						)}
-					</button>
-				)}
+						</button>
+					)}
+				</div>
 
-				{/*
-					SECURITY: Content ditampilkan menggunakan React's JSX interpolation {content}
-					React secara otomatis melakukan escaping untuk mencegah XSS attacks.
-				*/}
-				<p className={styles.text} style={{ textWrap: "balance" }}>
-					{content}
-				</p>
+				{/* Render content dengan TextRenderer untuk AI, plain untuk user */}
+				<div className={styles.text}>
+					{role === "ai" ? (
+						<TextRenderer content={content} />
+					) : (
+						<p style={{ textWrap: "balance" }}>{content}</p>
+					)}
+				</div>
 
-				{/* Timestamp hanya untuk user dan ai messages, tidak untuk error */}
+				{/* Timestamp */}
 				{(role === "user" || role === "ai") && <Timestamp timestamp={timestamp} />}
-
-				{/* Feedback copied */}
-				{copied && role === "ai" && (
-					<span className="absolute -bottom-6 right-0 text-xs text-green-600 font-medium">
-						Disalin
-					</span>
-				)}
 			</div>
 		</div>
 	);
