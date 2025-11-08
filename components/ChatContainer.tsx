@@ -28,7 +28,7 @@ export function ChatContainer() {
 	const { messages, isLoading, sendMessage } = useChat();
 
 	return (
-		<div className="w-full max-w-[700px] h-[600px] bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden">
+		<div className="w-full max-w-[700px] h-[500px] sm:h-[550px] md:h-[600px] lg:h-[650px] bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden">
 			{/* Message list dengan auto-scroll */}
 			<MessageList messages={messages} isLoading={isLoading} />
 

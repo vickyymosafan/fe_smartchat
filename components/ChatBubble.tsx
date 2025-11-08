@@ -38,19 +38,19 @@ export function ChatBubble({ message }: ChatBubbleProps) {
 	const roleStyles = {
 		user: {
 			wrapper: "flex justify-end",
-			bubble: "max-w-[70%] bg-blue-500 text-white rounded-2xl px-4 py-3",
+			bubble: "max-w-[90%] sm:max-w-[80%] md:max-w-[70%] bg-blue-500 text-white rounded-2xl px-4 py-3",
 			text: "text-base",
 		},
 		ai: {
 			wrapper: "flex justify-start",
 			bubble:
-				"max-w-[70%] bg-neutral-100 text-neutral-800 rounded-2xl px-4 py-3",
+				"max-w-[90%] sm:max-w-[80%] md:max-w-[70%] bg-neutral-100 text-neutral-800 rounded-2xl px-4 py-3",
 			text: "text-base",
 		},
 		error: {
 			wrapper: "flex justify-center",
 			bubble:
-				"max-w-[70%] bg-red-50 text-red-700 border border-red-200 rounded-2xl px-4 py-3",
+				"max-w-[90%] sm:max-w-[80%] md:max-w-[70%] bg-red-50 text-red-700 border border-red-200 rounded-2xl px-4 py-3",
 			text: "text-sm",
 		},
 	};

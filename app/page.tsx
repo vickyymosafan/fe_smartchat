@@ -24,7 +24,7 @@ import { ChatContainer } from "@/components/ChatContainer";
  */
 export default function ChatPage() {
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-neutral-50 p-4">
+		<div className="min-h-screen flex items-center justify-center bg-neutral-50 p-4 sm:p-6 overflow-x-hidden">
 			<ChatContainer />
 		</div>
 	);
