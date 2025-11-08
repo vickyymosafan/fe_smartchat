@@ -84,8 +84,46 @@ export async function sendChatMessage(message: string): Promise<string> {
 		// Parse response sukses
 		const data: ChatApiResponse = await response.json();
 
-		// Return data AI response
-		return data.data;
+		// Extract AI response dari data
+		// N8n webhook bisa return object dengan berbagai format:
+		// - { output: "text" } - format n8n AI Agent
+		// - "text" - direct string
+		// - { message: "text" } - format lain
+		const aiResponse = data.data;
+
+		// Handle berbagai format response
+		if (typeof aiResponse === "string") {
+			return aiResponse;
+		}
+
+		// Jika object, coba extract text dari berbagai kemungkinan field
+		if (typeof aiResponse === "object" && aiResponse !== null) {
+			// N8n AI Agent format
+			if ("output" in aiResponse && typeof aiResponse.output === "string") {
+				return aiResponse.output;
+			}
+
+			// Format message
+			if ("message" in aiResponse && typeof aiResponse.message === "string") {
+				return aiResponse.message;
+			}
+
+			// Format text
+			if ("text" in aiResponse && typeof aiResponse.text === "string") {
+				return aiResponse.text;
+			}
+
+			// Format response
+			if ("response" in aiResponse && typeof aiResponse.response === "string") {
+				return aiResponse.response;
+			}
+
+			// Jika tidak ada field yang dikenali, stringify object
+			return JSON.stringify(aiResponse);
+		}
+
+		// Fallback: convert to string
+		return String(aiResponse);
 	} catch (error) {
 		// Re-throw Error objects (termasuk network errors dan HTTP errors)
 		if (error instanceof Error) {
