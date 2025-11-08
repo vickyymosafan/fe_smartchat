@@ -1,9 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  body {
-    @apply text-neutral-800 bg-neutral-50;
-  }
+body {
+  color: rgb(38 38 38);
+  background-color: rgb(250 250 250);
 }
