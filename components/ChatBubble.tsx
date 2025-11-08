@@ -69,6 +69,12 @@ export function ChatBubble({ message }: ChatBubbleProps) {
 			<div className={styles.bubble} role={role === "error" ? "alert" : undefined}>
 				{/* Screen reader label untuk konteks pesan */}
 				<span className="sr-only">{roleLabels[role]}: </span>
+				{/*
+					SECURITY: Content ditampilkan menggunakan React's JSX interpolation {content}
+					React secara otomatis melakukan escaping untuk mencegah XSS attacks.
+					JANGAN gunakan dangerouslySetInnerHTML kecuali benar-benar diperlukan
+					dan content sudah disanitasi dengan library seperti DOMPurify.
+				*/}
 				<p className={styles.text}>{content}</p>
 				{/* Timestamp hanya untuk user dan ai messages, tidak untuk error */}
 				{(role === "user" || role === "ai") && <Timestamp timestamp={timestamp} />}
