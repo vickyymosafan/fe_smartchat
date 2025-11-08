@@ -39,14 +39,14 @@ export default function ChatInput({ onSendMessage, isLoading }: ChatInputProps) 
   return (
     <div className="border-t border-border bg-background px-3 py-3 sm:px-4 sm:py-4 md:px-6 lg:px-8 flex-shrink-0">
       <div className="mx-auto max-w-3xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl">
-        <div className="flex gap-2 sm:gap-3 items-end rounded-lg border border-border bg-card p-2 sm:p-3">
+        <div className="flex gap-2 sm:gap-3 items-center rounded-lg border border-border bg-card p-2 sm:p-3">
           <Textarea
             ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Tanyakan sesuatu... (Ctrl + Enter untuk kirim)"
-            className="resize-none border-0 bg-transparent p-0 focus-visible:ring-0 min-h-[24px] max-h-[120px] text-xs sm:text-sm md:text-base flex-1"
+            className="resize-none border-0 bg-transparent p-0 focus-visible:ring-0 min-h-[24px] max-h-[120px] text-xs sm:text-sm md:text-base flex-1 placeholder:text-center"
             disabled={isLoading}
           />
           <Button
