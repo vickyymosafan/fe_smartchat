@@ -1,7 +1,5 @@
 "use client"
 
-import { formatDistanceToNow } from "date-fns"
-import { id } from "date-fns/locale"
 import type { ChatMessage as ChatMessageType } from "@/types/chat"
 
 export default function ChatMessage({ message }: { message: ChatMessageType }) {
@@ -13,7 +11,7 @@ export default function ChatMessage({ message }: { message: ChatMessageType }) {
       <div
         className={`${
           isUser
-            ? "max-w-[85%] sm:max-w-md md:max-w-lg lg:max-w-xl rounded-lg bg-primary text-primary-foreground px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-3.5"
+            ? "max-w-[70%] sm:max-w-sm md:max-w-md rounded-lg bg-primary text-primary-foreground px-3 py-2.5 sm:px-4 sm:py-3"
             : isError
             ? "max-w-[90%] sm:max-w-xl md:max-w-2xl lg:max-w-3xl rounded-lg bg-destructive/10 border border-destructive/20 text-destructive px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-3.5"
             : "w-full bg-transparent text-foreground"
@@ -31,12 +29,6 @@ export default function ChatMessage({ message }: { message: ChatMessageType }) {
             <MarkdownContent content={message.content} />
           </div>
         )}
-        <p className={`mt-1.5 sm:mt-2 text-[10px] sm:text-xs ${isUser ? "opacity-60" : isError ? "opacity-70" : "opacity-50 text-muted-foreground"}`}>
-          {formatDistanceToNow(new Date(message.timestamp), {
-            locale: id,
-            addSuffix: true,
-          })}
-        </p>
       </div>
     </div>
   )
