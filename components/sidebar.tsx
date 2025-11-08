@@ -71,40 +71,9 @@ export default function Sidebar() {
         )}
       </div>
 
-      {/* Divider */}
-      <div className="border-t border-sidebar-border" />
-
-      {/* Footer Section */}
-      <div className="p-2 md:p-3 space-y-1 md:space-y-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent text-xs md:text-sm"
-        >
-          <Settings className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2 flex-shrink-0" />
-          <span className={isOpen ? "" : "hidden"}>Settings</span>
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent text-xs md:text-sm"
-        >
-          <HelpCircle className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2 flex-shrink-0" />
-          <span className={isOpen ? "" : "hidden"}>Get Help</span>
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent text-xs md:text-sm"
-        >
-          <Search className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2 flex-shrink-0" />
-          <span className={isOpen ? "" : "hidden"}>Search</span>
-        </Button>
-      </div>
-
       {/* User Profile Section */}
       {isOpen && (
-        <div className="p-2 md:p-3 border-t border-sidebar-border">
+        <div className="p-2 md:p-3">
           <div className="flex items-center justify-between p-1.5 md:p-2 rounded-lg hover:bg-sidebar-accent transition-colors">
             <div className="flex items-center gap-1.5 md:gap-2">
               <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
