@@ -83,14 +83,14 @@ export function MessageInput({ onSend, isLoading }: MessageInputProps) {
 					disabled={isLoading}
 					aria-label="Kolom input pesan"
 					aria-describedby="input-hint"
-					className="flex-1 resize-none border border-neutral-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+					className="flex-1 resize-none border border-neutral-300 rounded-xl px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
 				/>
 				<button
 					onClick={handleSubmit}
 					disabled={!isMessageValid || isLoading}
 					aria-label="Kirim pesan"
 					aria-disabled={!isMessageValid || isLoading}
-					className="min-w-[44px] min-h-[44px] bg-blue-500 text-white rounded-xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+					className="min-w-[44px] min-h-[44px] bg-blue-500 text-white rounded-xl hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					Kirim
 				</button>
