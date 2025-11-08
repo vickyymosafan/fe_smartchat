@@ -11,7 +11,7 @@ export default function ChatMessage({ message }: { message: ChatMessageType }) {
       <div
         className={`${
           isUser
-            ? "max-w-[70%] sm:max-w-sm md:max-w-md rounded-lg bg-primary text-primary-foreground px-3 py-2.5 sm:px-4 sm:py-3"
+            ? "max-w-[90%] sm:max-w-xl md:max-w-2xl rounded-lg bg-primary text-primary-foreground px-3 py-2.5 sm:px-4 sm:py-3"
             : isError
             ? "max-w-[90%] sm:max-w-xl md:max-w-2xl lg:max-w-3xl rounded-lg bg-destructive/10 border border-destructive/20 text-destructive px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-3.5"
             : "w-full bg-transparent text-foreground"
