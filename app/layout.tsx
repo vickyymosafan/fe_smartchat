@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import PWAInstallPrompt from "@/components/pwa-install-prompt";
+import ServiceWorkerRegister from "@/components/service-worker-register";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -51,6 +52,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="ChatSmart" />
       </head>
       <body className={`${montserrat.variable} antialiased`}>
+        <ServiceWorkerRegister />
         {children}
         <PWAInstallPrompt />
       </body>
