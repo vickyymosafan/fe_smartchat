@@ -7,6 +7,8 @@ import Sidebar from "@/components/sidebar"
 import { useChat } from "@/hooks/useChat"
 import { useAutoScroll } from "@/hooks/useAutoScroll"
 import { useState } from "react"
+import { containerMaxWidth, containerPadding, textSizes, gaps } from "@/lib/styles"
+import { cn } from "@/lib/utils"
 
 export default function ChatbotInterface() {
   // Gunakan custom hooks untuk state management
@@ -14,29 +16,19 @@ export default function ChatbotInterface() {
   const { scrollRef } = useAutoScroll(messages)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
-  const handleSendMessage = async (content: string) => {
-    await sendMessage(content)
-  }
-
-  const handleResetChat = () => {
-    resetChat()
-  }
-
-  const handleToggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen)
-  }
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
-      <Sidebar isOpen={isSidebarOpen} onToggle={handleToggleSidebar} />
+      <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
 
       <div className="flex flex-col flex-1 min-w-0">
-        <ChatHeader onResetChat={handleResetChat} onToggleSidebar={handleToggleSidebar} />
+        <ChatHeader onResetChat={resetChat} onToggleSidebar={toggleSidebar} />
         <div 
           ref={scrollRef}
-          className="flex-1 overflow-y-auto bg-background px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-8"
+          className={cn("flex-1 overflow-y-auto bg-background", containerPadding)}
         >
-          <div className="mx-auto max-w-3xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl space-y-4 sm:space-y-6 h-full">
+          <div className={cn("mx-auto space-y-4 sm:space-y-6 h-full", containerMaxWidth)}>
             {messages.length === 0 ? (
               <EmptyState />
             ) : (
@@ -46,7 +38,7 @@ export default function ChatbotInterface() {
                 ))}
                 {error && (
                   <div className="flex justify-center">
-                    <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm text-destructive max-w-full">
+                    <div className={cn("rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 sm:px-4 sm:py-3 text-destructive max-w-full", textSizes.sm)}>
                       {error}
                     </div>
                   </div>
@@ -72,7 +64,7 @@ export default function ChatbotInterface() {
             )}
           </div>
         </div>
-        <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
+        <ChatInput onSendMessage={sendMessage} isLoading={isLoading} />
       </div>
     </div>
   )
@@ -87,7 +79,7 @@ function EmptyState() {
           Mulai percakapan dengan AI untuk bantuan, saran, dan pertanyaan
         </p>
       </div>
-      <div className="grid w-full max-w-xl lg:max-w-2xl grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+      <div className={cn("grid w-full max-w-xl lg:max-w-2xl grid-cols-1 sm:grid-cols-2", gaps.md)}>
         <SuggestionCard text="Tanyakan tentang coding" />
         <SuggestionCard text="Minta ide project" />
         <SuggestionCard text="Jelaskan konsep" />

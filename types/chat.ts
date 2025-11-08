@@ -48,3 +48,8 @@ export interface ChatApiError {
 	message: string;
 	details?: any;
 }
+
+/**
+ * Helper type untuk create message
+ */
+export type CreateMessageParams = Omit<ChatMessage, "id" | "timestamp">;

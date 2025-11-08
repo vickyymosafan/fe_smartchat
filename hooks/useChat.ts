@@ -8,6 +8,7 @@
 import { useState } from "react";
 import type { ChatMessage } from "@/types/chat";
 import { sendChatMessage } from "@/lib/api";
+import { createMessage } from "@/lib/message-factory";
 
 /**
  * Return type untuk useChat hook
@@ -18,14 +19,6 @@ interface UseChatReturn {
 	error: string | null;
 	sendMessage: (content: string) => Promise<void>;
 	resetChat: () => void;
-}
-
-/**
- * Generate unique ID untuk message
- * Menggunakan kombinasi timestamp dan random number
- */
-function generateId(): string {
-	return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 }
 
 /**
@@ -59,13 +52,7 @@ export function useChat(): UseChatReturn {
 	 */
 	const sendMessage = async (content: string): Promise<void> => {
 		// Optimistic update: tambahkan pesan user langsung ke state
-		const userMessage: ChatMessage = {
-			id: generateId(),
-			role: "user",
-			content,
-			timestamp: new Date(),
-		};
-
+		const userMessage = createMessage("user", content);
 		setMessages((prev) => [...prev, userMessage]);
 		setIsLoading(true);
 		setError(null);
@@ -73,34 +60,17 @@ export function useChat(): UseChatReturn {
 		try {
 			// Panggil API service untuk mendapatkan respons AI
 			const aiResponse = await sendChatMessage(content);
-
+			
 			// Tambahkan respons AI ke state
-			const aiMessage: ChatMessage = {
-				id: generateId(),
-				role: "ai",
-				content: aiResponse,
-				timestamp: new Date(),
-			};
-
+			const aiMessage = createMessage("ai", aiResponse);
 			setMessages((prev) => [...prev, aiMessage]);
 		} catch (error) {
 			// Handle error: tambahkan pesan error ke chat
-			const errorMessage: ChatMessage = {
-				id: generateId(),
-				role: "error",
-				content:
-					error instanceof Error
-						? error.message
-						: "Terjadi kesalahan, silakan coba lagi",
-				timestamp: new Date(),
-			};
-
+			const errorContent = error instanceof Error ? error.message : "Terjadi kesalahan, silakan coba lagi";
+			const errorMessage = createMessage("error", errorContent);
+			
 			setMessages((prev) => [...prev, errorMessage]);
-			setError(
-				error instanceof Error
-					? error.message
-					: "Terjadi kesalahan, silakan coba lagi",
-			);
+			setError(errorContent);
 		} finally {
 			// Selalu set loading ke false setelah selesai
 			setIsLoading(false);
