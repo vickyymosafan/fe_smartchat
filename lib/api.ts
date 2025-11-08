@@ -17,11 +17,11 @@ import type {
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
 
 // Validasi environment variable
-if (!API_BASE_URL || API_BASE_URL === "") {
+if (!API_BASE_URL) {
 	throw new Error(
 		"NEXT_PUBLIC_API_BASE_URL tidak dikonfigurasi atau kosong. " +
 			"Silakan tambahkan variabel ini di file .env.local dengan URL backend yang valid. " +
-			"Contoh: NEXT_PUBLIC_API_BASE_URL=http://localhost:3001",
+			"Contoh: NEXT_PUBLIC_API_BASE_URL=https://be-chatsmart.vercel.app",
 	);
 }
 

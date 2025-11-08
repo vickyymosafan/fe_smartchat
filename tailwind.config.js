@@ -9,8 +9,12 @@ module.exports = {
       fontFamily: {
         sans: [
           'var(--font-montserrat)',
-          'Inter',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
           'Roboto',
+          'Helvetica Neue',
           'Arial',
           'sans-serif',
         ],

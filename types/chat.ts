@@ -21,15 +21,6 @@ export interface ChatMessage {
 }
 
 /**
- * State untuk chat hook
- */
-export interface ChatState {
-	messages: ChatMessage[];
-	isLoading: boolean;
-	error: string | null;
-}
-
-/**
  * Request body untuk POST /api/chat
  * Sesuai dengan backend chatRequestSchema
  */
