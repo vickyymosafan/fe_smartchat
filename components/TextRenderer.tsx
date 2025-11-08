@@ -48,10 +48,10 @@ function BlockRenderer({ block }: { block: ParsedBlock }) {
 
 		case "numberedList":
 			return (
-				<ol className="list-decimal list-inside space-y-2 ml-2">
+				<ol className="list-decimal list-outside space-y-2 ml-6">
 					{(block.content as string[]).map((item, i) => (
-						<li key={i} className="text-[16px] leading-[1.7] text-neutral-900">
-							{parseInlineFormatting(item.replace(/^\d+[.)]\s+/, ""))}
+						<li key={i} className="text-[16px] leading-[1.7] text-neutral-900 pl-2">
+							{parseInlineFormatting(item.replace(/^\s*\d+[.)]\s+/, ""))}
 						</li>
 					))}
 				</ol>

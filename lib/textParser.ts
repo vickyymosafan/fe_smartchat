@@ -112,10 +112,11 @@ export function parseText(text: string): ParsedBlock[] {
 			continue;
 		}
 
-		// Numbered list: 1. or 1)
+		// Numbered list: 1. or 1) or just starting with number
 		if (/^\s*\d+[.)]\s+/.test(line)) {
 			const listItems: string[] = [];
 			while (i < lines.length && /^\s*\d+[.)]\s+/.test(lines[i])) {
+				// Remove leading whitespace and store the item
 				listItems.push(lines[i].trim());
 				i++;
 			}
