@@ -25,10 +25,29 @@ import { ChatContainer } from "@/components/ChatContainer";
  */
 export default function ChatPage() {
 	return (
-		<main className="min-h-screen flex items-center justify-center bg-neutral-50 p-4 sm:p-6 overflow-x-hidden">
+		<main className="h-screen flex flex-col bg-neutral-50 overflow-hidden">
 			{/* Page title untuk screen readers */}
 			<h1 className="sr-only">Aplikasi Chat AI</h1>
-			<ChatContainer />
+
+			{/* Header tipis */}
+			<header className="flex-shrink-0 bg-white border-b border-neutral-200 px-4 py-3 sm:px-6">
+				<div className="max-w-[700px] mx-auto flex items-center justify-between">
+					<h2 className="text-lg font-semibold text-neutral-900">Chat AI</h2>
+					<button
+						className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200"
+						aria-label="Mulai obrolan baru"
+					>
+						Obrolan Baru
+					</button>
+				</div>
+			</header>
+
+			{/* Chat container - full height */}
+			<div className="flex-1 flex items-center justify-center overflow-hidden px-4 sm:px-6 py-4">
+				<div className="w-full max-w-[700px] h-full">
+					<ChatContainer />
+				</div>
+			</div>
 		</main>
 	);
 }

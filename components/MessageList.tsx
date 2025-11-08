@@ -8,6 +8,7 @@
 import type { ChatMessage } from "@/types/chat";
 import { ChatBubble } from "./ChatBubble";
 import { TypingIndicator } from "./TypingIndicator";
+import { ScrollToBottom } from "./ScrollToBottom";
 import { useAutoScroll } from "@/hooks/useAutoScroll";
 
 /**
@@ -42,29 +43,39 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
 	const { scrollRef } = useAutoScroll(messages);
 
 	return (
-		<div
-			ref={scrollRef}
-			role="log"
-			aria-live="polite"
-			aria-atomic="false"
-			aria-relevant="additions"
-			className="flex-1 overflow-y-auto px-3 py-4 sm:px-4 sm:py-6 md:px-6 md:py-8"
-		>
-			<div className="space-y-3 sm:space-y-4">
-				{/* Render semua messages dengan ChatBubble */}
-				{messages.map((message) => (
-					<div
-						key={message.id}
-						role="article"
-						aria-label={`Pesan dari ${message.role}`}
-					>
-						<ChatBubble message={message} />
-					</div>
-				))}
+		<div className="flex-1 relative overflow-hidden">
+			<div
+				ref={scrollRef}
+				role="log"
+				aria-live="polite"
+				aria-atomic="false"
+				aria-relevant="additions"
+				className="h-full overflow-y-auto px-4 py-4 sm:px-5 sm:py-5 md:px-6 md:py-6 scroll-smooth"
+			>
+				<div className="space-y-4">
+					{/* Render semua messages dengan ChatBubble */}
+					{messages.map((message) => (
+						<div
+							key={message.id}
+							role="article"
+							aria-label={`Pesan dari ${message.role}`}
+							className="animate-fadeIn"
+						>
+							<ChatBubble message={message} />
+						</div>
+					))}
 
-				{/* Tampilkan typing indicator ketika loading */}
-				{isLoading && <TypingIndicator />}
+					{/* Tampilkan typing indicator ketika loading */}
+					{isLoading && (
+						<div className="animate-fadeIn">
+							<TypingIndicator />
+						</div>
+					)}
+				</div>
 			</div>
+
+			{/* Scroll to bottom button */}
+			<ScrollToBottom scrollRef={scrollRef} messageCount={messages.length} />
 		</div>
 	);
 }

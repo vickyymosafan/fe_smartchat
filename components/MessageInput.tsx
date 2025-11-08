@@ -80,8 +80,8 @@ export function MessageInput({ onSend, isLoading }: MessageInputProps) {
 	};
 
 	return (
-		<div className="border-t border-neutral-200 p-4">
-			<div className="flex gap-2">
+		<div className="border-t border-neutral-200 p-4 sm:p-5 md:p-6">
+			<div className="flex gap-2 sm:gap-3">
 				<textarea
 					ref={textareaRef}
 					value={message}
@@ -93,22 +93,22 @@ export function MessageInput({ onSend, isLoading }: MessageInputProps) {
 					disabled={isLoading}
 					aria-label="Kolom input pesan"
 					aria-describedby="input-hint"
-					className="flex-1 resize-none border border-neutral-300 rounded-xl px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+					className="flex-1 resize-none border border-neutral-300 rounded-xl px-4 py-3 text-[16px] font-normal leading-[1.7] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-neutral-50"
 				/>
 				<button
 					onClick={handleSubmit}
 					disabled={!isMessageValid || isLoading}
-					aria-label="Kirim pesan"
+					aria-label={isLoading ? "Mengirim pesan" : "Kirim pesan"}
 					aria-disabled={!isMessageValid || isLoading}
-					className="min-w-[44px] min-h-[44px] bg-blue-500 text-white rounded-xl hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+					className="min-w-[44px] min-h-[44px] sm:min-w-[48px] sm:min-h-[48px] px-4 bg-blue-500 text-white text-sm font-medium rounded-xl hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
 				>
-					Kirim
+					{isLoading ? "Mengirim..." : "Kirim"}
 				</button>
 			</div>
 
 			{/* Character counter - tampil ketika mendekati limit */}
 			{shouldShowCounter && (
-				<div className="flex justify-end mt-1">
+				<div className="flex justify-end mt-2">
 					<span
 						className={`text-xs ${getCounterColor()} transition-colors duration-300`}
 						aria-live="polite"

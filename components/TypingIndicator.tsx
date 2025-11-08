@@ -21,9 +21,14 @@
  */
 export function TypingIndicator() {
 	return (
-		<div className="flex justify-start" role="status" aria-live="polite" aria-label="AI sedang mengetik">
-			<div className="bg-neutral-100 rounded-2xl px-4 py-3">
-				<div className="flex gap-1" aria-hidden="true">
+		<div
+			className="flex justify-start"
+			role="status"
+			aria-live="polite"
+			aria-label="AI sedang mengetik"
+		>
+			<div className="bg-neutral-100 rounded-xl sm:rounded-2xl px-4 py-3 shadow-sm">
+				<div className="flex gap-1.5" aria-hidden="true">
 					<span
 						className="w-2 h-2 bg-neutral-400 rounded-full animate-bounce"
 						style={{ animationDelay: "0ms" }}
