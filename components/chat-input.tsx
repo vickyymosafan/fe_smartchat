@@ -33,7 +33,10 @@ export default function ChatInput({ onSendMessage, isLoading }: ChatInputProps) 
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && e.ctrlKey) {
+    // Enter tanpa Shift = kirim pesan
+    // Shift + Enter = baris baru
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault() // Prevent default new line
       handleSend()
     }
   }
@@ -47,7 +50,7 @@ export default function ChatInput({ onSendMessage, isLoading }: ChatInputProps) 
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Tanyakan sesuatu... (Ctrl + Enter untuk kirim)"
+            placeholder="Tanyakan sesuatu... (Enter untuk kirim, Shift+Enter untuk baris baru)"
             className={cn("resize-none border-0 bg-transparent p-0 focus-visible:ring-0 min-h-[24px] max-h-[120px] flex-1 placeholder:text-center", textSizes.base)}
             disabled={isLoading}
           />
