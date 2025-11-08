@@ -6,11 +6,13 @@ import ChatHeader from "@/components/chat-header"
 import Sidebar from "@/components/sidebar"
 import { useChat } from "@/hooks/useChat"
 import { useAutoScroll } from "@/hooks/useAutoScroll"
+import { useState } from "react"
 
 export default function ChatbotInterface() {
   // Gunakan custom hooks untuk state management
   const { messages, isLoading, error, sendMessage, resetChat } = useChat()
   const { scrollRef } = useAutoScroll(messages)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const handleSendMessage = async (content: string) => {
     await sendMessage(content)
@@ -20,12 +22,16 @@ export default function ChatbotInterface() {
     resetChat()
   }
 
+  const handleToggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen)
+  }
+
   return (
     <div className="flex h-screen bg-background overflow-hidden">
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} onToggle={handleToggleSidebar} />
 
       <div className="flex flex-col flex-1 min-w-0">
-        <ChatHeader onResetChat={handleResetChat} />
+        <ChatHeader onResetChat={handleResetChat} onToggleSidebar={handleToggleSidebar} />
         <div 
           ref={scrollRef}
           className="flex-1 overflow-y-auto bg-background px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-8"

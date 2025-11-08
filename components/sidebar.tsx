@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { MessageCircle, Settings, HelpCircle, Search, Plus, ChevronLeft, MoreHorizontal } from "lucide-react"
+import { MessageCircle, Settings, HelpCircle, Search, Plus, ChevronLeft, MoreHorizontal, X } from "lucide-react"
 import { useState } from "react"
 
 interface Conversation {
@@ -10,16 +10,29 @@ interface Conversation {
   date: string
 }
 
-export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false)
+interface SidebarProps {
+  isOpen: boolean
+  onToggle: () => void
+}
+
+export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
   const [conversations, setConversations] = useState<Conversation[]>([])
 
   return (
-    <div
-      className={`${
-        isOpen ? "w-64" : "w-0 md:w-16"
-      } bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col h-screen fixed md:sticky left-0 top-0 z-50 overflow-hidden`}
-    >
+    <>
+      {/* Backdrop overlay untuk mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={onToggle}
+        />
+      )}
+      
+      <div
+        className={`${
+          isOpen ? "w-64" : "w-0 md:w-16"
+        } bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col h-screen fixed md:sticky left-0 top-0 z-50 overflow-hidden`}
+      >
       {/* Header Section */}
       <div className="p-3 md:p-4 border-b border-sidebar-border flex items-center justify-between gap-2">
         {isOpen && (
@@ -33,10 +46,13 @@ export default function Sidebar() {
         <Button
           size="icon"
           variant="ghost"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={onToggle}
           className="h-7 w-7 md:h-8 md:w-8 flex-shrink-0 hover:bg-sidebar-accent"
         >
-          <ChevronLeft className={`h-3.5 w-3.5 md:h-4 md:w-4 transition-transform duration-300 ${!isOpen && "rotate-180"}`} />
+          {isOpen ? (
+            <X className="h-3.5 w-3.5 md:h-4 md:w-4 md:hidden" />
+          ) : null}
+          <ChevronLeft className={`h-3.5 w-3.5 md:h-4 md:w-4 transition-transform duration-300 ${!isOpen && "rotate-180"} ${isOpen ? "hidden md:block" : ""}`} />
         </Button>
       </div>
 
@@ -90,6 +106,7 @@ export default function Sidebar() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }
