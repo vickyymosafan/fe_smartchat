@@ -110,7 +110,7 @@ function BlockRenderer({ block }: { block: ParsedBlock }) {
 				<div className="overflow-x-auto">
 					<table className="min-w-full border border-neutral-200 text-sm">
 						<tbody>
-							{(block.content as any[]).map((row: any, i: number) => (
+							{(block.content as Array<{ isHeader: boolean; cells: string[] }>).map((row, i: number) => (
 								<tr key={i} className={row.isHeader ? "bg-neutral-100" : ""}>
 									{row.cells.map((cell: string, j: number) => {
 										const Tag = row.isHeader ? "th" : "td";
