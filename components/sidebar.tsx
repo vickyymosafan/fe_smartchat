@@ -82,7 +82,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
                 <span className="text-[10px] md:text-xs font-semibold text-sidebar-primary">SC</span>
               </div>
               <div className="min-w-0">
-                <p className="text-xs md:text-sm font-medium text-sidebar-foreground truncate">SmartChat</p>
+                <p className="text-xs md:text-sm font-medium text-sidebar-foreground truncate">Smartchat</p>
                 <p className="text-[10px] md:text-xs text-sidebar-foreground/60 truncate">Authenticated</p>
               </div>
             </div>
