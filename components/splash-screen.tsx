@@ -449,7 +449,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
               }}
               className="text-xs text-muted-foreground font-medium"
             >
-              Powered by AI Technology
+              vickymosafan x adrian reswara
             </motion.p>
             
             {/* Progress Bar */}
