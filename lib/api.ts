@@ -55,8 +55,9 @@ if (
  */
 export async function sendChatMessage(message: string): Promise<string> {
 	try {
-		// Get auth token from localStorage
-		const token = localStorage.getItem('auth_token');
+		// Get auth token from sessionStorage (changed from localStorage)
+		// Token is cleared when browser/tab/PWA is closed
+		const token = sessionStorage.getItem('auth_token');
 		
 		// Kirim POST request ke backend
 		const response = await fetch(`${API_BASE_URL}/api/chat`, {

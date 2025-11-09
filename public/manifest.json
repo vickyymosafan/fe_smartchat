@@ -1,7 +1,7 @@
 {
-  "name": "ChatSmart - AI Assistant",
-  "short_name": "ChatSmart",
-  "description": "Professional AI chat interface untuk bantuan, saran, dan pertanyaan",
+  "name": "",
+  "short_name": "Smartchat",
+  "description": "Professional AI chat interface untuk bantuan, saran, dan pertanyaan tentang Universitas Muhammadiyah Jember",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
