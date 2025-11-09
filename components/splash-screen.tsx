@@ -7,14 +7,14 @@ interface SplashScreenProps {
   onComplete?: () => void
 }
 
-// Generate particles for floating effect
+// Generate particles for floating effect (optimized count)
 const generateParticles = (count: number) => {
   return Array.from({ length: count }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
-    size: Math.random() * 4 + 2,
-    duration: Math.random() * 3 + 2,
+    size: Math.random() * 3 + 2, // Slightly smaller
+    duration: Math.random() * 4 + 3, // Slower for smoother performance
     delay: Math.random() * 2,
   }))
 }
@@ -37,8 +37,8 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const bgXInverted = useTransform(bgX, (x) => -x)
   const bgYInverted = useTransform(bgY, (y) => -y)
 
-  // Generate particles once
-  const particles = useMemo(() => generateParticles(30), [])
+  // Generate particles once (reduced from 30 to 10 for performance)
+  const particles = useMemo(() => generateParticles(10), [])
 
   useEffect(() => {
     // Check if mobile
@@ -55,19 +55,37 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
     return () => clearTimeout(timer)
   }, [onComplete])
 
-  // Track mouse position for parallax (desktop only)
+  // Track mouse position for parallax (desktop only, throttled for performance)
   useEffect(() => {
     if (isMobile) return
 
+    let rafId: number | null = null
+    let lastX = 0
+    let lastY = 0
+
     const handleMouseMove = (e: MouseEvent) => {
-      const centerX = window.innerWidth / 2
-      const centerY = window.innerHeight / 2
-      mouseX.set(e.clientX - centerX)
-      mouseY.set(e.clientY - centerY)
+      lastX = e.clientX
+      lastY = e.clientY
+
+      // Use requestAnimationFrame for smooth updates
+      if (rafId === null) {
+        rafId = requestAnimationFrame(() => {
+          const centerX = window.innerWidth / 2
+          const centerY = window.innerHeight / 2
+          mouseX.set(lastX - centerX)
+          mouseY.set(lastY - centerY)
+          rafId = null
+        })
+      }
     }
 
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
+    window.addEventListener("mousemove", handleMouseMove, { passive: true })
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId)
+      }
+    }
   }, [isMobile, mouseX, mouseY])
 
   return (
@@ -80,69 +98,36 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 overflow-hidden"
         >
-          {/* Liquid Morphing Background */}
+          {/* Optimized Background - Reduced layers and blur intensity */}
           <div className="absolute inset-0 overflow-hidden">
-            {/* Layer 1 - Primary gradient */}
+            {/* Primary gradient - Simplified animation */}
             <motion.div
-              style={!isMobile ? { x: bgX, y: bgY } : {}}
-              animate={{
-                scale: [1, 1.3, 1.1, 1],
-                rotate: [0, 90, 180, 270, 360],
-                opacity: [0.15, 0.25, 0.2, 0.15],
-              }}
-              transition={{
-                duration: 20,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute top-0 left-0 w-full h-full rounded-full bg-gradient-to-br from-primary/30 via-purple-500/20 to-blue-500/30 blur-3xl"
-            />
-            
-            {/* Layer 2 - Secondary gradient */}
-            <motion.div
-              style={!isMobile ? { x: bgXInverted, y: bgYInverted } : {}}
-              animate={{
-                scale: [1.2, 1, 1.3, 1.2],
-                rotate: [360, 270, 180, 90, 0],
-                opacity: [0.2, 0.15, 0.25, 0.2],
-              }}
-              transition={{
-                duration: 25,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute bottom-0 right-0 w-full h-full rounded-full bg-gradient-to-tl from-blue-500/30 via-cyan-500/20 to-primary/30 blur-3xl"
-            />
-
-            {/* Animated circles */}
-            <motion.div
+              style={!isMobile ? { x: bgX, y: bgY, willChange: "transform, opacity" } : { willChange: "transform, opacity" }}
               animate={{
                 scale: [1, 1.2, 1],
-                opacity: [0.1, 0.2, 0.1],
-                x: [0, 50, 0],
-                y: [0, -30, 0],
+                opacity: [0.15, 0.25, 0.15],
               }}
               transition={{
-                duration: 8,
+                duration: 30,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/20 blur-3xl"
+              className="absolute top-0 left-0 w-full h-full rounded-full bg-gradient-to-br from-primary/30 via-purple-500/20 to-blue-500/30 blur-xl"
             />
+            
+            {/* Secondary gradient - Simplified animation */}
             <motion.div
+              style={!isMobile ? { x: bgXInverted, y: bgYInverted, willChange: "transform, opacity" } : { willChange: "transform, opacity" }}
               animate={{
                 scale: [1.2, 1, 1.2],
-                opacity: [0.1, 0.2, 0.1],
-                x: [0, -50, 0],
-                y: [0, 30, 0],
+                opacity: [0.2, 0.15, 0.2],
               }}
               transition={{
-                duration: 10,
+                duration: 35,
                 repeat: Infinity,
                 ease: "easeInOut",
-                delay: 1,
               }}
-              className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-blue-500/20 blur-3xl"
+              className="absolute bottom-0 right-0 w-full h-full rounded-full bg-gradient-to-tl from-blue-500/30 via-cyan-500/20 to-primary/30 blur-xl"
             />
           </div>
 
@@ -181,7 +166,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
           {/* Logo Container with Parallax */}
           <motion.div 
             className="relative z-10 flex flex-col items-center gap-8"
-            style={!isMobile ? { x: logoX, y: logoY } : {}}
+            style={!isMobile ? { x: logoX, y: logoY, willChange: "transform" } : {}}
           >
             {/* Animated Logo */}
             <motion.div
@@ -213,6 +198,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                   scale: { delay: 0.1, duration: 0.5 },
                 }}
                 className="absolute inset-0 rounded-full border-4 border-primary/20 border-t-primary w-24 h-24 sm:w-32 sm:h-32"
+                style={{ willChange: "transform" }}
               />
 
               {/* Middle Ring - Medium speed */}
@@ -233,6 +219,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                   scale: { delay: 0.2, duration: 0.5 },
                 }}
                 className="absolute inset-2 rounded-full border-4 border-blue-500/20 border-b-blue-500 w-20 h-20 sm:w-28 sm:h-28"
+                style={{ willChange: "transform" }}
               />
 
               {/* Inner Ring - Slowest */}
@@ -253,6 +240,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                   scale: { delay: 0.3, duration: 0.5 },
                 }}
                 className="absolute inset-4 rounded-full border-2 border-purple-500/20 border-r-purple-500 w-16 h-16 sm:w-24 sm:h-24"
+                style={{ willChange: "transform" }}
               />
 
               {/* Logo Circle */}
@@ -304,95 +292,47 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                 </motion.span>
               </motion.div>
 
-              {/* Pulse Effect 1 */}
+              {/* Single Pulse Effect - Optimized */}
               <motion.div
                 animate={{
                   scale: [1, 1.8, 1],
-                  opacity: [0.5, 0, 0.5],
+                  opacity: [0.4, 0, 0.4],
                 }}
                 transition={{
-                  duration: 2,
+                  duration: 2.5,
                   repeat: Infinity,
                   ease: "easeOut",
                 }}
                 className="absolute inset-0 rounded-full bg-primary/30 w-24 h-24 sm:w-32 sm:h-32"
-              />
-
-              {/* Pulse Effect 2 */}
-              <motion.div
-                animate={{
-                  scale: [1, 2, 1],
-                  opacity: [0.3, 0, 0.3],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeOut",
-                  delay: 0.5,
-                }}
-                className="absolute inset-0 rounded-full bg-blue-500/30 w-24 h-24 sm:w-32 sm:h-32"
+                style={{ willChange: "transform, opacity" }}
               />
             </motion.div>
 
-            {/* App Name with Glitch Effect */}
+            {/* App Name - Simplified (removed glitch layers for performance) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.5 }}
               className="text-center space-y-2"
             >
-              <div className="relative">
-                {/* Main Text */}
-                <motion.h1
-                  animate={{
-                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                  className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-foreground via-primary via-blue-500 to-foreground bg-clip-text text-transparent bg-[length:200%_auto]"
-                  style={{
-                    filter: "drop-shadow(0 0 10px rgba(59,130,246,0.3))",
-                  }}
-                >
-                  SmartChat
-                </motion.h1>
-                
-                {/* Glitch Effect Layers */}
-                <motion.h1
-                  animate={{
-                    opacity: [0, 0.7, 0],
-                    x: [-2, 2, -2],
-                  }}
-                  transition={{
-                    duration: 0.3,
-                    repeat: Infinity,
-                    repeatDelay: 3,
-                  }}
-                  className="absolute inset-0 text-3xl sm:text-4xl font-bold text-red-500/50"
-                  style={{ mixBlendMode: "screen" }}
-                >
-                  SmartChat
-                </motion.h1>
-                <motion.h1
-                  animate={{
-                    opacity: [0, 0.7, 0],
-                    x: [2, -2, 2],
-                  }}
-                  transition={{
-                    duration: 0.3,
-                    repeat: Infinity,
-                    repeatDelay: 3,
-                    delay: 0.1,
-                  }}
-                  className="absolute inset-0 text-3xl sm:text-4xl font-bold text-blue-500/50"
-                  style={{ mixBlendMode: "screen" }}
-                >
-                  SmartChat
-                </motion.h1>
-              </div>
+              {/* Main Text with Animated Gradient */}
+              <motion.h1
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-foreground via-primary via-blue-500 to-foreground bg-clip-text text-transparent bg-[length:200%_auto]"
+                style={{
+                  filter: "drop-shadow(0 0 10px rgba(59,130,246,0.3))",
+                  willChange: "background-position",
+                }}
+              >
+                SmartChat
+              </motion.h1>
               
               <motion.p
                 initial={{ opacity: 0 }}
