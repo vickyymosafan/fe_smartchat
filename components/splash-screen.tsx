@@ -27,11 +27,15 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   
-  // Parallax transforms
+  // Parallax transforms - ALL at top level (Rules of Hooks)
   const logoX = useTransform(mouseX, [-500, 500], [-20, 20])
   const logoY = useTransform(mouseY, [-500, 500], [-20, 20])
   const bgX = useTransform(mouseX, [-500, 500], [-10, 10])
   const bgY = useTransform(mouseY, [-500, 500], [-10, 10])
+  
+  // Inverted transforms for Layer 2 (opposite direction)
+  const bgXInverted = useTransform(bgX, (x) => -x)
+  const bgYInverted = useTransform(bgY, (y) => -y)
 
   // Generate particles once
   const particles = useMemo(() => generateParticles(30), [])
@@ -96,7 +100,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
             
             {/* Layer 2 - Secondary gradient */}
             <motion.div
-              style={!isMobile ? { x: useTransform(bgX, (x) => -x), y: useTransform(bgY, (y) => -y) } : {}}
+              style={!isMobile ? { x: bgXInverted, y: bgYInverted } : {}}
               animate={{
                 scale: [1.2, 1, 1.3, 1.2],
                 rotate: [360, 270, 180, 90, 0],
