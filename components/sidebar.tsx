@@ -1,7 +1,8 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { MessageCircle, Plus, ChevronLeft, MoreHorizontal, X } from "lucide-react"
+import { MessageCircle, Plus, ChevronLeft, MoreHorizontal, X, LogOut } from "lucide-react"
+import { useAuth } from "@/hooks/useAuth"
 
 interface SidebarProps {
   isOpen: boolean
@@ -9,6 +10,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
+  const { logout } = useAuth()
 
   return (
     <>
@@ -73,21 +75,32 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
       {/* User Profile Section */}
       {isOpen && (
-        <div className="p-2 md:p-3">
+        <div className="p-2 md:p-3 space-y-2">
           <div className="flex items-center justify-between p-1.5 md:p-2 rounded-lg hover:bg-sidebar-accent transition-colors">
             <div className="flex items-center gap-1.5 md:gap-2">
               <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
                 <span className="text-[10px] md:text-xs font-semibold text-sidebar-primary">SC</span>
               </div>
               <div className="min-w-0">
-                <p className="text-xs md:text-sm font-medium text-sidebar-foreground truncate">Shadcn</p>
-                <p className="text-[10px] md:text-xs text-sidebar-foreground/60 truncate">shadcn@example.com</p>
+                <p className="text-xs md:text-sm font-medium text-sidebar-foreground truncate">SmartChat</p>
+                <p className="text-[10px] md:text-xs text-sidebar-foreground/60 truncate">Authenticated</p>
               </div>
             </div>
             <Button variant="ghost" size="icon" className="h-5 w-5 md:h-6 md:w-6 hover:bg-sidebar-accent flex-shrink-0">
               <MoreHorizontal className="h-2.5 w-2.5 md:h-3 md:w-3" />
             </Button>
           </div>
+          
+          {/* Logout Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={logout}
+            className="w-full justify-start text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
+          >
+            <LogOut className="h-3.5 w-3.5 mr-2" />
+            Logout
+          </Button>
         </div>
       )}
       </div>
