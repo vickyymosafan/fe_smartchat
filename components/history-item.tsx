@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { MessageCircle, MoreHorizontal, Pencil, Trash2, Check, X } from "lucide-react"
+import { MessageCircle, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ChatHistory } from "@/lib/chat-history-api"
 
@@ -29,15 +29,13 @@ export default function HistoryItem({
 		if (editTitle.trim() && editTitle !== history.title) {
 			try {
 				await onRename(history.id, editTitle.trim())
-				setIsEditing(false)
 			} catch (error) {
-				// Error handled by parent
 				setEditTitle(history.title)
 			}
 		} else {
-			setIsEditing(false)
 			setEditTitle(history.title)
 		}
+		setIsEditing(false)
 	}
 
 	const handleCancelEdit = () => {
@@ -46,13 +44,11 @@ export default function HistoryItem({
 	}
 
 	const handleDelete = async () => {
-		if (window.confirm("Hapus riwayat chat ini?")) {
-			setIsDeleting(true)
-			try {
-				await onDelete(history.id)
-			} catch (error) {
-				setIsDeleting(false)
-			}
+		setIsDeleting(true)
+		try {
+			await onDelete(history.id)
+		} catch (error) {
+			setIsDeleting(false)
 		}
 	}
 
@@ -78,38 +74,19 @@ export default function HistoryItem({
 			}`} />
 
 			{isEditing ? (
-				<div className="flex-1 flex items-center gap-1">
-					<input
-						type="text"
-						value={editTitle}
-						onChange={(e) => setEditTitle(e.target.value)}
-						onKeyDown={(e) => {
-							if (e.key === "Enter") handleSaveRename()
-							if (e.key === "Escape") handleCancelEdit()
-						}}
-						className="flex-1 bg-sidebar-accent text-sidebar-foreground text-xs px-2 py-1 rounded border border-sidebar-border focus:outline-none focus:ring-1 focus:ring-sidebar-primary"
-						autoFocus
-						disabled={isDeleting}
-					/>
-					<Button
-						size="icon"
-						variant="ghost"
-						onClick={handleSaveRename}
-						className="h-6 w-6"
-						disabled={isDeleting}
-					>
-						<Check className="h-3 w-3 text-green-500" />
-					</Button>
-					<Button
-						size="icon"
-						variant="ghost"
-						onClick={handleCancelEdit}
-						className="h-6 w-6"
-						disabled={isDeleting}
-					>
-						<X className="h-3 w-3 text-red-500" />
-					</Button>
-				</div>
+				<input
+					type="text"
+					value={editTitle}
+					onChange={(e) => setEditTitle(e.target.value)}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") handleSaveRename()
+						if (e.key === "Escape") handleCancelEdit()
+					}}
+					onBlur={handleSaveRename}
+					className="flex-1 bg-sidebar-accent text-sidebar-foreground text-xs px-2 py-1 rounded border border-sidebar-border focus:outline-none focus:ring-1 focus:ring-sidebar-primary"
+					autoFocus
+					disabled={isDeleting}
+				/>
 			) : (
 				<>
 					<p className={`flex-1 text-xs truncate ${
@@ -150,7 +127,8 @@ export default function HistoryItem({
 										Rename
 									</button>
 									<button
-										onClick={() => {
+										onClick={(e) => {
+											e.stopPropagation()
 											setShowMenu(false)
 											handleDelete()
 										}}
