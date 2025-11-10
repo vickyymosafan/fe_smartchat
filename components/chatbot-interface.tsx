@@ -66,7 +66,7 @@ export default function ChatbotInterface() {
       />
 
       <div className="flex flex-col flex-1 min-w-0">
-        <ChatHeader onResetChat={resetChat} onToggleSidebar={toggleSidebar} />
+        <ChatHeader onToggleSidebar={toggleSidebar} />
         <div 
           ref={scrollRef}
           className={cn("flex-1 overflow-y-auto bg-background", containerPadding)}
