@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useRef, useEffect, KeyboardEvent, ClipboardEvent } from "react"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
 import { APP_CONFIG } from "@/lib/app-config"
+import { usePinInput } from "@/hooks/usePinInput"
 
 interface PinAuthProps {
   onVerify: (pin: string) => Promise<void>
@@ -31,80 +31,22 @@ export default function PinAuth({
   retryText = APP_CONFIG.auth.retryButtonText,
   verifyingText = APP_CONFIG.auth.verifyingText,
 }: PinAuthProps) {
-  const [pins, setPins] = useState<string[]>(Array(pinLength).fill(""))
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-
-  // Auto-focus first input on mount
-  useEffect(() => {
-    inputRefs.current[0]?.focus()
-  }, [])
-
-  // Auto-submit when all pins filled
-  useEffect(() => {
-    const allFilled = pins.every((pin) => pin !== "")
-    if (allFilled && !isLoading) {
-      const fullPin = pins.join("")
-      onVerify(fullPin)
-    }
-  }, [pins, isLoading, onVerify])
-
-  const handleChange = (index: number, value: string) => {
-    // Only allow numbers
-    if (value && !/^\d$/.test(value)) return
-
-    const newPins = [...pins]
-    newPins[index] = value
-
-    setPins(newPins)
-
-    // Auto-advance to next input
-    if (value && index < pinLength - 1) {
-      inputRefs.current[index + 1]?.focus()
-    }
-  }
-
-  const handleKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace") {
-      e.preventDefault()
-      
-      const newPins = [...pins]
-      
-      if (pins[index]) {
-        // Clear current box
-        newPins[index] = ""
-        setPins(newPins)
-      } else if (index > 0) {
-        // Move to previous box and clear it
-        newPins[index - 1] = ""
-        setPins(newPins)
-        inputRefs.current[index - 1]?.focus()
+  const {
+    pins,
+    inputRefs,
+    handleChange,
+    handleKeyDown,
+    handlePaste,
+    reset: handleReset,
+  } = usePinInput({
+    length: pinLength,
+    onComplete: (pin) => {
+      if (!isLoading) {
+        onVerify(pin)
       }
-    } else if (e.key === "ArrowLeft" && index > 0) {
-      inputRefs.current[index - 1]?.focus()
-    } else if (e.key === "ArrowRight" && index < pinLength - 1) {
-      inputRefs.current[index + 1]?.focus()
-    }
-  }
-
-  const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    
-    const pastedData = e.clipboardData.getData("text").trim()
-    
-    const regex = new RegExp(`^\\d{${pinLength}}$`)
-    if (!regex.test(pastedData)) return
-
-    const newPins = pastedData.split("")
-    setPins(newPins)
-    
-    // Focus last input
-    inputRefs.current[pinLength - 1]?.focus()
-  }
-
-  const handleReset = () => {
-    setPins(Array(pinLength).fill(""))
-    inputRefs.current[0]?.focus()
-  }
+    },
+    autoSubmit: true,
+  })
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">

@@ -6,7 +6,8 @@ import ChatHeader from "@/components/chat-header"
 import Sidebar from "@/components/sidebar"
 import { useChat } from "@/hooks/useChat"
 import { useAutoScroll } from "@/hooks/useAutoScroll"
-import { useState, useEffect } from "react"
+import { useResponsiveSidebar } from "@/hooks/useResponsiveSidebar"
+import { useState } from "react"
 import { containerMaxWidth, containerPadding, textSizes, gaps } from "@/lib/styles"
 import { cn } from "@/lib/utils"
 import { APP_CONFIG } from "@/lib/app-config"
@@ -26,21 +27,10 @@ export default function ChatbotInterface({
   emptyStateConfig,
   loadingText = APP_CONFIG.chat.loadingText,
 }: ChatbotInterfaceProps = {}) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const { isOpen: isSidebarOpen, toggle: toggleSidebar } = useResponsiveSidebar({
+    breakpoint: sidebarBreakpoint,
+  })
   const [refreshHistoryTrigger, setRefreshHistoryTrigger] = useState(0)
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSidebarOpen(window.innerWidth >= sidebarBreakpoint)
-    }
-    
-    // Set initial state
-    handleResize()
-    
-    // Listen to resize events
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
 
   // Callback to refresh history when new chat is created
   const handleHistoryCreated = () => {
@@ -62,8 +52,6 @@ export default function ChatbotInterface({
   })
   const { scrollRef } = useAutoScroll(messages)
 
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
-  
   const handleHistoryClick = async (sessionId: string) => {
     await loadHistoryMessages(sessionId)
   }

@@ -1,30 +1,17 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { useAuth } from "@/hooks/useAuth"
+import { useSplashScreen } from "@/hooks/useSplashScreen"
 import ChatbotInterface from "@/components/chatbot-interface"
 import PinAuth from "@/components/pin-auth"
 import SplashScreen from "@/components/splash-screen"
-import { SPLASH_SHOWN_KEY } from "@/lib/constants"
 
 export default function Home() {
   const { isAuthenticated, isLoading, error, verifyPin } = useAuth()
-  const [showSplash, setShowSplash] = useState(true)
-
-  useEffect(() => {
-    const splashShown = sessionStorage.getItem(SPLASH_SHOWN_KEY)
-    if (splashShown) {
-      setShowSplash(false)
-    }
-  }, [])
-
-  const handleSplashComplete = () => {
-    sessionStorage.setItem(SPLASH_SHOWN_KEY, "true")
-    setShowSplash(false)
-  }
+  const { showSplash, completeSplash } = useSplashScreen()
 
   if (showSplash) {
-    return <SplashScreen onComplete={handleSplashComplete} />
+    return <SplashScreen onComplete={completeSplash} />
   }
 
   // Show loading state while checking auth

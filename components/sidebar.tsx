@@ -5,7 +5,6 @@ import { MessageCircle, Plus, ChevronLeft, X, LogOut, Info } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import { useChatHistory } from "@/hooks/useChatHistory"
 import HistoryItem from "./history-item"
-import { resetSessionId } from "@/lib/session"
 import { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { APP_CONFIG } from "@/lib/app-config"
@@ -63,11 +62,9 @@ export default function Sidebar({
   }, [refreshTrigger, refreshHistories])
 
   const handleNewChat = () => {
-    resetSessionId()
     if (onNewChat) {
       onNewChat()
     }
-    // Don't reload page, just reset state
   }
 
   return (
