@@ -95,7 +95,7 @@ export default function Sidebar({
 
       {/* Conversations History */}
       <div className="flex-1 overflow-y-auto px-2 md:px-3 py-2">
-        {isOpen && (
+        {isOpen ? (
           <div>
             <p className="text-[10px] md:text-xs text-sidebar-foreground/60 font-semibold mb-2 md:mb-3 px-2">RIWAYAT</p>
             <div className="space-y-1">
@@ -116,6 +116,17 @@ export default function Sidebar({
                 ))
               )}
             </div>
+          </div>
+        ) : (
+          <div className="hidden md:flex flex-col items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-10 h-10 hover:bg-sidebar-accent"
+              title="Riwayat"
+            >
+              <MessageCircle className="h-5 w-5 text-sidebar-foreground/60" />
+            </Button>
           </div>
         )}
       </div>
