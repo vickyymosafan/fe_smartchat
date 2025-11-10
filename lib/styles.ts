@@ -9,6 +9,12 @@
 export const containerMaxWidth = "max-w-3xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl"
 
 /**
+ * Message and input max-width for consistent chat UI
+ * Narrower than container for better readability
+ */
+export const messageMaxWidth = "max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl"
+
+/**
  * Responsive padding untuk main container
  */
 export const containerPadding = "px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-8"

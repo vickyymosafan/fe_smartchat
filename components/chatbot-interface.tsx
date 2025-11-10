@@ -8,7 +8,7 @@ import { useChat } from "@/hooks/useChat"
 import { useAutoScroll } from "@/hooks/useAutoScroll"
 import { useResponsiveSidebar } from "@/hooks/useResponsiveSidebar"
 import { useState } from "react"
-import { containerMaxWidth, containerPadding, textSizes, gaps } from "@/lib/styles"
+import { messageMaxWidth, containerPadding, textSizes, gaps } from "@/lib/styles"
 import { cn } from "@/lib/utils"
 import { APP_CONFIG } from "@/lib/app-config"
 
@@ -59,7 +59,7 @@ export default function ChatbotInterface() {
           ref={scrollRef}
           className={cn("flex-1 overflow-y-auto bg-background", containerPadding)}
         >
-          <div className={cn("mx-auto space-y-4 sm:space-y-6 h-full", containerMaxWidth)}>
+          <div className={cn("mx-auto space-y-4 sm:space-y-6 h-full w-full", messageMaxWidth)}>
             {isLoadingHistory ? (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center space-y-2">
@@ -80,8 +80,8 @@ export default function ChatbotInterface() {
                   <ChatMessage key={message.id} message={message} />
                 ))}
                 {error && (
-                  <div className="flex justify-center">
-                    <div className={cn("rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 sm:px-4 sm:py-3 text-destructive max-w-full", textSizes.sm)}>
+                  <div className="flex justify-center w-full">
+                    <div className={cn("rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 sm:px-4 sm:py-3 text-destructive w-full", textSizes.sm)}>
                       {error}
                     </div>
                   </div>
@@ -89,7 +89,7 @@ export default function ChatbotInterface() {
               </>
             )}
             {isLoading && (
-              <div className="flex justify-start">
+              <div className="flex justify-start w-full">
                 <div className="rounded-lg bg-muted px-3 py-2.5 sm:px-4 sm:py-3">
                   <div className="flex gap-1.5 sm:gap-2">
                     <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-muted-foreground animate-bounce" />

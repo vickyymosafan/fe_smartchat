@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Send } from "lucide-react"
-import { containerMaxWidth, textSizes, gaps, iconSizes } from "@/lib/styles"
+import { messageMaxWidth, textSizes, gaps, iconSizes } from "@/lib/styles"
 import { cn } from "@/lib/utils"
 import { APP_CONFIG } from "@/lib/app-config"
 
@@ -53,7 +53,7 @@ export default function ChatInput({
 
   return (
     <div className="border-t border-border bg-background px-3 py-3 sm:px-4 sm:py-4 md:px-6 lg:px-8 flex-shrink-0">
-      <div className={cn("mx-auto", containerMaxWidth)}>
+      <div className={cn("mx-auto w-full", messageMaxWidth)}>
         <div className={cn("flex items-center rounded-lg border border-border bg-card p-2 sm:p-3", gaps.md)}>
           <Textarea
             ref={textareaRef}
