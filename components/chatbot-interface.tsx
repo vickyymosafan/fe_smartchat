@@ -12,23 +12,9 @@ import { containerMaxWidth, containerPadding, textSizes, gaps } from "@/lib/styl
 import { cn } from "@/lib/utils"
 import { APP_CONFIG } from "@/lib/app-config"
 
-interface ChatbotInterfaceProps {
-  sidebarBreakpoint?: number
-  emptyStateConfig?: {
-    title?: string
-    description?: string
-    suggestions?: string[]
-  }
-  loadingText?: string
-}
-
-export default function ChatbotInterface({
-  sidebarBreakpoint = APP_CONFIG.breakpoints.mobile,
-  emptyStateConfig,
-  loadingText = APP_CONFIG.chat.loadingText,
-}: ChatbotInterfaceProps = {}) {
+export default function ChatbotInterface() {
   const { isOpen: isSidebarOpen, toggle: toggleSidebar } = useResponsiveSidebar({
-    breakpoint: sidebarBreakpoint,
+    breakpoint: APP_CONFIG.breakpoints.mobile,
   })
   const [refreshHistoryTrigger, setRefreshHistoryTrigger] = useState(0)
 
@@ -78,14 +64,14 @@ export default function ChatbotInterface({
               <div className="flex items-center justify-center h-full">
                 <div className="text-center space-y-2">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
-                  <p className="text-sm text-muted-foreground">{loadingText}</p>
+                  <p className="text-sm text-muted-foreground">{APP_CONFIG.chat.loadingText}</p>
                 </div>
               </div>
             ) : messages.length === 0 ? (
               <EmptyState 
-                title={emptyStateConfig?.title || APP_CONFIG.branding.appTitle}
-                description={emptyStateConfig?.description || APP_CONFIG.branding.tagline}
-                suggestions={emptyStateConfig?.suggestions || [...APP_CONFIG.chat.suggestions]}
+                title={APP_CONFIG.branding.appTitle}
+                description={APP_CONFIG.branding.tagline}
+                suggestions={[...APP_CONFIG.chat.suggestions]}
                 onSuggestionClick={sendMessage}
               />
             ) : (

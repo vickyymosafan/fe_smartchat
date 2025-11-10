@@ -10,26 +10,12 @@ interface PinAuthProps {
   onVerify: (pin: string) => Promise<void>
   isLoading: boolean
   error: string | null
-  appName?: string
-  pinLength?: number
-  promptText?: string
-  helperText?: string
-  tipText?: string
-  retryText?: string
-  verifyingText?: string
 }
 
 export default function PinAuth({ 
   onVerify, 
   isLoading, 
   error,
-  appName = APP_CONFIG.branding.appName,
-  pinLength = APP_CONFIG.auth.pinLength,
-  promptText = APP_CONFIG.auth.pinPrompt,
-  helperText = APP_CONFIG.auth.pinHelperText,
-  tipText = APP_CONFIG.auth.pinTip,
-  retryText = APP_CONFIG.auth.retryButtonText,
-  verifyingText = APP_CONFIG.auth.verifyingText,
 }: PinAuthProps) {
   const {
     pins,
@@ -39,7 +25,7 @@ export default function PinAuth({
     handlePaste,
     reset: handleReset,
   } = usePinInput({
-    length: pinLength,
+    length: APP_CONFIG.auth.pinLength,
     onComplete: (pin) => {
       if (!isLoading) {
         onVerify(pin)
@@ -89,7 +75,7 @@ export default function PinAuth({
             transition={{ delay: 0.2 }}
             className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent"
           >
-            {appName}
+            {APP_CONFIG.branding.appName}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -97,7 +83,7 @@ export default function PinAuth({
             transition={{ delay: 0.3 }}
             className="text-muted-foreground"
           >
-            {promptText}
+            {APP_CONFIG.auth.pinPrompt}
           </motion.p>
         </motion.div>
 
@@ -165,7 +151,7 @@ export default function PinAuth({
                 onClick={handleReset}
                 className="mt-2 hover:bg-destructive/10"
               >
-                {retryText}
+                {APP_CONFIG.auth.retryButtonText}
               </Button>
             </motion.div>
           )}
@@ -178,7 +164,7 @@ export default function PinAuth({
               className="flex items-center justify-center gap-2 text-muted-foreground"
             >
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span className="text-sm">{verifyingText}</span>
+              <span className="text-sm">{APP_CONFIG.auth.verifyingText}</span>
             </motion.div>
           )}
         </motion.div>
@@ -190,8 +176,8 @@ export default function PinAuth({
           transition={{ delay: 0.8 }}
           className="text-center text-xs text-muted-foreground space-y-1"
         >
-          <p>{helperText}</p>
-          <p className="text-[10px]">{tipText}</p>
+          <p>{APP_CONFIG.auth.pinHelperText}</p>
+          <p className="text-[10px]">{APP_CONFIG.auth.pinTip}</p>
         </motion.div>
       </motion.div>
     </div>

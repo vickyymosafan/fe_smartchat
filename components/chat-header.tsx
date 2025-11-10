@@ -11,27 +11,17 @@ import { APP_CONFIG } from "@/lib/app-config"
 
 interface ChatHeaderProps {
   onToggleSidebar?: () => void
-  title?: string
-  onSettingsClick?: () => void
-  showSettings?: boolean
 }
 
 export default function ChatHeader({ 
   onToggleSidebar,
-  title = APP_CONFIG.branding.chatTitle,
-  onSettingsClick,
-  showSettings = true,
 }: ChatHeaderProps) {
   const [showInstallModal, setShowInstallModal] = useState(false)
   const { canInstall, isInstalled, deviceType, installPWA } = usePWAInstall()
 
   const handleSettingsClick = () => {
-    if (onSettingsClick) {
-      onSettingsClick()
-    } else {
-      console.log("Settings clicked", { canInstall, isInstalled, deviceType })
-      setShowInstallModal(true)
-    }
+    console.log("Settings clicked", { canInstall, isInstalled, deviceType })
+    setShowInstallModal(true)
   }
 
   return (
@@ -46,21 +36,19 @@ export default function ChatHeader({
           >
             <Menu className="h-5 w-5" />
           </Button>
-          <h2 className="text-sm sm:text-base md:text-lg font-semibold text-foreground">{title}</h2>
+          <h2 className="text-sm sm:text-base md:text-lg font-semibold text-foreground">{APP_CONFIG.branding.chatTitle}</h2>
         </div>
         
-        {showSettings && (
-          <div className={cn("flex items-center", gaps.sm)}>
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={handleSettingsClick}
-              className="h-7 w-7 sm:h-8 sm:w-8"
-            >
-              <Settings className={iconSizes.sm} />
-            </Button>
-          </div>
-        )}
+        <div className={cn("flex items-center", gaps.sm)}>
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={handleSettingsClick}
+            className="h-7 w-7 sm:h-8 sm:w-8"
+          >
+            <Settings className={iconSizes.sm} />
+          </Button>
+        </div>
       </div>
 
       <PWAInstallModal
