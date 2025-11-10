@@ -3,8 +3,6 @@
  * Menghindari duplikasi className patterns
  */
 
-import { cn } from "@/lib/utils";
-
 /**
  * Container max-width classes
  */
@@ -48,19 +46,4 @@ export const textSizes = {
 	lg: "text-sm sm:text-base md:text-lg",
 } as const;
 
-/**
- * Helper untuk membuat container dengan max-width dan padding
- */
-export function getContainerClasses(additionalClasses?: string) {
-	return cn("mx-auto", containerMaxWidth, additionalClasses);
-}
 
-/**
- * Helper untuk icon button sizes
- */
-export function getIconButtonClasses(size: "sm" | "md" = "md") {
-	const sizeClasses = size === "sm" 
-		? "h-7 w-7 sm:h-8 sm:w-8" 
-		: "h-8 w-8 sm:h-9 sm:w-9";
-	return sizeClasses;
-}

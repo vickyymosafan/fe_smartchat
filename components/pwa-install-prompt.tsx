@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { X, Download, Share, MoreVertical, Plus } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { X, Download, Share, Plus } from "lucide-react"
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
