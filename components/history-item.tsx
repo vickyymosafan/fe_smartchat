@@ -69,7 +69,7 @@ export default function HistoryItem({
 				isDeleting ? "opacity-50" : ""
 			} ${
 				isActive 
-					? "bg-sidebar-accent border border-sidebar-primary/50" 
+					? "bg-sidebar-accent" 
 					: "hover:bg-sidebar-accent"
 			}`}
 		>
