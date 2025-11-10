@@ -1,6 +1,6 @@
-# Chat Frontend UI
+# Smartchat Frontend
 
-Aplikasi chat frontend yang dibangun dengan Next.js 16, TypeScript, dan Tailwind CSS. Aplikasi ini menyediakan antarmuka chat yang responsif, accessible, dan profesional untuk berkomunikasi dengan backend AI.
+Aplikasi chat frontend yang dibangun dengan Next.js 15, TypeScript, dan Tailwind CSS. Aplikasi ini menyediakan antarmuka chat yang responsif, accessible, dan profesional untuk berkomunikasi dengan backend AI, dilengkapi dengan fitur chat history management.
 
 ## 📋 Daftar Isi
 
@@ -18,33 +18,53 @@ Aplikasi chat frontend yang dibangun dengan Next.js 16, TypeScript, dan Tailwind
 
 ## ✨ Fitur
 
+### Core Features
 - 💬 **Chat Real-time**: Kirim dan terima pesan dari AI dengan respons cepat
+- 📚 **Chat History Management**: Simpan, lihat, dan kelola riwayat percakapan
+- 🔄 **Session Management**: Persistent session tracking dengan sessionStorage
+- 🗂️ **Sidebar History**: Collapsible sidebar dengan daftar chat histories
+- ✏️ **Rename & Delete**: Edit judul chat atau hapus riwayat yang tidak diperlukan
+- 🆕 **New Chat**: Mulai percakapan baru tanpa menghapus riwayat sebelumnya
+
+### UI/UX Features
 - 🎨 **UI Modern**: Desain clean dan profesional dengan Tailwind CSS
 - 📱 **Responsive**: Tampilan optimal di semua ukuran layar (mobile, tablet, desktop)
 - ♿ **Accessible**: Kepatuhan WCAG 2.1 AA dengan ARIA labels dan keyboard navigation
-- 🔒 **Secure**: Implementasi security best practices (XSS protection, HTTPS enforcement)
-- ⚡ **Performance**: Optimized bundle size dan fast loading times
+- 🎭 **Loading States**: Visual feedback untuk semua operasi async
 - 🌐 **Bahasa Indonesia**: Semua teks UI dalam bahasa Indonesia
+
+### Technical Features
+- 🔒 **Secure**: PIN-based authentication dengan token management
+- ⚡ **Performance**: Optimized queries dan bundle size
 - ✅ **Type-Safe**: Full TypeScript dengan strict mode
 - 🎯 **SOLID Principles**: Arsitektur yang maintainable dan extensible
+- 🔄 **Auto-refresh**: History list otomatis update saat ada perubahan
 
 ## 🛠 Teknologi
 
 ### Core
 
-- **[Next.js 16](https://nextjs.org/)** - React framework dengan App Router
+- **[Next.js 15](https://nextjs.org/)** - React framework dengan App Router
 - **[React 19](https://react.dev/)** - UI library
 - **[TypeScript 5](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[Tailwind CSS 4](https://tailwindcss.com/)** - Utility-first CSS framework
+- **[Tailwind CSS 3](https://tailwindcss.com/)** - Utility-first CSS framework
+
+### UI Components
+
+- **[Radix UI](https://www.radix-ui.com/)** - Accessible component primitives
+- **[Lucide React](https://lucide.dev/)** - Beautiful icon library
+- **[class-variance-authority](https://cva.style/)** - Component variants management
+- **[clsx](https://github.com/lukeed/clsx)** - Conditional className utility
 
 ### Font
 
-- **[Montserrat](https://fonts.google.com/specimen/Montserrat)** - Primary font via next/font/google
+- **[Geist](https://vercel.com/font)** - Modern font family via next/font
 
 ### Development Tools
 
 - **ESLint 9** - Code linting
 - **eslint-config-next** - Next.js ESLint configuration
+- **PostCSS** - CSS processing
 
 ## 📦 Prasyarat
 
@@ -211,54 +231,81 @@ Cek bahwa:
 
 ```
 frontend/
-├── app/                      # Next.js App Router
-│   ├── layout.tsx           # Root layout dengan Montserrat font
-│   ├── page.tsx             # Main chat page
-│   └── globals.css          # Global styles
+├── app/                          # Next.js App Router
+│   ├── layout.tsx               # Root layout dengan Geist font
+│   ├── page.tsx                 # Main chat page dengan PIN auth
+│   └── globals.css              # Global styles dan Tailwind directives
 │
-├── components/              # React components
-│   ├── ChatContainer.tsx    # Main chat container
-│   ├── MessageList.tsx      # List of messages
-│   ├── ChatBubble.tsx       # Single message bubble
-│   ├── MessageInput.tsx     # Input field dan send button
-│   ├── TypingIndicator.tsx  # Typing animation
-│   └── Timestamp.tsx        # Timestamp display
+├── components/                   # React components
+│   ├── chatbot-interface.tsx    # Main chat interface dengan sidebar
+│   ├── chat-header.tsx          # Header dengan reset dan sidebar toggle
+│   ├── chat-input.tsx           # Input field dengan auto-expand
+│   ├── chat-message.tsx         # Message bubble dengan timestamp
+│   ├── sidebar.tsx              # Collapsible sidebar dengan history list
+│   ├── history-item.tsx         # Single history item dengan actions
+│   ├── pin-auth.tsx             # PIN authentication component
+│   ├── splash-screen.tsx        # Loading splash screen
+│   ├── pwa-install-prompt.tsx   # PWA installation prompt
+│   ├── service-worker-register.tsx # Service worker registration
+│   └── ui/                      # Reusable UI components
+│       ├── button.tsx           # Button component dengan variants
+│       └── textarea.tsx         # Textarea component
 │
-├── hooks/                   # Custom React hooks
-│   ├── useChat.ts          # Chat state management
-│   └── useAutoScroll.ts    # Auto-scroll functionality
+├── hooks/                        # Custom React hooks
+│   ├── useAuth.ts               # Authentication state management
+│   ├── useChat.ts               # Chat state dan message handling
+│   ├── useChatHistory.ts        # Chat history CRUD operations
+│   └── useAutoScroll.ts         # Auto-scroll functionality
 │
-├── lib/                     # Utility libraries
-│   ├── api.ts              # API service layer
-│   └── format.ts           # Formatting utilities
+├── lib/                          # Utility libraries
+│   ├── api.ts                   # Chat API service layer
+│   ├── api-config.ts            # API configuration dan headers
+│   ├── auth-api.ts              # Authentication API
+│   ├── chat-history-api.ts      # Chat history API
+│   ├── session.ts               # Session management utilities
+│   ├── message-factory.ts       # Message creation utilities
+│   ├── styles.ts                # Shared style utilities
+│   └── utils.ts                 # General utility functions
 │
-├── types/                   # TypeScript type definitions
-│   └── chat.ts             # Chat-related types
+├── types/                        # TypeScript type definitions
+│   └── chat.ts                  # Chat-related types dan interfaces
 │
-├── public/                  # Static assets
+├── public/                       # Static assets
+│   ├── icons/                   # PWA icons
+│   ├── screenshots/             # PWA screenshots
+│   ├── manifest.json            # PWA manifest
+│   └── sw.js                    # Service worker
 │
-├── .env.example            # Environment variables template
-├── .env.local              # Local environment variables (gitignored)
-├── .gitignore              # Git ignore rules
-├── eslint.config.mjs       # ESLint configuration
-├── next.config.ts          # Next.js configuration
-├── package.json            # Dependencies dan scripts
-├── postcss.config.mjs      # PostCSS configuration
-├── tailwind.config.js      # Tailwind CSS configuration
-├── tsconfig.json           # TypeScript configuration
-├── README.md               # Dokumentasi ini
-├── ACCESSIBILITY.md        # Dokumentasi aksesibilitas
-└── SECURITY.md             # Dokumentasi keamanan
+├── scripts/                      # Build scripts
+│   └── generate-icons.js        # Icon generation script
+│
+├── .env.example                 # Environment variables template
+├── .env.local                   # Local environment variables (gitignored)
+├── .gitignore                   # Git ignore rules
+├── components.json              # Shadcn UI configuration
+├── eslint.config.mjs            # ESLint configuration
+├── next.config.ts               # Next.js configuration
+├── package.json                 # Dependencies dan scripts
+├── postcss.config.mjs           # PostCSS configuration
+├── tailwind.config.js           # Tailwind CSS configuration
+├── tsconfig.json                # TypeScript configuration
+├── vercel.json                  # Vercel deployment configuration
+├── CHANGELOG.md                 # Version history dan changes
+├── README.md                    # Dokumentasi ini
+├── ACCESSIBILITY.md             # Dokumentasi aksesibilitas
+└── SECURITY.md                  # Dokumentasi keamanan
 ```
 
 ### Penjelasan Folder
 
 - **`app/`** - Next.js App Router untuk routing dan layouts
 - **`components/`** - Reusable React components dengan single responsibility
+  - **`ui/`** - Base UI components (buttons, inputs, etc)
 - **`hooks/`** - Custom hooks untuk state management dan side effects
-- **`lib/`** - Service layer dan utility functions
+- **`lib/`** - Service layer, API clients, dan utility functions
 - **`types/`** - TypeScript type definitions dan interfaces
-- **`public/`** - Static files yang dapat diakses langsung
+- **`public/`** - Static files dan PWA assets
+- **`scripts/`** - Build dan utility scripts
 
 ## 🚢 Deployment ke Vercel
 
@@ -621,5 +668,17 @@ Jika mengalami masalah atau memiliki pertanyaan:
 
 **Dibuat dengan ❤️ menggunakan Next.js, TypeScript, dan Tailwind CSS**
 
-**Versi:** 0.1.0  
-**Terakhir diperbarui:** November 2024
+**Versi:** 3.0.0  
+**Terakhir diperbarui:** 10 November 2025
+
+## 📝 Changelog
+
+Lihat [CHANGELOG.md](./CHANGELOG.md) untuk detail perubahan di setiap versi.
+
+### Latest Updates (v3.0.0)
+
+- ✨ Chat history management dengan CRUD operations
+- 🗂️ Sidebar dengan daftar riwayat percakapan
+- 🔄 Session management dan persistence
+- ⚡ Optimized database queries (N+1 fix)
+- 🐛 Bug fixes untuk history loading
