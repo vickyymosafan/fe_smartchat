@@ -127,15 +127,15 @@ function EmptyState({
   onSuggestionClick
 }: EmptyStateProps) {
   return (
-    <div className="flex min-h-full flex-col items-center justify-center gap-4 sm:gap-6 py-8 sm:py-12 text-center px-4">
-      <div className="space-y-1.5 sm:space-y-2">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">{title}</h1>
-        <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-md mx-auto">
+    <div className="flex min-h-full flex-col items-center justify-center gap-3 xs:gap-4 sm:gap-6 py-6 xs:py-8 sm:py-12 text-center px-3 xs:px-4">
+      <div className="space-y-1 xs:space-y-1.5 sm:space-y-2">
+        <h1 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">{title}</h1>
+        <p className="text-xs xs:text-sm sm:text-base md:text-lg text-muted-foreground max-w-xs xs:max-w-sm sm:max-w-md mx-auto">
           {description}
         </p>
       </div>
       {suggestions.length > 0 && (
-        <div className={cn("grid w-full max-w-xl lg:max-w-2xl grid-cols-1 sm:grid-cols-2", gaps.md)}>
+        <div className={cn("grid w-full max-w-xs xs:max-w-sm sm:max-w-xl lg:max-w-2xl grid-cols-1 sm:grid-cols-2", gaps.md)}>
           {suggestions.map((text, index) => (
             <SuggestionCard 
               key={index} 
@@ -158,7 +158,7 @@ function SuggestionCard({ text, onClick }: SuggestionCardProps) {
   return (
     <button 
       onClick={onClick}
-      className="rounded-lg border border-border bg-card px-3 py-2.5 sm:px-4 sm:py-3 text-left text-xs sm:text-sm md:text-base text-card-foreground transition-colors hover:bg-muted hover:border-border/60 active:scale-95"
+      className="rounded-lg border border-border bg-card px-2.5 py-2 xs:px-3 xs:py-2.5 sm:px-4 sm:py-3 text-left text-[10px] xs:text-xs sm:text-sm md:text-base text-card-foreground transition-colors hover:bg-muted hover:border-border/60 active:scale-95"
     >
       {text}
     </button>

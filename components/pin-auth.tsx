@@ -92,9 +92,9 @@ export default function PinAuth({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="space-y-4"
+          className="space-y-3 sm:space-y-4"
         >
-          <div className="flex justify-center gap-2 sm:gap-3">
+          <div className="flex justify-center gap-1.5 xs:gap-2 sm:gap-3">
             {pins.map((pin, index) => (
               <motion.div
                 key={index}
@@ -115,9 +115,9 @@ export default function PinAuth({
                   whileFocus={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className={`
-                    w-12 h-14 sm:w-14 sm:h-16 
-                    text-center text-2xl font-bold
-                    rounded-xl border-2
+                    w-10 h-12 xs:w-11 xs:h-13 sm:w-14 sm:h-16 
+                    text-center text-xl xs:text-2xl font-bold
+                    rounded-lg xs:rounded-xl border-2
                     transition-all duration-300
                     ${pin ? "border-primary bg-primary/10 shadow-lg shadow-primary/20" : "border-border bg-card"}
                     ${error ? "border-destructive animate-shake" : ""}

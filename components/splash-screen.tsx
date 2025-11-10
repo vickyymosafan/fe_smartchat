@@ -213,7 +213,7 @@ export default function SplashScreen({
                   opacity: { delay: 0.1, duration: 0.5 },
                   scale: { delay: 0.1, duration: 0.5 },
                 }}
-                className="absolute inset-0 rounded-full border-4 border-primary/20 border-t-primary w-24 h-24 sm:w-32 sm:h-32"
+                className="absolute inset-0 rounded-full border-3 xs:border-4 border-primary/20 border-t-primary w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32"
                 style={{ willChange: "transform" }}
               />
 
@@ -234,7 +234,7 @@ export default function SplashScreen({
                   opacity: { delay: 0.2, duration: 0.5 },
                   scale: { delay: 0.2, duration: 0.5 },
                 }}
-                className="absolute inset-2 rounded-full border-4 border-blue-500/20 border-b-blue-500 w-20 h-20 sm:w-28 sm:h-28"
+                className="absolute inset-1.5 xs:inset-2 rounded-full border-3 xs:border-4 border-blue-500/20 border-b-blue-500 w-17 h-17 xs:w-20 xs:h-20 sm:w-28 sm:h-28"
                 style={{ willChange: "transform" }}
               />
 
@@ -255,7 +255,7 @@ export default function SplashScreen({
                   opacity: { delay: 0.3, duration: 0.5 },
                   scale: { delay: 0.3, duration: 0.5 },
                 }}
-                className="absolute inset-4 rounded-full border-2 border-purple-500/20 border-r-purple-500 w-16 h-16 sm:w-24 sm:h-24"
+                className="absolute inset-3 xs:inset-4 rounded-full border-2 border-purple-500/20 border-r-purple-500 w-14 h-14 xs:w-16 xs:h-16 sm:w-24 sm:h-24"
                 style={{ willChange: "transform" }}
               />
 
@@ -264,7 +264,7 @@ export default function SplashScreen({
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-                className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-primary via-blue-500 to-purple-600 shadow-2xl shadow-primary/50 flex items-center justify-center overflow-hidden"
+                className="relative w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-primary via-blue-500 to-purple-600 shadow-2xl shadow-primary/50 flex items-center justify-center overflow-hidden"
               >
                 {/* Shimmer Effect */}
                 <motion.div
@@ -299,7 +299,7 @@ export default function SplashScreen({
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="relative text-4xl sm:text-5xl font-bold text-white z-10"
+                  className="relative text-3xl xs:text-4xl sm:text-5xl font-bold text-white z-10"
                   style={{
                     textShadow: "0 0 20px rgba(255,255,255,0.5), 0 0 40px rgba(59,130,246,0.5)",
                   }}
@@ -319,7 +319,7 @@ export default function SplashScreen({
                   repeat: Infinity,
                   ease: "easeOut",
                 }}
-                className="absolute inset-0 rounded-full bg-primary/30 w-24 h-24 sm:w-32 sm:h-32"
+                className="absolute inset-0 rounded-full bg-primary/30 w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32"
                 style={{ willChange: "transform, opacity" }}
               />
             </motion.div>
@@ -329,7 +329,7 @@ export default function SplashScreen({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.5 }}
-              className="text-center space-y-2"
+              className="text-center space-y-1.5 sm:space-y-2"
             >
               {/* Main Text with Animated Gradient */}
               <motion.h1
@@ -341,7 +341,7 @@ export default function SplashScreen({
                   repeat: Infinity,
                   ease: "linear",
                 }}
-                className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-foreground via-primary via-blue-500 to-foreground bg-clip-text text-transparent bg-[length:200%_auto]"
+                className="text-2xl xs:text-3xl sm:text-4xl font-bold bg-gradient-to-r from-foreground via-primary via-blue-500 to-foreground bg-clip-text text-transparent bg-[length:200%_auto]"
                 style={{
                   filter: "drop-shadow(0 0 10px rgba(59,130,246,0.3))",
                   willChange: "background-position",
@@ -354,7 +354,7 @@ export default function SplashScreen({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1 }}
-                className="text-sm sm:text-base text-muted-foreground font-medium"
+                className="text-xs xs:text-sm sm:text-base text-muted-foreground font-medium"
               >
                 {subtitle}
               </motion.p>
@@ -365,7 +365,7 @@ export default function SplashScreen({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
-              className="flex gap-3"
+              className="flex gap-2 xs:gap-2.5 sm:gap-3"
             >
               {[0, 1, 2].map((i) => (
                 <motion.div
@@ -381,7 +381,7 @@ export default function SplashScreen({
                     delay: i * 0.15,
                     ease: "easeInOut",
                   }}
-                  className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-primary to-blue-500 shadow-lg shadow-primary/50"
+                  className="w-2 h-2 xs:w-2.5 xs:h-2.5 rounded-full bg-gradient-to-br from-primary to-blue-500 shadow-lg shadow-primary/50"
                 />
               ))}
             </motion.div>
@@ -392,7 +392,7 @@ export default function SplashScreen({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4 }}
-            className="absolute bottom-8 text-center space-y-2"
+            className="absolute bottom-6 xs:bottom-8 text-center space-y-1.5 xs:space-y-2 px-4"
           >
             <motion.p
               animate={{
@@ -403,13 +403,13 @@ export default function SplashScreen({
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="text-xs text-muted-foreground font-medium"
+              className="text-[10px] xs:text-xs text-muted-foreground font-medium"
             >
               {credits}
             </motion.p>
             
             {/* Progress Bar */}
-            <div className="w-32 h-1 bg-muted/20 rounded-full overflow-hidden mx-auto">
+            <div className="w-24 xs:w-32 h-0.5 xs:h-1 bg-muted/20 rounded-full overflow-hidden mx-auto">
               <motion.div
                 initial={{ x: "-100%" }}
                 animate={{ x: "100%" }}

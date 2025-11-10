@@ -61,7 +61,7 @@ export default function ChatInput({
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className={cn("resize-none border-0 bg-transparent p-0 focus-visible:ring-0 min-h-[24px] flex-1 placeholder:text-center", textSizes.base)}
+            className={cn("resize-none border-0 bg-transparent p-0 focus-visible:ring-0 min-h-[24px] flex-1", textSizes.base)}
             style={{ maxHeight: `${maxHeight}px` }}
             disabled={isLoading}
           />
