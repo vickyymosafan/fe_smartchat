@@ -1,4 +1,6 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "http://localhost:3001";
+import { getAuthToken } from "./auth-session"
+
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "http://localhost:3001"
 
 if (
 	typeof window !== "undefined" &&
@@ -9,25 +11,20 @@ if (
 		"⚠️ WARNING: Backend API tidak menggunakan HTTPS di production environment. " +
 			"Ini tidak aman dan dapat menyebabkan masalah keamanan. " +
 			"Gunakan HTTPS untuk production.",
-	);
-}
-
-export function getAuthToken(): string | null {
-	if (typeof window === "undefined") return null;
-	return sessionStorage.getItem("auth_token");
+	)
 }
 
 export function createHeaders(includeAuth: boolean = true): HeadersInit {
 	const headers: HeadersInit = {
 		"Content-Type": "application/json",
-	};
+	}
 
 	if (includeAuth) {
-		const token = getAuthToken();
+		const token = getAuthToken()
 		if (token) {
-			headers["Authorization"] = `Bearer ${token}`;
+			headers["Authorization"] = `Bearer ${token}`
 		}
 	}
 
-	return headers;
+	return headers
 }

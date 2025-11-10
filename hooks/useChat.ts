@@ -6,6 +6,7 @@ import { sendChatMessage, loadChatHistory } from "@/lib/api";
 import { createMessage } from "@/lib/message-factory";
 import { resetSessionId } from "@/lib/session";
 import { createChatHistory } from "@/lib/chat-history-api";
+import { convertBackendMessages } from "@/lib/message-converter";
 
 interface UseChatReturn {
 	messages: ChatMessage[];
@@ -21,15 +22,6 @@ interface UseChatReturn {
 
 interface UseChatProps {
 	onHistoryCreated?: () => void;
-}
-
-function convertBackendMessages(history: any[]): ChatMessage[] {
-	return history.map((msg: any) => ({
-		id: msg.id,
-		role: msg.role === "assistant" ? "ai" : msg.role,
-		content: msg.content,
-		timestamp: new Date(msg.createdAt),
-	}));
 }
 
 export function useChat(props?: UseChatProps): UseChatReturn {

@@ -5,28 +5,25 @@ import { useAuth } from "@/hooks/useAuth"
 import ChatbotInterface from "@/components/chatbot-interface"
 import PinAuth from "@/components/pin-auth"
 import SplashScreen from "@/components/splash-screen"
+import { SPLASH_SHOWN_KEY } from "@/lib/constants"
 
 export default function Home() {
   const { isAuthenticated, isLoading, error, verifyPin } = useAuth()
   const [showSplash, setShowSplash] = useState(true)
-  const [splashComplete, setSplashComplete] = useState(false)
 
-  // Check if splash has been shown in this session
   useEffect(() => {
-    const splashShown = sessionStorage.getItem("splash_shown")
+    const splashShown = sessionStorage.getItem(SPLASH_SHOWN_KEY)
     if (splashShown) {
       setShowSplash(false)
-      setSplashComplete(true)
     }
   }, [])
 
   const handleSplashComplete = () => {
-    sessionStorage.setItem("splash_shown", "true")
-    setSplashComplete(true)
+    sessionStorage.setItem(SPLASH_SHOWN_KEY, "true")
+    setShowSplash(false)
   }
 
-  // Show splash screen on first load
-  if (showSplash && !splashComplete) {
+  if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} />
   }
 

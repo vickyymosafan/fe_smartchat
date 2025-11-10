@@ -1,18 +1,13 @@
-/**
- * PWA Install Hook
- * Manage PWA installation state and logic
- */
-
 "use client"
 
 import { useState, useEffect } from "react"
+import { detectDeviceType, isAppInstalled, type DeviceType } from "@/lib/device-detection"
+import { PWA_INSTALL_DISMISSED_KEY } from "@/lib/constants"
 
 interface BeforeInstallPromptEvent extends Event {
 	prompt: () => Promise<void>
 	userChoice: Promise<{ outcome: "accepted" | "dismissed" }>
 }
-
-type DeviceType = "android" | "ios" | "desktop" | "unknown"
 
 interface UsePWAInstallReturn {
 	canInstall: boolean
@@ -30,26 +25,18 @@ export function usePWAInstall(): UsePWAInstallReturn {
 	const [canInstall, setCanInstall] = useState(false)
 
 	useEffect(() => {
-		// Detect device type
-		const userAgent = navigator.userAgent.toLowerCase()
-		const isIOS = /iphone|ipad|ipod/.test(userAgent)
-		const isAndroid = /android/.test(userAgent)
-		const isStandalone = window.matchMedia("(display-mode: standalone)").matches
-		const isIOSStandalone = (window.navigator as any).standalone === true
-
-		if (isStandalone || isIOSStandalone) {
+		const installed = isAppInstalled()
+		if (installed) {
 			setIsInstalled(true)
 			setCanInstall(false)
 			return
 		}
 
-		if (isIOS) {
-			setDeviceType("ios")
+		const device = detectDeviceType()
+		setDeviceType(device)
+
+		if (device === "ios") {
 			setCanInstall(true)
-		} else if (isAndroid) {
-			setDeviceType("android")
-		} else {
-			setDeviceType("desktop")
 		}
 
 		// Listen for beforeinstallprompt event (Android/Desktop)
@@ -84,7 +71,7 @@ export function usePWAInstall(): UsePWAInstallReturn {
 	}
 
 	const dismissPrompt = () => {
-		localStorage.setItem("pwa-install-dismissed", Date.now().toString())
+		localStorage.setItem(PWA_INSTALL_DISMISSED_KEY, Date.now().toString())
 	}
 
 	return {

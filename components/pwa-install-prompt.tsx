@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { X, Download, Share, Plus } from "lucide-react"
+import { X, Download } from "lucide-react"
+import { detectDeviceType, isAppInstalled, type DeviceType } from "@/lib/device-detection"
+import { PWA_INSTALL_DISMISSED_KEY, PWA_INSTALL_COOLDOWN_DAYS } from "@/lib/constants"
+import IOSInstallInstructions from "./ios-install-instructions"
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>
 }
-
-type DeviceType = "android" | "ios" | "desktop" | "unknown"
 
 export default function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
@@ -18,33 +19,19 @@ export default function PWAInstallPrompt() {
   const [isInstalled, setIsInstalled] = useState(false)
 
   useEffect(() => {
-    // Detect device type
-    const userAgent = navigator.userAgent.toLowerCase()
-    const isIOS = /iphone|ipad|ipod/.test(userAgent)
-    const isAndroid = /android/.test(userAgent)
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches
-    const isIOSStandalone = (window.navigator as any).standalone === true
-
-    if (isStandalone || isIOSStandalone) {
+    if (isAppInstalled()) {
       setIsInstalled(true)
       return
     }
 
-    if (isIOS) {
-      setDeviceType("ios")
-    } else if (isAndroid) {
-      setDeviceType("android")
-    } else {
-      setDeviceType("desktop")
-    }
+    const device = detectDeviceType()
+    setDeviceType(device)
 
-    // Check if user has dismissed the prompt before
-    const dismissed = localStorage.getItem("pwa-install-dismissed")
+    const dismissed = localStorage.getItem(PWA_INSTALL_DISMISSED_KEY)
     const dismissedTime = dismissed ? parseInt(dismissed) : 0
     const daysSinceDismissed = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24)
 
-    // Show prompt again after 30 days (increased from 7 to avoid annoying users)
-    if (daysSinceDismissed < 30) {
+    if (daysSinceDismissed < PWA_INSTALL_COOLDOWN_DAYS) {
       return
     }
 
@@ -57,11 +44,10 @@ export default function PWAInstallPrompt() {
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
 
-    // For iOS, show manual instructions after a longer delay
-    if (isIOS && !isIOSStandalone) {
+    if (device === "ios") {
       const timer = setTimeout(() => {
         setShowPrompt(true)
-      }, 10000) // Show after 10 seconds (increased from 3)
+      }, 10000)
 
       return () => {
         clearTimeout(timer)
@@ -88,7 +74,7 @@ export default function PWAInstallPrompt() {
 
   const handleDismiss = () => {
     setShowPrompt(false)
-    localStorage.setItem("pwa-install-dismissed", Date.now().toString())
+    localStorage.setItem(PWA_INSTALL_DISMISSED_KEY, Date.now().toString())
   }
 
   if (isInstalled || !showPrompt) return null
@@ -170,61 +156,15 @@ export default function PWAInstallPrompt() {
               </Button>
             </div>
 
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Untuk menginstall aplikasi ini di iPhone Anda:
-              </p>
+            <IOSInstallInstructions />
 
-              <div className="space-y-3">
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold text-sm">
-                    1
-                  </div>
-                  <div className="flex-1 pt-1">
-                    <p className="text-sm text-card-foreground">
-                      Tap tombol <strong>Share</strong> <Share className="inline h-4 w-4 mx-1" /> 
-                      di bagian bawah browser Safari
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold text-sm">
-                    2
-                  </div>
-                  <div className="flex-1 pt-1">
-                    <p className="text-sm text-card-foreground">
-                      Scroll ke bawah dan tap <strong>"Add to Home Screen"</strong> <Plus className="inline h-4 w-4 mx-1" />
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold text-sm">
-                    3
-                  </div>
-                  <div className="flex-1 pt-1">
-                    <p className="text-sm text-card-foreground">
-                      Tap <strong>"Add"</strong> di pojok kanan atas
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-lg bg-muted/50 p-3 border border-border">
-                <p className="text-xs text-muted-foreground">
-                  💡 <strong>Tips:</strong> Setelah diinstall, Anda bisa membuka ChatSmart langsung dari Home Screen seperti aplikasi native!
-                </p>
-              </div>
-
-              <Button
-                onClick={handleDismiss}
-                className="w-full"
-                variant="outline"
-              >
-                Mengerti
-              </Button>
-            </div>
+            <Button
+              onClick={handleDismiss}
+              className="w-full mt-4"
+              variant="outline"
+            >
+              Mengerti
+            </Button>
           </div>
         </div>
       ) : null}

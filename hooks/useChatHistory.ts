@@ -7,6 +7,7 @@ import {
 	deleteChatHistory,
 } from "@/lib/chat-history-api"
 import { getSessionId } from "@/lib/session"
+import { handleError } from "@/lib/error-handler"
 
 interface UseChatHistoryReturn {
 	histories: ChatHistory[]
@@ -16,12 +17,6 @@ interface UseChatHistoryReturn {
 	renameHistory: (id: string, newTitle: string) => Promise<void>
 	deleteHistory: (id: string) => Promise<void>
 	refreshHistories: () => Promise<void>
-}
-
-function handleError(err: any, defaultMessage: string): string {
-	const message = err.message || defaultMessage
-	console.error(defaultMessage, err)
-	return message
 }
 
 export function useChatHistory(): UseChatHistoryReturn {

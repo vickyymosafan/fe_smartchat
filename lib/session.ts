@@ -1,33 +1,33 @@
-const SESSION_ID_KEY = "chat_session_id";
+import { SESSION_ID_KEY } from "./constants"
 
 function generateSessionId(): string {
-	const timestamp = Date.now();
-	const random = Math.random().toString(36).substring(2, 9);
-	return `session-${timestamp}-${random}`;
+	const timestamp = Date.now()
+	const random = Math.random().toString(36).substring(2, 9)
+	return `session-${timestamp}-${random}`
 }
 
 export function getSessionId(): string {
 	if (typeof window === "undefined") {
-		return generateSessionId();
+		return generateSessionId()
 	}
 
-	let sessionId = sessionStorage.getItem(SESSION_ID_KEY);
+	let sessionId = sessionStorage.getItem(SESSION_ID_KEY)
 
 	if (!sessionId) {
-		sessionId = generateSessionId();
-		sessionStorage.setItem(SESSION_ID_KEY, sessionId);
+		sessionId = generateSessionId()
+		sessionStorage.setItem(SESSION_ID_KEY, sessionId)
 	}
 
-	return sessionId;
+	return sessionId
 }
 
 function clearSessionId(): void {
 	if (typeof window !== "undefined") {
-		sessionStorage.removeItem(SESSION_ID_KEY);
+		sessionStorage.removeItem(SESSION_ID_KEY)
 	}
 }
 
 export function resetSessionId(): string {
-	clearSessionId();
-	return getSessionId();
+	clearSessionId()
+	return getSessionId()
 }
