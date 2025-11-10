@@ -43,8 +43,8 @@ export default function PWAInstallPrompt() {
     const dismissedTime = dismissed ? parseInt(dismissed) : 0
     const daysSinceDismissed = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24)
 
-    // Show prompt again after 7 days
-    if (daysSinceDismissed < 7) {
+    // Show prompt again after 30 days (increased from 7 to avoid annoying users)
+    if (daysSinceDismissed < 30) {
       return
     }
 
@@ -57,11 +57,11 @@ export default function PWAInstallPrompt() {
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
 
-    // For iOS, show manual instructions after a delay
+    // For iOS, show manual instructions after a longer delay
     if (isIOS && !isIOSStandalone) {
       const timer = setTimeout(() => {
         setShowPrompt(true)
-      }, 3000) // Show after 3 seconds
+      }, 10000) // Show after 10 seconds (increased from 3)
 
       return () => {
         clearTimeout(timer)
