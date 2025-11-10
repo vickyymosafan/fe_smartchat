@@ -23,8 +23,16 @@ interface UseChatProps {
 	onHistoryCreated?: () => void;
 }
 
+function convertBackendMessages(history: any[]): ChatMessage[] {
+	return history.map((msg: any) => ({
+		id: msg.id,
+		role: msg.role === "assistant" ? "ai" : msg.role,
+		content: msg.content,
+		timestamp: new Date(msg.createdAt),
+	}));
+}
+
 export function useChat(props?: UseChatProps): UseChatReturn {
-	// State management
 	const [messages, setMessages] = useState<ChatMessage[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isLoadingHistory, setIsLoadingHistory] = useState<boolean>(false);
@@ -42,13 +50,7 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 				setCurrentSessionId(sessionId);
 				
 				const history = await loadChatHistory(sessionId);
-				
-				const convertedMessages: ChatMessage[] = history.map((msg: any) => ({
-					id: msg.id,
-					role: msg.role === "assistant" ? "ai" : msg.role,
-					content: msg.content,
-					timestamp: new Date(msg.createdAt),
-				}));
+				const convertedMessages = convertBackendMessages(history);
 
 				setMessages(convertedMessages);
 				
@@ -108,13 +110,7 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 		
 		try {
 			const history = await loadChatHistory(sessionId);
-			
-			const convertedMessages: ChatMessage[] = history.map((msg: any) => ({
-				id: msg.id,
-				role: msg.role === "assistant" ? "ai" : msg.role,
-				content: msg.content,
-				timestamp: new Date(msg.createdAt),
-			}));
+			const convertedMessages = convertBackendMessages(history);
 
 			setMessages(convertedMessages);
 			setCurrentSessionId(sessionId);

@@ -1,22 +1,10 @@
-/**
- * Auth API Client
- * Handle authentication API calls
- */
-
 import { API_BASE_URL, createHeaders } from "./api-config";
 
-/**
- * Verify PIN code
- * 
- * @param pin - 6 digit PIN code
- * @returns Promise dengan token jika valid
- * @throws Error jika PIN invalid atau network error
- */
 export async function verifyPin(pin: string): Promise<string> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/auth/verify-pin`, {
       method: 'POST',
-      headers: createHeaders(false), // No auth needed for PIN verification
+      headers: createHeaders(false),
       body: JSON.stringify({ pin }),
     });
 

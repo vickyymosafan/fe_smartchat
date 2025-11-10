@@ -1,8 +1,3 @@
-/**
- * Chat History API
- * API functions untuk chat history management
- */
-
 import { API_BASE_URL, createHeaders } from "./api-config"
 
 export interface ChatHistory {
@@ -13,9 +8,15 @@ export interface ChatHistory {
 	updatedAt: string
 }
 
-/**
- * Create new chat history from first message
- */
+async function handleResponse<T>(response: Response, errorMessage: string): Promise<T> {
+	if (!response.ok) {
+		const error = await response.json()
+		throw new Error(error.message || errorMessage)
+	}
+	const result = await response.json()
+	return result.data
+}
+
 export async function createChatHistory(
 	sessionId: string,
 	firstMessage: string
@@ -29,18 +30,9 @@ export async function createChatHistory(
 		}),
 	})
 
-	if (!response.ok) {
-		const error = await response.json()
-		throw new Error(error.message || "Failed to create chat history")
-	}
-
-	const result = await response.json()
-	return result.data
+	return handleResponse<ChatHistory>(response, "Failed to create chat history")
 }
 
-/**
- * Get all chat histories (across all sessions)
- */
 export async function getChatHistories(): Promise<ChatHistory[]> {
 	const response = await fetch(
 		`${API_BASE_URL}/api/chat/histories`,
@@ -49,18 +41,9 @@ export async function getChatHistories(): Promise<ChatHistory[]> {
 		}
 	)
 
-	if (!response.ok) {
-		const error = await response.json()
-		throw new Error(error.message || "Failed to get chat histories")
-	}
-
-	const result = await response.json()
-	return result.data
+	return handleResponse<ChatHistory[]>(response, "Failed to get chat histories")
 }
 
-/**
- * Rename chat history
- */
 export async function renameChatHistory(
 	id: string,
 	newTitle: string
@@ -73,18 +56,9 @@ export async function renameChatHistory(
 		}),
 	})
 
-	if (!response.ok) {
-		const error = await response.json()
-		throw new Error(error.message || "Failed to rename chat history")
-	}
-
-	const result = await response.json()
-	return result.data
+	return handleResponse<ChatHistory>(response, "Failed to rename chat history")
 }
 
-/**
- * Delete chat history
- */
 export async function deleteChatHistory(id: string): Promise<void> {
 	const response = await fetch(`${API_BASE_URL}/api/chat/histories/${id}`, {
 		method: "DELETE",
