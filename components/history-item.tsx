@@ -78,6 +78,7 @@ export default function HistoryItem({
 					type="text"
 					value={editTitle}
 					onChange={(e) => setEditTitle(e.target.value)}
+					onClick={(e) => e.stopPropagation()}
 					onKeyDown={(e) => {
 						if (e.key === "Enter") handleSaveRename()
 						if (e.key === "Escape") handleCancelEdit()
@@ -112,12 +113,13 @@ export default function HistoryItem({
 						{showMenu && (
 							<>
 								<div
-									className="fixed inset-0 z-10"
+									className="fixed inset-0 z-[60]"
 									onClick={() => setShowMenu(false)}
 								/>
-								<div className="absolute right-0 top-full mt-1 bg-sidebar border border-sidebar-border rounded-lg shadow-lg z-20 py-1 min-w-[120px]">
+								<div className="absolute right-0 top-full mt-1 bg-sidebar border border-sidebar-border rounded-lg shadow-lg z-[70] py-1 min-w-[120px]">
 									<button
-										onClick={() => {
+										onClick={(e) => {
+											e.stopPropagation()
 											setIsEditing(true)
 											setShowMenu(false)
 										}}
