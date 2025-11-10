@@ -52,9 +52,9 @@ export default function ChatInput({
   }
 
   return (
-    <div className="border-t border-border bg-background px-3 py-3 sm:px-4 sm:py-4 md:px-6 lg:px-8 flex-shrink-0">
+    <div className="bg-background px-3 py-3 sm:px-4 sm:py-4 md:px-6 lg:px-8 flex-shrink-0">
       <div className={cn("mx-auto w-full", messageMaxWidth)}>
-        <div className={cn("flex items-center rounded-full border border-border bg-card p-2 sm:p-3 md:p-3.5", gaps.md)}>
+        <div className={cn("flex items-center rounded-full bg-card p-2 sm:p-3 md:p-3.5", gaps.md)}>
           <Textarea
             ref={textareaRef}
             value={message}
