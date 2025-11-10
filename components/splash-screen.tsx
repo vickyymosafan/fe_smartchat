@@ -184,10 +184,10 @@ export default function SplashScreen({
             className="relative z-10 flex flex-col items-center gap-8"
             style={!isMobile ? { x: logoX, y: logoY, willChange: "transform" } : {}}
           >
-            {/* Animated Logo */}
+            {/* Animated Logo - Clean & Transparent */}
             <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
               transition={{
                 type: "spring",
                 stiffness: 200,
@@ -196,127 +196,39 @@ export default function SplashScreen({
               }}
               className="relative"
             >
-              {/* Outer Ring 1 - Fastest */}
-              <motion.div
-                initial={{ opacity: 0, scale: 1.5 }}
+              {/* SmartChat Logo Image - Transparent */}
+              <motion.img
+                src="/smartchat4.png"
+                alt="SmartChat Logo"
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
                 animate={{ 
-                  rotate: 360,
-                  opacity: 1,
+                  opacity: 1, 
                   scale: 1,
+                  y: 0,
                 }}
-                transition={{
-                  rotate: {
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "linear",
-                  },
-                  opacity: { delay: 0.1, duration: 0.5 },
-                  scale: { delay: 0.1, duration: 0.5 },
+                transition={{ 
+                  delay: 0.3,
+                  duration: 0.8,
+                  ease: "easeOut"
                 }}
-                className="absolute inset-0 rounded-full border-3 xs:border-4 border-primary/20 border-t-primary w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32"
-                style={{ willChange: "transform" }}
+                className="relative w-32 h-32 xs:w-40 xs:h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 object-contain z-10 drop-shadow-2xl"
+                style={{
+                  filter: "drop-shadow(0 10px 30px rgba(59, 130, 246, 0.3))"
+                }}
               />
 
-              {/* Middle Ring - Medium speed */}
-              <motion.div
-                initial={{ opacity: 0, scale: 1.5 }}
-                animate={{ 
-                  rotate: -360,
-                  opacity: 1,
-                  scale: 1,
-                }}
-                transition={{
-                  rotate: {
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "linear",
-                  },
-                  opacity: { delay: 0.2, duration: 0.5 },
-                  scale: { delay: 0.2, duration: 0.5 },
-                }}
-                className="absolute inset-1.5 xs:inset-2 rounded-full border-3 xs:border-4 border-blue-500/20 border-b-blue-500 w-17 h-17 xs:w-20 xs:h-20 sm:w-28 sm:h-28"
-                style={{ willChange: "transform" }}
-              />
-
-              {/* Inner Ring - Slowest */}
-              <motion.div
-                initial={{ opacity: 0, scale: 1.5 }}
-                animate={{ 
-                  rotate: 360,
-                  opacity: 1,
-                  scale: 1,
-                }}
-                transition={{
-                  rotate: {
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "linear",
-                  },
-                  opacity: { delay: 0.3, duration: 0.5 },
-                  scale: { delay: 0.3, duration: 0.5 },
-                }}
-                className="absolute inset-3 xs:inset-4 rounded-full border-2 border-purple-500/20 border-r-purple-500 w-14 h-14 xs:w-16 xs:h-16 sm:w-24 sm:h-24"
-                style={{ willChange: "transform" }}
-              />
-
-              {/* Logo Circle */}
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-                className="relative w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-primary via-blue-500 to-purple-600 shadow-2xl shadow-primary/50 flex items-center justify-center overflow-hidden"
-              >
-                {/* Shimmer Effect */}
-                <motion.div
-                  animate={{
-                    x: ["-200%", "200%"],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 1,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"
-                />
-
-                {/* Inner Glow */}
-                <motion.div
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.5, 0.8, 0.5],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute inset-2 rounded-full bg-white/20 blur-md"
-                />
-
-                {/* SmartChat Logo Image */}
-                <motion.img
-                  src="/smartchat4.png"
-                  alt="SmartChat Logo"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.6 }}
-                  className="relative w-12 h-12 xs:w-14 xs:h-14 sm:w-20 sm:h-20 object-contain z-10"
-                />
-              </motion.div>
-
-              {/* Single Pulse Effect - Optimized */}
+              {/* Subtle Glow Effect Behind Logo */}
               <motion.div
                 animate={{
-                  scale: [1, 1.8, 1],
-                  opacity: [0.4, 0, 0.4],
+                  scale: [1, 1.2, 1],
+                  opacity: [0.3, 0.5, 0.3],
                 }}
                 transition={{
-                  duration: 2.5,
+                  duration: 3,
                   repeat: Infinity,
-                  ease: "easeOut",
+                  ease: "easeInOut",
                 }}
-                className="absolute inset-0 rounded-full bg-primary/30 w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32"
+                className="absolute inset-0 blur-3xl bg-gradient-to-br from-primary/40 via-blue-500/40 to-purple-600/40 rounded-full"
                 style={{ willChange: "transform, opacity" }}
               />
             </motion.div>
