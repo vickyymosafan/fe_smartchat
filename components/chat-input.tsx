@@ -8,22 +8,32 @@ import { Textarea } from "@/components/ui/textarea"
 import { Send } from "lucide-react"
 import { containerMaxWidth, textSizes, gaps, iconSizes } from "@/lib/styles"
 import { cn } from "@/lib/utils"
+import { APP_CONFIG } from "@/lib/app-config"
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void
   isLoading: boolean
+  placeholder?: string
+  helperText?: string
+  maxHeight?: number
 }
 
-export default function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
+export default function ChatInput({ 
+  onSendMessage, 
+  isLoading,
+  placeholder = APP_CONFIG.chat.placeholder,
+  helperText = APP_CONFIG.chat.helperText,
+  maxHeight = APP_CONFIG.chat.maxInputHeight,
+}: ChatInputProps) {
   const [message, setMessage] = useState("")
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto"
-      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + "px"
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, maxHeight) + "px"
     }
-  }, [message])
+  }, [message, maxHeight])
 
   const handleSend = () => {
     if (message.trim() && !isLoading) {
@@ -50,8 +60,9 @@ export default function ChatInput({ onSendMessage, isLoading }: ChatInputProps) 
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Tanyakan sesuatu... (Enter untuk kirim, Shift+Enter untuk baris baru)"
-            className={cn("resize-none border-0 bg-transparent p-0 focus-visible:ring-0 min-h-[24px] max-h-[120px] flex-1 placeholder:text-center", textSizes.base)}
+            placeholder={placeholder}
+            className={cn("resize-none border-0 bg-transparent p-0 focus-visible:ring-0 min-h-[24px] flex-1 placeholder:text-center", textSizes.base)}
+            style={{ maxHeight: `${maxHeight}px` }}
             disabled={isLoading}
           />
           <Button
@@ -64,7 +75,9 @@ export default function ChatInput({ onSendMessage, isLoading }: ChatInputProps) 
           </Button>
         </div>
 
-        <p className={cn("mt-1.5 sm:mt-2 text-muted-foreground text-center", textSizes.xs)}>Smartchat Assistant siap membantu Anda</p>
+        {helperText && (
+          <p className={cn("mt-1.5 sm:mt-2 text-muted-foreground text-center", textSizes.xs)}>{helperText}</p>
+        )}
       </div>
     </div>
   )

@@ -4,17 +4,34 @@ import { useState, useRef, useEffect, KeyboardEvent, ClipboardEvent } from "reac
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
+import { APP_CONFIG } from "@/lib/app-config"
 
 interface PinAuthProps {
   onVerify: (pin: string) => Promise<void>
   isLoading: boolean
   error: string | null
+  appName?: string
+  pinLength?: number
+  promptText?: string
+  helperText?: string
+  tipText?: string
+  retryText?: string
+  verifyingText?: string
 }
 
-const PIN_LENGTH = 6
-
-export default function PinAuth({ onVerify, isLoading, error }: PinAuthProps) {
-  const [pins, setPins] = useState<string[]>(Array(PIN_LENGTH).fill(""))
+export default function PinAuth({ 
+  onVerify, 
+  isLoading, 
+  error,
+  appName = APP_CONFIG.branding.appName,
+  pinLength = APP_CONFIG.auth.pinLength,
+  promptText = APP_CONFIG.auth.pinPrompt,
+  helperText = APP_CONFIG.auth.pinHelperText,
+  tipText = APP_CONFIG.auth.pinTip,
+  retryText = APP_CONFIG.auth.retryButtonText,
+  verifyingText = APP_CONFIG.auth.verifyingText,
+}: PinAuthProps) {
+  const [pins, setPins] = useState<string[]>(Array(pinLength).fill(""))
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   // Auto-focus first input on mount
@@ -41,7 +58,7 @@ export default function PinAuth({ onVerify, isLoading, error }: PinAuthProps) {
     setPins(newPins)
 
     // Auto-advance to next input
-    if (value && index < PIN_LENGTH - 1) {
+    if (value && index < pinLength - 1) {
       inputRefs.current[index + 1]?.focus()
     }
   }
@@ -64,7 +81,7 @@ export default function PinAuth({ onVerify, isLoading, error }: PinAuthProps) {
       }
     } else if (e.key === "ArrowLeft" && index > 0) {
       inputRefs.current[index - 1]?.focus()
-    } else if (e.key === "ArrowRight" && index < PIN_LENGTH - 1) {
+    } else if (e.key === "ArrowRight" && index < pinLength - 1) {
       inputRefs.current[index + 1]?.focus()
     }
   }
@@ -74,18 +91,18 @@ export default function PinAuth({ onVerify, isLoading, error }: PinAuthProps) {
     
     const pastedData = e.clipboardData.getData("text").trim()
     
-    // Only allow 6 digits
-    if (!/^\d{6}$/.test(pastedData)) return
+    const regex = new RegExp(`^\\d{${pinLength}}$`)
+    if (!regex.test(pastedData)) return
 
     const newPins = pastedData.split("")
     setPins(newPins)
     
     // Focus last input
-    inputRefs.current[PIN_LENGTH - 1]?.focus()
+    inputRefs.current[pinLength - 1]?.focus()
   }
 
   const handleReset = () => {
-    setPins(Array(PIN_LENGTH).fill(""))
+    setPins(Array(pinLength).fill(""))
     inputRefs.current[0]?.focus()
   }
 
@@ -130,7 +147,7 @@ export default function PinAuth({ onVerify, isLoading, error }: PinAuthProps) {
             transition={{ delay: 0.2 }}
             className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent"
           >
-            SmartChat
+            {appName}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -138,7 +155,7 @@ export default function PinAuth({ onVerify, isLoading, error }: PinAuthProps) {
             transition={{ delay: 0.3 }}
             className="text-muted-foreground"
           >
-            Masukkan PIN untuk melanjutkan
+            {promptText}
           </motion.p>
         </motion.div>
 
@@ -206,7 +223,7 @@ export default function PinAuth({ onVerify, isLoading, error }: PinAuthProps) {
                 onClick={handleReset}
                 className="mt-2 hover:bg-destructive/10"
               >
-                Coba Lagi
+                {retryText}
               </Button>
             </motion.div>
           )}
@@ -219,7 +236,7 @@ export default function PinAuth({ onVerify, isLoading, error }: PinAuthProps) {
               className="flex items-center justify-center gap-2 text-muted-foreground"
             >
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span className="text-sm">Memverifikasi PIN...</span>
+              <span className="text-sm">{verifyingText}</span>
             </motion.div>
           )}
         </motion.div>
@@ -231,8 +248,8 @@ export default function PinAuth({ onVerify, isLoading, error }: PinAuthProps) {
           transition={{ delay: 0.8 }}
           className="text-center text-xs text-muted-foreground space-y-1"
         >
-          <p>PIN terdiri dari 6 digit angka</p>
-          <p className="text-[10px]">💡 Tip: Anda bisa paste PIN langsung</p>
+          <p>{helperText}</p>
+          <p className="text-[10px]">{tipText}</p>
         </motion.div>
       </motion.div>
     </div>

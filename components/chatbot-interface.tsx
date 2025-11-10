@@ -9,15 +9,29 @@ import { useAutoScroll } from "@/hooks/useAutoScroll"
 import { useState, useEffect } from "react"
 import { containerMaxWidth, containerPadding, textSizes, gaps } from "@/lib/styles"
 import { cn } from "@/lib/utils"
+import { APP_CONFIG } from "@/lib/app-config"
 
-export default function ChatbotInterface() {
+interface ChatbotInterfaceProps {
+  sidebarBreakpoint?: number
+  emptyStateConfig?: {
+    title?: string
+    description?: string
+    suggestions?: string[]
+  }
+  loadingText?: string
+}
+
+export default function ChatbotInterface({
+  sidebarBreakpoint = APP_CONFIG.breakpoints.mobile,
+  emptyStateConfig,
+  loadingText = APP_CONFIG.chat.loadingText,
+}: ChatbotInterfaceProps = {}) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [refreshHistoryTrigger, setRefreshHistoryTrigger] = useState(0)
 
-  // Set sidebar terbuka di desktop, tertutup di mobile
   useEffect(() => {
     const handleResize = () => {
-      setIsSidebarOpen(window.innerWidth >= 768)
+      setIsSidebarOpen(window.innerWidth >= sidebarBreakpoint)
     }
     
     // Set initial state
@@ -76,11 +90,16 @@ export default function ChatbotInterface() {
               <div className="flex items-center justify-center h-full">
                 <div className="text-center space-y-2">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
-                  <p className="text-sm text-muted-foreground">Memuat riwayat chat...</p>
+                  <p className="text-sm text-muted-foreground">{loadingText}</p>
                 </div>
               </div>
             ) : messages.length === 0 ? (
-              <EmptyState />
+              <EmptyState 
+                title={emptyStateConfig?.title || APP_CONFIG.branding.appTitle}
+                description={emptyStateConfig?.description || APP_CONFIG.branding.tagline}
+                suggestions={emptyStateConfig?.suggestions || [...APP_CONFIG.chat.suggestions]}
+                onSuggestionClick={sendMessage}
+              />
             ) : (
               <>
                 {messages.map((message) => (
@@ -120,28 +139,53 @@ export default function ChatbotInterface() {
   )
 }
 
-function EmptyState() {
+interface EmptyStateProps {
+  title?: string
+  description?: string
+  suggestions?: string[]
+  onSuggestionClick?: (suggestion: string) => void
+}
+
+function EmptyState({ 
+  title = "Smartchat Assistant",
+  description = "Mulai percakapan dengan AI untuk bantuan, saran, dan pertanyaan",
+  suggestions = [],
+  onSuggestionClick
+}: EmptyStateProps) {
   return (
     <div className="flex min-h-full flex-col items-center justify-center gap-4 sm:gap-6 py-8 sm:py-12 text-center px-4">
       <div className="space-y-1.5 sm:space-y-2">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">Smartchat Assistant</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">{title}</h1>
         <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-md mx-auto">
-          Mulai percakapan dengan AI untuk bantuan, saran, dan pertanyaan
+          {description}
         </p>
       </div>
-      <div className={cn("grid w-full max-w-xl lg:max-w-2xl grid-cols-1 sm:grid-cols-2", gaps.md)}>
-        <SuggestionCard text="Tanyakan tentang coding" />
-        <SuggestionCard text="Minta ide project" />
-        <SuggestionCard text="Jelaskan konsep" />
-        <SuggestionCard text="Bantu debug code" />
-      </div>
+      {suggestions.length > 0 && (
+        <div className={cn("grid w-full max-w-xl lg:max-w-2xl grid-cols-1 sm:grid-cols-2", gaps.md)}>
+          {suggestions.map((text, index) => (
+            <SuggestionCard 
+              key={index} 
+              text={text} 
+              onClick={onSuggestionClick ? () => onSuggestionClick(text) : undefined}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
 
-function SuggestionCard({ text }: { text: string }) {
+interface SuggestionCardProps {
+  text: string
+  onClick?: () => void
+}
+
+function SuggestionCard({ text, onClick }: SuggestionCardProps) {
   return (
-    <button className="rounded-lg border border-border bg-card px-3 py-2.5 sm:px-4 sm:py-3 text-left text-xs sm:text-sm md:text-base text-card-foreground transition-colors hover:bg-muted hover:border-border/60 active:scale-95">
+    <button 
+      onClick={onClick}
+      className="rounded-lg border border-border bg-card px-3 py-2.5 sm:px-4 sm:py-3 text-left text-xs sm:text-sm md:text-base text-card-foreground transition-colors hover:bg-muted hover:border-border/60 active:scale-95"
+    >
       {text}
     </button>
   )

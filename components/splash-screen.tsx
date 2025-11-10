@@ -2,12 +2,27 @@
 
 import { useEffect, useState, useMemo } from "react"
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion"
+import { APP_CONFIG } from "@/lib/app-config"
 
 interface SplashScreenProps {
   onComplete?: () => void
+  appName?: string
+  subtitle?: string
+  logoText?: string
+  credits?: string
+  duration?: number
+  exitDuration?: number
 }
 
-export default function SplashScreen({ onComplete }: SplashScreenProps) {
+export default function SplashScreen({ 
+  onComplete,
+  appName = APP_CONFIG.branding.appName,
+  subtitle = APP_CONFIG.branding.subtitle,
+  logoText = APP_CONFIG.branding.logoText,
+  credits = APP_CONFIG.about.credits,
+  duration = APP_CONFIG.splash.duration,
+  exitDuration = APP_CONFIG.splash.exitAnimationDuration,
+}: SplashScreenProps) {
   const [isVisible, setIsVisible] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
   const [isClient, setIsClient] = useState(false)
@@ -46,16 +61,15 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
     // Check if mobile
     setIsMobile(window.innerWidth < 768)
     
-    // Hide splash screen after 3 seconds
     const timer = setTimeout(() => {
       setIsVisible(false)
       if (onComplete) {
-        setTimeout(onComplete, 800) // Wait for exit animation
+        setTimeout(onComplete, exitDuration)
       }
-    }, 3000)
+    }, duration)
 
     return () => clearTimeout(timer)
-  }, [onComplete])
+  }, [onComplete, duration, exitDuration])
 
   // Track mouse position for parallax (desktop only, throttled for performance)
   useEffect(() => {
@@ -290,7 +304,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                     textShadow: "0 0 20px rgba(255,255,255,0.5), 0 0 40px rgba(59,130,246,0.5)",
                   }}
                 >
-                  SC
+                  {logoText}
                 </motion.span>
               </motion.div>
 
@@ -333,7 +347,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                   willChange: "background-position",
                 }}
               >
-                SmartChat
+                {appName}
               </motion.h1>
               
               <motion.p
@@ -342,7 +356,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                 transition={{ delay: 1 }}
                 className="text-sm sm:text-base text-muted-foreground font-medium"
               >
-                AI Assistant
+                {subtitle}
               </motion.p>
             </motion.div>
 
@@ -391,7 +405,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
               }}
               className="text-xs text-muted-foreground font-medium"
             >
-              vickymosafan x adrian reswara
+              {credits}
             </motion.p>
             
             {/* Progress Bar */}
