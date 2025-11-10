@@ -1,12 +1,13 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { MessageCircle, Plus, ChevronLeft, MoreHorizontal, X, LogOut } from "lucide-react"
+import { MessageCircle, Plus, ChevronLeft, X, LogOut, Info } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import { useChatHistory } from "@/hooks/useChatHistory"
 import HistoryItem from "./history-item"
 import { resetSessionId } from "@/lib/session"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
 interface SidebarProps {
   isOpen: boolean
@@ -27,6 +28,7 @@ export default function Sidebar({
 }: SidebarProps) {
   const { logout } = useAuth()
   const { histories, isLoading, renameHistory, deleteHistory, refreshHistories } = useChatHistory()
+  const [showAboutDialog, setShowAboutDialog] = useState(false)
 
   // Refresh histories when trigger changes (new chat created)
   useEffect(() => {
@@ -147,23 +149,19 @@ export default function Sidebar({
         )}
       </div>
 
-      {/* User Profile Section */}
+      {/* Footer Section */}
       {isOpen && (
-        <div className="p-2 md:p-3 space-y-2">
-          <div className="flex items-center justify-between p-1.5 md:p-2 rounded-lg hover:bg-sidebar-accent transition-colors">
-            <div className="flex items-center gap-1.5 md:gap-2">
-              <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-[10px] md:text-xs font-semibold text-sidebar-primary">SC</span>
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs md:text-sm font-medium text-sidebar-foreground truncate">Smartchat</p>
-                <p className="text-[10px] md:text-xs text-sidebar-foreground/60 truncate">Authenticated</p>
-              </div>
-            </div>
-            <Button variant="ghost" size="icon" className="h-5 w-5 md:h-6 md:w-6 hover:bg-sidebar-accent flex-shrink-0">
-              <MoreHorizontal className="h-2.5 w-2.5 md:h-3 md:w-3" />
-            </Button>
-          </div>
+        <div className="p-2 md:p-3 space-y-2 border-t border-sidebar-border">
+          {/* About Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowAboutDialog(true)}
+            className="w-full justify-start text-xs hover:bg-sidebar-accent"
+          >
+            <Info className="h-3.5 w-3.5 mr-2" />
+            Tentang
+          </Button>
           
           {/* Logout Button */}
           <Button
@@ -177,6 +175,57 @@ export default function Sidebar({
           </Button>
         </div>
       )}
+
+      {/* About Dialog */}
+      <Dialog open={showAboutDialog} onOpenChange={setShowAboutDialog}>
+        <DialogContent onClose={() => setShowAboutDialog(false)}>
+          <DialogHeader>
+            <DialogTitle>Tentang Smartchat</DialogTitle>
+            <DialogDescription>
+              Chatbot cerdas untuk informasi Universitas Muhammadiyah Jember
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 mt-4">
+            <div>
+              <h3 className="font-semibold text-sm mb-2 text-[#f5f5f5]">Tim Pengembang</h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-[#2a2a2a]">
+                  <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+                    <span className="text-sm font-semibold text-white">VM</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm text-[#f5f5f5]">Vickymosafan</p>
+                    <p className="text-xs text-[#d0d0d0]">Developer & Dataset PMB</p>
+                    <p className="text-xs text-[#a0a0a0] mt-1">
+                      Mengumpulkan dataset dari PMB Universitas Muhammadiyah Jember
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-[#2a2a2a]">
+                  <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                    <span className="text-sm font-semibold text-white">AR</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm text-[#f5f5f5]">Adrian Reswara</p>
+                    <p className="text-xs text-[#d0d0d0]">Dataset Collector</p>
+                    <p className="text-xs text-[#a0a0a0] mt-1">
+                      Mengumpulkan dataset dari unmuhjember.ac.id
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-[#3a3a3a]">
+              <p className="text-xs text-[#a0a0a0] text-center">
+                © 2025 Smartchat - Universitas Muhammadiyah Jember
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       </div>
     </>
   )
