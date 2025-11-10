@@ -1,68 +1,97 @@
 /**
- * Simple Icon Generator Script
- * Generates placeholder PWA icons if you don't have them yet
+ * SmartChat Icon Generator Script
+ * Generates PWA icons from smartchat4.png logo
  * 
- * Usage: node scripts/generate-icons.js
+ * Usage: 
+ * 1. Install sharp: npm install --save-dev sharp
+ * 2. Run: node scripts/generate-icons.js
  * 
- * Note: This creates simple colored squares as placeholders.
- * Replace with actual branded icons for production!
+ * This script resizes smartchat4.png to all required PWA icon sizes
  */
 
 const fs = require('fs');
 const path = require('path');
 
+// Check if sharp is installed
+let sharp;
+try {
+  sharp = require('sharp');
+} catch (error) {
+  console.error('❌ Error: sharp is not installed!');
+  console.log('\n📦 Please install sharp first:');
+  console.log('   npm install --save-dev sharp');
+  console.log('\n   Then run this script again.');
+  process.exit(1);
+}
+
 // Icon sizes needed for PWA
 const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
 
-// Create icons directory if it doesn't exist
+// Paths
+const sourceImage = path.join(__dirname, '../public/smartchat4.png');
 const iconsDir = path.join(__dirname, '../public/icons');
+
+// Check if source image exists
+if (!fs.existsSync(sourceImage)) {
+  console.error('❌ Error: smartchat4.png not found in public folder!');
+  console.log('\n📁 Please make sure smartchat4.png exists at:');
+  console.log(`   ${sourceImage}`);
+  process.exit(1);
+}
+
+// Create icons directory if it doesn't exist
 if (!fs.existsSync(iconsDir)) {
   fs.mkdirSync(iconsDir, { recursive: true });
 }
 
-// Generate SVG placeholder for each size
-sizes.forEach(size => {
-  const svg = `
-<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#333333;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  <rect width="${size}" height="${size}" fill="url(#grad)" rx="${size * 0.15}"/>
-  <text 
-    x="50%" 
-    y="50%" 
-    font-family="Arial, sans-serif" 
-    font-size="${size * 0.3}" 
-    font-weight="bold"
-    fill="white" 
-    text-anchor="middle" 
-    dominant-baseline="middle"
-  >SC</text>
-  <text 
-    x="50%" 
-    y="${size * 0.75}" 
-    font-family="Arial, sans-serif" 
-    font-size="${size * 0.08}" 
-    fill="white" 
-    text-anchor="middle" 
-    opacity="0.8"
-  >SmartChat</text>
-</svg>`.trim();
+console.log('🎨 Generating PWA icons from smartchat4.png...\n');
 
-  const filename = `icon-${size}x${size}.svg`;
-  const filepath = path.join(iconsDir, filename);
+// Generate PNG icons for each size
+const generateIcons = async () => {
+  // Generate PWA icons
+  for (const size of sizes) {
+    const filename = `icon-${size}x${size}.png`;
+    const filepath = path.join(iconsDir, filename);
+    
+    try {
+      await sharp(sourceImage)
+        .resize(size, size, {
+          fit: 'contain',
+          background: { r: 0, g: 0, b: 0, alpha: 0 }
+        })
+        .png()
+        .toFile(filepath);
+      
+      console.log(`✅ Generated ${filename}`);
+    } catch (error) {
+      console.error(`❌ Failed to generate ${filename}:`, error.message);
+    }
+  }
   
-  fs.writeFileSync(filepath, svg);
-  console.log(`✅ Generated ${filename}`);
-});
+  // Generate favicon.ico (32x32)
+  const faviconPath = path.join(__dirname, '../public/favicon.ico');
+  try {
+    await sharp(sourceImage)
+      .resize(32, 32, {
+        fit: 'contain',
+        background: { r: 0, g: 0, b: 0, alpha: 0 }
+      })
+      .png()
+      .toFile(faviconPath);
+    
+    console.log(`✅ Generated favicon.ico`);
+  } catch (error) {
+    console.error(`❌ Failed to generate favicon.ico:`, error.message);
+  }
+  
+  console.log('\n🎉 All SmartChat icons generated successfully!');
+  console.log('📁 PWA Icons: public/icons/');
+  console.log('📁 Favicon: public/favicon.ico');
+  console.log('\n✨ Your PWA now uses the SmartChat logo!');
+  console.log('\n💡 Clear browser cache (Ctrl+Shift+R) to see the new favicon');
+};
 
-console.log('\n🎉 All placeholder icons generated!');
-console.log('📁 Location: public/icons/');
-console.log('\n⚠️  IMPORTANT: These are placeholder SVG icons.');
-console.log('   For production, replace with actual PNG icons using:');
-console.log('   - https://www.pwabuilder.com/imageGenerator');
-console.log('   - Or design your own in Figma/Photoshop');
-console.log('\n💡 SVG icons work for testing, but PNG is recommended for better compatibility.');
+generateIcons().catch(error => {
+  console.error('❌ Error generating icons:', error);
+  process.exit(1);
+});

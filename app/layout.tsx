@@ -11,26 +11,26 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "ChatSmart - AI Chat Interface",
+  title: "Smartchat - AI Chat Interface",
   description: "Professional chat interface powered by AI",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "ChatSmart",
+    title: "Smartchat",
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: "website",
-    siteName: "ChatSmart",
-    title: "ChatSmart - AI Assistant",
+    siteName: "Smartchat",
+    title: "Smartchat - AI Assistant",
     description: "Professional AI chat interface untuk bantuan, saran, dan pertanyaan",
   },
   twitter: {
     card: "summary",
-    title: "ChatSmart - AI Assistant",
+    title: "Smartchat - AI Assistant",
     description: "Professional AI chat interface untuk bantuan, saran, dan pertanyaan",
   },
 };
@@ -43,13 +43,16 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.svg" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/smartchat4.png?v=2" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/smartchat4.png?v=2" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png" />
         <meta name="theme-color" content="#000000" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="ChatSmart" />
+        <meta name="apple-mobile-web-app-title" content="SmartChat" />
       </head>
       <body className={`${montserrat.variable} antialiased`}>
         <ServiceWorkerRegister />

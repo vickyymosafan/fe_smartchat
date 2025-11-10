@@ -294,18 +294,15 @@ export default function SplashScreen({
                   className="absolute inset-2 rounded-full bg-white/20 blur-md"
                 />
 
-                {/* SC Text with Glitch */}
-                <motion.span
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
+                {/* SmartChat Logo Image */}
+                <motion.img
+                  src="/smartchat4.png"
+                  alt="SmartChat Logo"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.6 }}
-                  className="relative text-3xl xs:text-4xl sm:text-5xl font-bold text-white z-10"
-                  style={{
-                    textShadow: "0 0 20px rgba(255,255,255,0.5), 0 0 40px rgba(59,130,246,0.5)",
-                  }}
-                >
-                  {logoText}
-                </motion.span>
+                  className="relative w-12 h-12 xs:w-14 xs:h-14 sm:w-20 sm:h-20 object-contain z-10"
+                />
               </motion.div>
 
               {/* Single Pulse Effect - Optimized */}
