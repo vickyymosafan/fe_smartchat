@@ -1,4 +1,5 @@
 import { AUTH_TOKEN_KEY, LAST_ACTIVE_KEY, INACTIVE_TIMEOUT_MS } from "./constants"
+import { clearSessionId } from "./session"
 
 export function getAuthToken(): string | null {
 	if (typeof window === "undefined") return null
@@ -15,6 +16,8 @@ export function clearAuthToken(): void {
 	if (typeof window === "undefined") return
 	sessionStorage.removeItem(AUTH_TOKEN_KEY)
 	sessionStorage.removeItem(LAST_ACTIVE_KEY)
+	// Also clear chat session on logout for security
+	clearSessionId()
 }
 
 export function isSessionExpired(): boolean {

@@ -16,7 +16,7 @@ export function getSessionId(): string {
 	return sessionId
 }
 
-function clearSessionId(): void {
+export function clearSessionId(): void {
 	if (typeof window !== "undefined") {
 		sessionStorage.removeItem(SESSION_ID_KEY)
 	}

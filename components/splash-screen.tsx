@@ -181,154 +181,68 @@ export default function SplashScreen({
 
           {/* Logo Container with Parallax */}
           <motion.div 
-            className="relative z-10 flex flex-col items-center gap-8"
+            className="relative z-10 flex flex-col items-center gap-6 sm:gap-8"
             style={!isMobile ? { x: logoX, y: logoY, willChange: "transform" } : {}}
           >
-            {/* Animated Logo - Clean & Transparent */}
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{
+            {/* SmartChat Logo - Large & Prominent */}
+            <motion.img
+              src="/smartchat4.png"
+              alt="SmartChat Logo"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1,
+              }}
+              transition={{ 
+                delay: 0.2,
+                duration: 0.6,
                 type: "spring",
                 stiffness: 200,
-                damping: 20,
-                duration: 0.8,
+                damping: 20
               }}
-              className="relative"
-            >
-              {/* SmartChat Logo Image - Transparent */}
-              <motion.img
-                src="/smartchat4.png"
-                alt="SmartChat Logo"
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                animate={{ 
-                  opacity: 1, 
-                  scale: 1,
-                  y: 0,
-                }}
-                transition={{ 
-                  delay: 0.3,
-                  duration: 0.8,
-                  ease: "easeOut"
-                }}
-                className="relative w-32 h-32 xs:w-40 xs:h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 object-contain z-10 drop-shadow-2xl"
-                style={{
-                  filter: "drop-shadow(0 10px 30px rgba(59, 130, 246, 0.3))"
-                }}
-              />
+              className="w-48 h-48 xs:w-56 xs:h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 object-contain"
+            />
 
-              {/* Subtle Glow Effect Behind Logo */}
-              <motion.div
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.3, 0.5, 0.3],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute inset-0 blur-3xl bg-gradient-to-br from-primary/40 via-blue-500/40 to-purple-600/40 rounded-full"
-                style={{ willChange: "transform, opacity" }}
-              />
-            </motion.div>
-
-            {/* App Name - Simplified (removed glitch layers for performance) */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.5 }}
-              className="text-center space-y-1.5 sm:space-y-2"
-            >
-              {/* Main Text with Animated Gradient */}
-              <motion.h1
-                animate={{
-                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-                className="text-2xl xs:text-3xl sm:text-4xl font-bold bg-gradient-to-r from-foreground via-primary via-blue-500 to-foreground bg-clip-text text-transparent bg-[length:200%_auto]"
-                style={{
-                  filter: "drop-shadow(0 0 10px rgba(59,130,246,0.3))",
-                  willChange: "background-position",
-                }}
-              >
-                {appName}
-              </motion.h1>
-              
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-                className="text-xs xs:text-sm sm:text-base text-muted-foreground font-medium"
-              >
-                {subtitle}
-              </motion.p>
-            </motion.div>
-
-            {/* Loading Dots - Enhanced */}
+            {/* Loading Dots Animation */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.2 }}
+              transition={{ delay: 0.6 }}
               className="flex gap-2 xs:gap-2.5 sm:gap-3"
             >
               {[0, 1, 2].map((i) => (
                 <motion.div
                   key={i}
                   animate={{
-                    scale: [1, 1.8, 1],
+                    scale: [1, 1.5, 1],
                     opacity: [0.3, 1, 0.3],
-                    y: [0, -10, 0],
+                    y: [0, -8, 0],
                   }}
                   transition={{
-                    duration: 1.2,
+                    duration: 1,
                     repeat: Infinity,
                     delay: i * 0.15,
                     ease: "easeInOut",
                   }}
-                  className="w-2 h-2 xs:w-2.5 xs:h-2.5 rounded-full bg-gradient-to-br from-primary to-blue-500 shadow-lg shadow-primary/50"
+                  className="w-2.5 h-2.5 xs:w-3 xs:h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-gradient-to-br from-primary to-blue-500 shadow-lg shadow-primary/50"
                 />
               ))}
             </motion.div>
-          </motion.div>
 
-          {/* Bottom Text with Animation */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4 }}
-            className="absolute bottom-6 xs:bottom-8 text-center space-y-1.5 xs:space-y-2 px-4"
-          >
+            {/* Credits Text */}
             <motion.p
-              animate={{
-                opacity: [0.5, 1, 0.5],
-              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{
+                delay: 1,
                 duration: 2,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="text-[10px] xs:text-xs text-muted-foreground font-medium"
+              className="text-[10px] xs:text-xs sm:text-sm text-muted-foreground font-medium"
             >
               {credits}
             </motion.p>
-            
-            {/* Progress Bar */}
-            <div className="w-24 xs:w-32 h-0.5 xs:h-1 bg-muted/20 rounded-full overflow-hidden mx-auto">
-              <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: "100%" }}
-                transition={{
-                  duration: 2.5,
-                  ease: "easeInOut",
-                }}
-                className="h-full w-1/2 bg-gradient-to-r from-transparent via-primary to-transparent"
-              />
-            </div>
           </motion.div>
         </motion.div>
       )}
