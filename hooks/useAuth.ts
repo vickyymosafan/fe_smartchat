@@ -36,6 +36,24 @@ export function useAuth(props?: UseAuthProps): UseAuthReturn {
     setIsLoading(false)
   }, [])
 
+  // Listen for token expiration events from API interceptor
+  useEffect(() => {
+    const handleTokenExpired = () => {
+      console.log("[Auth] Token expired event received - logging out")
+      logout()
+    }
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("token-expired", handleTokenExpired)
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("token-expired", handleTokenExpired)
+      }
+    }
+  }, [])
+
   // Track page visibility for auto-logout on inactivity
   useEffect(() => {
     if (!isAuthenticated) return
@@ -90,9 +108,20 @@ export function useAuth(props?: UseAuthProps): UseAuthReturn {
   }
 
   const logout = (): void => {
+    console.log("[Auth] Logging out - clearing token and session")
+    
+    // Clear client-side token immediately (synchronous)
     clearAuthToken()
+    
+    // Update state immediately - this triggers instant re-render
     setIsAuthenticated(false)
     setError(null)
+    setIsLoading(false)
+    
+    // Call backend logout endpoint (fire and forget - async, non-blocking)
+    injectedService.logout().catch((err) => {
+      console.warn("[Auth] Backend logout failed:", err)
+    })
   }
 
   return {

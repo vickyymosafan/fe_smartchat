@@ -7,7 +7,12 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        'xs': '475px',
+        'xs': '375px',      // Small mobile (iPhone SE, small Android)
+        'sm': '640px',      // Mobile large / Phablet
+        'md': '768px',      // Tablet portrait
+        'lg': '1024px',     // Tablet landscape / Small laptop
+        'xl': '1280px',     // Desktop
+        '2xl': '1536px',    // Large desktop
       },
       fontFamily: {
         sans: [

@@ -5,11 +5,12 @@
 
 import type { IAuthService } from "@/types/services"
 import { API_BASE_URL, createHeaders } from "../api-config"
+import { fetchWithAuth } from "../api-interceptor"
 
 export class AuthService implements IAuthService {
 	async verifyPin(pin: string): Promise<string> {
 		try {
-			const response = await fetch(`${API_BASE_URL}/api/auth/verify-pin`, {
+			const response = await fetchWithAuth(`${API_BASE_URL}/api/auth/verify-pin`, {
 				method: "POST",
 				headers: createHeaders(false),
 				body: JSON.stringify({ pin }),
@@ -27,6 +28,18 @@ export class AuthService implements IAuthService {
 				throw error
 			}
 			throw new Error("Terjadi kesalahan saat verifikasi PIN")
+		}
+	}
+
+	async logout(): Promise<void> {
+		try {
+			await fetchWithAuth(`${API_BASE_URL}/api/auth/logout`, {
+				method: "POST",
+				headers: createHeaders(true),
+			})
+		} catch (error) {
+			// Ignore errors on logout - token will be cleared client-side anyway
+			console.warn("Logout request failed:", error)
 		}
 	}
 }

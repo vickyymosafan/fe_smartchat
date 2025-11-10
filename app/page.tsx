@@ -10,11 +10,12 @@ export default function Home() {
   const { isAuthenticated, isLoading, error, verifyPin } = useAuth()
   const { showSplash, completeSplash } = useSplashScreen()
 
+  // Priority 1: Show splash screen on first visit
   if (showSplash) {
     return <SplashScreen onComplete={completeSplash} />
   }
 
-  // Show PIN input if not authenticated (priority check)
+  // Priority 2: Show PIN input if not authenticated (instant redirect on logout)
   if (!isAuthenticated) {
     return (
       <main className="h-screen w-full bg-background">
@@ -23,7 +24,7 @@ export default function Home() {
     )
   }
 
-  // Show loading state only during initial auth check
+  // Priority 3: Show loading only during initial auth check (not on logout)
   if (isLoading) {
     return (
       <main className="h-screen w-full bg-background flex items-center justify-center">
@@ -35,7 +36,7 @@ export default function Home() {
     )
   }
 
-  // Show chat interface if authenticated
+  // Priority 4: Show chat interface if authenticated
   return (
     <main className="h-screen w-full bg-background">
       <ChatbotInterface />

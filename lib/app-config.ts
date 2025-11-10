@@ -14,8 +14,15 @@ export const APP_CONFIG = {
 		subtitle: "AI Assistant",
 	},
 
-	// UI Breakpoints
+	// UI Breakpoints (matching Tailwind config)
 	breakpoints: {
+		xs: 375,      // Small mobile
+		sm: 640,      // Mobile large
+		md: 768,      // Tablet portrait
+		lg: 1024,     // Tablet landscape / Small laptop
+		xl: 1280,     // Desktop
+		xxl: 1536,    // Large desktop
+		// Legacy support
 		mobile: 768,
 		tablet: 1024,
 		desktop: 1280,

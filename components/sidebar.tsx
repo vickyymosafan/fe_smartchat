@@ -192,7 +192,7 @@ export default function Sidebar({
             variant="ghost"
             size="sm"
             onClick={logout}
-            className="w-full justify-start text-[10px] sm:text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="w-full justify-start text-[10px] sm:text-xs text-destructive hover:text-destructive hover:bg-destructive/10 active:scale-95 transition-transform"
           >
             <LogOut className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1.5 sm:mr-2" />
             {sidebarLabels.logout}

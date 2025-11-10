@@ -41,6 +41,7 @@ export interface IChatHistoryService {
  */
 export interface IAuthService {
 	verifyPin(pin: string): Promise<string>
+	logout(): Promise<void>
 }
 
 /**
