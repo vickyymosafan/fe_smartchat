@@ -3,11 +3,7 @@
  * Handle authentication API calls
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
-
-if (!API_BASE_URL) {
-  throw new Error('NEXT_PUBLIC_API_BASE_URL tidak dikonfigurasi');
-}
+import { API_BASE_URL, createHeaders } from "./api-config";
 
 /**
  * Verify PIN code
@@ -20,9 +16,7 @@ export async function verifyPin(pin: string): Promise<string> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/auth/verify-pin`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: createHeaders(false), // No auth needed for PIN verification
       body: JSON.stringify({ pin }),
     });
 

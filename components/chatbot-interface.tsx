@@ -11,16 +11,45 @@ import { containerMaxWidth, containerPadding, textSizes, gaps } from "@/lib/styl
 import { cn } from "@/lib/utils"
 
 export default function ChatbotInterface() {
-  // Gunakan custom hooks untuk state management
-  const { messages, isLoading, error, sendMessage, resetChat } = useChat()
-  const { scrollRef } = useAutoScroll(messages)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [refreshHistoryTrigger, setRefreshHistoryTrigger] = useState(0)
+
+  // Callback to refresh history when new chat is created
+  const handleHistoryCreated = () => {
+    setRefreshHistoryTrigger(prev => prev + 1)
+  }
+
+  // Gunakan custom hooks untuk state management
+  const { 
+    messages, 
+    isLoading, 
+    isLoadingHistory, 
+    error, 
+    sendMessage, 
+    resetChat,
+    loadHistoryMessages,
+    currentSessionId
+  } = useChat({
+    onHistoryCreated: handleHistoryCreated
+  })
+  const { scrollRef } = useAutoScroll(messages)
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
+  
+  const handleHistoryClick = async (sessionId: string) => {
+    await loadHistoryMessages(sessionId)
+  }
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
-      <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onToggle={toggleSidebar} 
+        onNewChat={resetChat}
+        refreshTrigger={refreshHistoryTrigger}
+        onHistoryClick={handleHistoryClick}
+        currentSessionId={currentSessionId}
+      />
 
       <div className="flex flex-col flex-1 min-w-0">
         <ChatHeader onResetChat={resetChat} onToggleSidebar={toggleSidebar} />
@@ -29,7 +58,14 @@ export default function ChatbotInterface() {
           className={cn("flex-1 overflow-y-auto bg-background", containerPadding)}
         >
           <div className={cn("mx-auto space-y-4 sm:space-y-6 h-full", containerMaxWidth)}>
-            {messages.length === 0 ? (
+            {isLoadingHistory ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center space-y-2">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
+                  <p className="text-sm text-muted-foreground">Memuat riwayat chat...</p>
+                </div>
+              </div>
+            ) : messages.length === 0 ? (
               <EmptyState />
             ) : (
               <>

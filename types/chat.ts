@@ -23,10 +23,11 @@ export interface ChatMessage {
 /**
  * Request body untuk POST /api/chat
  * Sesuai dengan backend chatRequestSchema
+ * userId is used as sessionId by backend
  */
 export interface ChatApiRequest {
 	message: string;
-	userId?: string;
+	userId?: string; // Used as sessionId for chat history
 	metadata?: Record<string, any>;
 }
 

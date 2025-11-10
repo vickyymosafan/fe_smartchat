@@ -3,14 +3,45 @@
 import { Button } from "@/components/ui/button"
 import { MessageCircle, Plus, ChevronLeft, MoreHorizontal, X, LogOut } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
+import { useChatHistory } from "@/hooks/useChatHistory"
+import HistoryItem from "./history-item"
+import { resetSessionId } from "@/lib/session"
+import { useEffect } from "react"
 
 interface SidebarProps {
   isOpen: boolean
   onToggle: () => void
+  onNewChat?: () => void
+  refreshTrigger?: number
+  onHistoryClick?: (sessionId: string) => void
+  currentSessionId?: string | null
 }
 
-export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
+export default function Sidebar({ 
+  isOpen, 
+  onToggle, 
+  onNewChat, 
+  refreshTrigger,
+  onHistoryClick,
+  currentSessionId 
+}: SidebarProps) {
   const { logout } = useAuth()
+  const { histories, isLoading, renameHistory, deleteHistory, refreshHistories } = useChatHistory()
+
+  // Refresh histories when trigger changes (new chat created)
+  useEffect(() => {
+    if (refreshTrigger && refreshTrigger > 0) {
+      refreshHistories()
+    }
+  }, [refreshTrigger, refreshHistories])
+
+  const handleNewChat = () => {
+    resetSessionId()
+    if (onNewChat) {
+      onNewChat()
+    }
+    // Don't reload page, just reset state
+  }
 
   return (
     <>
@@ -53,6 +84,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
       {/* Quick Create Button */}
       <div className="p-2 md:p-3">
         <Button
+          onClick={handleNewChat}
           className="w-full bg-sidebar-primary hover:bg-sidebar-primary/90 text-sidebar-primary-foreground text-xs md:text-sm"
           size="sm"
         >
@@ -67,7 +99,22 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
           <div>
             <p className="text-[10px] md:text-xs text-sidebar-foreground/60 font-semibold mb-2 md:mb-3 px-2">RIWAYAT</p>
             <div className="space-y-1">
-              {/* Conversations will be displayed here */}
+              {isLoading ? (
+                <p className="text-xs text-sidebar-foreground/40 px-2">Loading...</p>
+              ) : histories.length === 0 ? (
+                <p className="text-xs text-sidebar-foreground/40 px-2">Belum ada riwayat</p>
+              ) : (
+                histories.map((history) => (
+                  <HistoryItem
+                    key={history.id}
+                    history={history}
+                    onRename={renameHistory}
+                    onDelete={deleteHistory}
+                    onHistoryClick={(h) => onHistoryClick?.(h.sessionId)}
+                    isActive={history.sessionId === currentSessionId}
+                  />
+                ))
+              )}
             </div>
           </div>
         )}

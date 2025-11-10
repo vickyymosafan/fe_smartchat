@@ -7,21 +7,10 @@ interface SplashScreenProps {
   onComplete?: () => void
 }
 
-// Generate particles for floating effect (optimized count)
-const generateParticles = (count: number) => {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 3 + 2, // Slightly smaller
-    duration: Math.random() * 4 + 3, // Slower for smoother performance
-    delay: Math.random() * 2,
-  }))
-}
-
 export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const [isVisible, setIsVisible] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
+  const [isClient, setIsClient] = useState(false)
   
   // Mouse position for parallax
   const mouseX = useMotionValue(0)
@@ -37,10 +26,23 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const bgXInverted = useTransform(bgX, (x) => -x)
   const bgYInverted = useTransform(bgY, (y) => -y)
 
-  // Generate particles once (reduced from 30 to 10 for performance)
-  const particles = useMemo(() => generateParticles(10), [])
+  // Generate particles only on client side to avoid hydration mismatch
+  const particles = useMemo(() => {
+    if (!isClient) return []
+    return Array.from({ length: 10 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 3 + 2,
+      duration: Math.random() * 4 + 3,
+      delay: Math.random() * 2,
+    }))
+  }, [isClient])
 
   useEffect(() => {
+    // Mark as client-side rendered
+    setIsClient(true)
+    
     // Check if mobile
     setIsMobile(window.innerWidth < 768)
     
@@ -131,8 +133,8 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
             />
           </div>
 
-          {/* Floating Particles */}
-          {!isMobile && (
+          {/* Floating Particles - Only render on client */}
+          {!isMobile && isClient && particles.length > 0 && (
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               {particles.map((particle) => (
                 <motion.div

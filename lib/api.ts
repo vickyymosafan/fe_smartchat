@@ -9,39 +9,14 @@ import type {
 	ChatApiResponse,
 	ChatApiError,
 } from "@/types/chat";
-
-/**
- * Base URL untuk Backend API
- * Dibaca dari environment variable NEXT_PUBLIC_API_BASE_URL
- */
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
-
-// Validasi environment variable
-if (!API_BASE_URL) {
-	throw new Error(
-		"NEXT_PUBLIC_API_BASE_URL tidak dikonfigurasi atau kosong. " +
-			"Silakan tambahkan variabel ini di file .env.local dengan URL backend yang valid. " +
-			"Contoh: NEXT_PUBLIC_API_BASE_URL=https://be-chatsmart.vercel.app",
-	);
-}
-
-// Warning untuk production jika tidak menggunakan HTTPS
-if (
-	typeof window !== "undefined" &&
-	process.env.NODE_ENV === "production" &&
-	!API_BASE_URL.startsWith("https://")
-) {
-	console.warn(
-		"⚠️ WARNING: Backend API tidak menggunakan HTTPS di production environment. " +
-			"Ini tidak aman dan dapat menyebabkan masalah keamanan. " +
-			"Gunakan HTTPS untuk production.",
-	);
-}
+import { API_BASE_URL, createHeaders } from "./api-config";
+import { getSessionId } from "./session";
 
 /**
  * Mengirim pesan chat ke Backend API dan mendapatkan respons AI
  *
  * @param message - Pesan dari user yang akan dikirim
+ * @param sessionId - Optional session ID, jika tidak ada akan ambil dari storage
  * @returns Promise yang resolve dengan respons AI sebagai string
  * @throws Error jika terjadi kesalahan network, HTTP error, atau error lainnya
  *
@@ -53,21 +28,18 @@ if (
  *   console.error("Gagal mengirim pesan:", error.message);
  * }
  */
-export async function sendChatMessage(message: string): Promise<string> {
+export async function sendChatMessage(message: string, sessionId?: string): Promise<string> {
 	try {
-		// Get auth token from sessionStorage (changed from localStorage)
-		// Token is cleared when browser/tab/PWA is closed
-		const token = sessionStorage.getItem('auth_token');
+		// Get session ID for chat history persistence
+		const sid = sessionId || getSessionId();
 		
 		// Kirim POST request ke backend
 		const response = await fetch(`${API_BASE_URL}/api/chat`, {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				...(token && { "Authorization": `Bearer ${token}` }),
-			},
+			headers: createHeaders(true),
 			body: JSON.stringify({
 				message,
+				userId: sid, // Backend uses userId as sessionId
 			} as ChatApiRequest),
 		});
 
@@ -137,5 +109,41 @@ export async function sendChatMessage(message: string): Promise<string> {
 
 		// Handle unexpected errors
 		throw new Error("Terjadi kesalahan yang tidak diketahui");
+	}
+}
+
+/**
+ * Load chat history from backend
+ * 
+ * @param sessionId - Session ID to load history for
+ * @param limit - Optional limit for number of messages
+ * @returns Promise with array of messages
+ */
+export async function loadChatHistory(
+	sessionId?: string,
+	limit?: number
+): Promise<any[]> {
+	try {
+		const sid = sessionId || getSessionId();
+		const url = new URL(`${API_BASE_URL}/api/chat/history/${sid}`);
+		
+		if (limit) {
+			url.searchParams.append("limit", limit.toString());
+		}
+
+		const response = await fetch(url.toString(), {
+			method: "GET",
+			headers: createHeaders(true),
+		});
+
+		if (!response.ok) {
+			throw new Error(`Failed to load chat history: ${response.statusText}`);
+		}
+
+		const data = await response.json();
+		return data.data?.messages || [];
+	} catch (error) {
+		console.error("Failed to load chat history:", error);
+		return [];
 	}
 }
