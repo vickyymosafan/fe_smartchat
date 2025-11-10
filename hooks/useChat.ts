@@ -1,15 +1,16 @@
-"use client";
+"use client"
 
 import { useState, useEffect, useRef } from "react"
 import type { ChatMessage } from "@/types/chat"
-import { sendChatMessage, loadChatHistory } from "@/lib/api"
+import type { IChatService, IChatHistoryService } from "@/types/services"
+import { chatService, chatHistoryService } from "@/lib/services"
 import { createMessage } from "@/lib/message-factory"
 import { resetSessionId } from "@/lib/session"
-import { createChatHistory } from "@/lib/chat-history-api"
-import { convertBackendMessages } from "@/lib/message-converter"
 
 interface UseChatProps {
 	onHistoryCreated?: () => void
+	chatService?: IChatService
+	chatHistoryService?: IChatHistoryService
 }
 
 interface UseChatReturn {
@@ -24,13 +25,17 @@ interface UseChatReturn {
 }
 
 export function useChat(props?: UseChatProps): UseChatReturn {
+	const {
+		onHistoryCreated,
+		chatService: injectedChatService = chatService,
+		chatHistoryService: injectedHistoryService = chatHistoryService,
+	} = props || {}
 	const [messages, setMessages] = useState<ChatMessage[]>([])
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [isLoadingHistory, setIsLoadingHistory] = useState<boolean>(false)
 	const [error, setError] = useState<string | null>(null)
 	const [currentSessionId, setCurrentSessionId] = useState<string | null>(null)
 	const historyCreatedRef = useRef<boolean>(false)
-	const { onHistoryCreated } = props || {}
 
 	useEffect(() => {
 		const loadHistory = async () => {
@@ -40,12 +45,10 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 				const sessionId = getSessionId()
 				setCurrentSessionId(sessionId)
 				
-				const history = await loadChatHistory(sessionId)
-				const convertedMessages = convertBackendMessages(history)
-
-				setMessages(convertedMessages)
+				const messages = await injectedChatService.loadHistory(sessionId)
+				setMessages(messages)
 				
-				if (convertedMessages.length > 0) {
+				if (messages.length > 0) {
 					historyCreatedRef.current = true
 				}
 			} catch (err) {
@@ -56,7 +59,7 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 		}
 
 		loadHistory()
-	}, [])
+	}, [injectedChatService])
 
 	const sendMessage = async (content: string): Promise<void> => {
 		const userMessage = createMessage("user", content)
@@ -69,7 +72,7 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 			
 			if (messages.length === 0 && !historyCreatedRef.current) {
 				try {
-					await createChatHistory(sessionId, content)
+					await injectedHistoryService.create(sessionId, content)
 					historyCreatedRef.current = true
 					
 					if (onHistoryCreated) {
@@ -80,7 +83,7 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 				}
 			}
 
-			const aiResponse = await sendChatMessage(content, sessionId)
+			const aiResponse = await injectedChatService.sendMessage(content, sessionId)
 			
 			const aiMessage = createMessage("ai", aiResponse)
 			setMessages((prev) => [...prev, aiMessage])
@@ -100,13 +103,11 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 		setError(null)
 		
 		try {
-			const history = await loadChatHistory(sessionId)
-			const convertedMessages = convertBackendMessages(history)
-
-			setMessages(convertedMessages)
+			const messages = await injectedChatService.loadHistory(sessionId)
+			setMessages(messages)
 			setCurrentSessionId(sessionId)
 			
-			historyCreatedRef.current = convertedMessages.length > 0
+			historyCreatedRef.current = messages.length > 0
 			
 			if (typeof window !== "undefined") {
 				sessionStorage.setItem("chat_session_id", sessionId)

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { MessageCircle, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ChatHistory } from "@/lib/chat-history-api"
+import type { ChatHistory } from "@/types/services"
 
 interface HistoryItemProps {
 	history: ChatHistory

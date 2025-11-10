@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { verifyPin as verifyPinAPI } from "@/lib/auth-api"
+import type { IAuthService } from "@/types/services"
+import { authService } from "@/lib/services"
 import { 
   checkAndRestoreSession, 
   setAuthToken, 
@@ -9,6 +10,10 @@ import {
   updateLastActive,
   isSessionExpired
 } from "@/lib/auth-session"
+
+interface UseAuthProps {
+  authService?: IAuthService
+}
 
 interface UseAuthReturn {
   isAuthenticated: boolean
@@ -18,7 +23,8 @@ interface UseAuthReturn {
   logout: () => void
 }
 
-export function useAuth(): UseAuthReturn {
+export function useAuth(props?: UseAuthProps): UseAuthReturn {
+  const { authService: injectedService = authService } = props || {}
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -71,7 +77,7 @@ export function useAuth(): UseAuthReturn {
     setError(null)
 
     try {
-      const token = await verifyPinAPI(pin)
+      const token = await injectedService.verifyPin(pin)
       setAuthToken(token)
       setIsAuthenticated(true)
     } catch (err) {
