@@ -59,7 +59,7 @@ export default function Sidebar({
         } bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col h-screen fixed md:sticky left-0 top-0 z-50 overflow-hidden`}
       >
       {/* Header Section */}
-      <div className="p-3 md:p-4 border-b border-sidebar-border flex items-center justify-between gap-2">
+      <div className="px-3 py-2.5 sm:px-4 sm:py-3 md:px-6 border-b border-sidebar-border flex items-center justify-between gap-2">
         {isOpen && (
           <div className="flex items-center gap-2 md:gap-3 flex-1">
             <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-sidebar-primary/20 flex items-center justify-center flex-shrink-0">
