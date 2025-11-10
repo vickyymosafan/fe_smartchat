@@ -6,13 +6,27 @@ import ChatHeader from "@/components/chat-header"
 import Sidebar from "@/components/sidebar"
 import { useChat } from "@/hooks/useChat"
 import { useAutoScroll } from "@/hooks/useAutoScroll"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { containerMaxWidth, containerPadding, textSizes, gaps } from "@/lib/styles"
 import { cn } from "@/lib/utils"
 
 export default function ChatbotInterface() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [refreshHistoryTrigger, setRefreshHistoryTrigger] = useState(0)
+
+  // Set sidebar terbuka di desktop, tertutup di mobile
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSidebarOpen(window.innerWidth >= 768)
+    }
+    
+    // Set initial state
+    handleResize()
+    
+    // Listen to resize events
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   // Callback to refresh history when new chat is created
   const handleHistoryCreated = () => {
