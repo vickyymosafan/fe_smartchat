@@ -68,31 +68,33 @@ export async function sendChatMessage(message: string, sessionId?: string): Prom
 	}
 }
 
+interface ChatHistoryMessage {
+	id: string
+	role: string
+	content: string
+	createdAt: string
+}
+
 export async function loadChatHistory(
 	sessionId?: string,
 	limit?: number
-): Promise<any[]> {
-	try {
-		const sid = sessionId || getSessionId();
-		const url = new URL(`${API_BASE_URL}/api/chat/history/${sid}`);
-		
-		if (limit) {
-			url.searchParams.append("limit", limit.toString());
-		}
-
-		const response = await fetch(url.toString(), {
-			method: "GET",
-			headers: createHeaders(true),
-		});
-
-		if (!response.ok) {
-			throw new Error(`Failed to load chat history: ${response.statusText}`);
-		}
-
-		const data = await response.json();
-		return data.data?.messages || [];
-	} catch (error) {
-		console.error("Failed to load chat history:", error);
-		return [];
+): Promise<ChatHistoryMessage[]> {
+	const sid = sessionId || getSessionId();
+	const url = new URL(`${API_BASE_URL}/api/chat/history/${sid}`);
+	
+	if (limit) {
+		url.searchParams.append("limit", limit.toString());
 	}
+
+	const response = await fetch(url.toString(), {
+		method: "GET",
+		headers: createHeaders(true),
+	});
+
+	if (!response.ok) {
+		throw new Error(`Failed to load chat history: ${response.statusText}`);
+	}
+
+	const data = await response.json();
+	return data.data?.messages || [];
 }

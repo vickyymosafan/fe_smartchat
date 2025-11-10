@@ -7,15 +7,15 @@ import { createMessage } from "@/lib/message-factory";
 import { resetSessionId } from "@/lib/session";
 import { createChatHistory } from "@/lib/chat-history-api";
 import { convertBackendMessages } from "@/lib/message-converter";
+import type { ChatHook } from "@/types/hooks";
 
-interface UseChatReturn {
+interface UseChatReturn extends Omit<ChatHook, 'reset'> {
 	messages: ChatMessage[];
 	isLoading: boolean;
 	error: string | null;
 	sendMessage: (content: string) => Promise<void>;
 	resetChat: () => void;
 	isLoadingHistory: boolean;
-	onHistoryCreated?: () => void;
 	loadHistoryMessages: (sessionId: string) => Promise<void>;
 	currentSessionId: string | null;
 }
@@ -136,7 +136,6 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 		error,
 		sendMessage,
 		resetChat,
-		onHistoryCreated,
 		loadHistoryMessages,
 		currentSessionId,
 	};

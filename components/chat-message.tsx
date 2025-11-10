@@ -1,14 +1,19 @@
 "use client"
 
 import type { ChatMessage as ChatMessageType } from "@/types/chat"
+import type { MessageComponentProps } from "@/types/components"
 import MarkdownContent from "./markdown/markdown-content"
 
-export default function ChatMessage({ message }: { message: ChatMessageType }) {
+interface ChatMessageProps extends Omit<MessageComponentProps, 'message'> {
+  message: ChatMessageType
+}
+
+export default function ChatMessage({ message, className }: ChatMessageProps) {
   const isUser = message.role === "user"
   const isError = message.role === "error"
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} ${className || ""}`}>
       <div
         className={`${
           isUser

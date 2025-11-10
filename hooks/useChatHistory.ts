@@ -8,13 +8,20 @@ import {
 } from "@/lib/chat-history-api"
 import { getSessionId } from "@/lib/session"
 import { handleError } from "@/lib/error-handler"
+import type { CRUDHook } from "@/types/hooks"
 
-interface UseChatHistoryReturn {
+interface CreateHistoryInput {
+	firstMessage: string
+}
+
+interface UpdateHistoryInput {
+	title: string
+}
+
+interface UseChatHistoryReturn extends Omit<CRUDHook<ChatHistory, CreateHistoryInput, UpdateHistoryInput>, 'data' | 'create' | 'update' | 'delete' | 'refresh'> {
 	histories: ChatHistory[]
-	isLoading: boolean
-	error: string | null
-	createHistory: (firstMessage: string) => Promise<ChatHistory | null>
-	renameHistory: (id: string, newTitle: string) => Promise<void>
+	createHistory: (firstMessage: string) => Promise<ChatHistory>
+	renameHistory: (id: string, newTitle: string) => Promise<ChatHistory>
 	deleteHistory: (id: string) => Promise<void>
 	refreshHistories: () => Promise<void>
 }
@@ -42,43 +49,29 @@ export function useChatHistory(): UseChatHistoryReturn {
 	}, [loadHistories])
 
 	const createHistory = useCallback(
-		async (firstMessage: string): Promise<ChatHistory | null> => {
-			try {
-				setError(null)
-				const sessionId = getSessionId()
-				const newHistory = await createChatHistory(sessionId, firstMessage)
-				setHistories((prev) => [newHistory, ...prev])
-				return newHistory
-			} catch (err: any) {
-				setError(handleError(err, "Failed to create chat history"))
-				return null
-			}
+		async (firstMessage: string): Promise<ChatHistory> => {
+			setError(null)
+			const sessionId = getSessionId()
+			const newHistory = await createChatHistory(sessionId, firstMessage)
+			setHistories((prev) => [newHistory, ...prev])
+			return newHistory
 		},
 		[]
 	)
 
-	const renameHistory = useCallback(async (id: string, newTitle: string) => {
-		try {
-			setError(null)
-			const updated = await renameChatHistory(id, newTitle)
-			setHistories((prev) =>
-				prev.map((h) => (h.id === id ? updated : h))
-			)
-		} catch (err: any) {
-			setError(handleError(err, "Failed to rename chat history"))
-			throw err
-		}
+	const renameHistory = useCallback(async (id: string, newTitle: string): Promise<ChatHistory> => {
+		setError(null)
+		const updated = await renameChatHistory(id, newTitle)
+		setHistories((prev) =>
+			prev.map((h) => (h.id === id ? updated : h))
+		)
+		return updated
 	}, [])
 
-	const deleteHistory = useCallback(async (id: string) => {
-		try {
-			setError(null)
-			await deleteChatHistory(id)
-			setHistories((prev) => prev.filter((h) => h.id !== id))
-		} catch (err: any) {
-			setError(handleError(err, "Failed to delete chat history"))
-			throw err
-		}
+	const deleteHistory = useCallback(async (id: string): Promise<void> => {
+		setError(null)
+		await deleteChatHistory(id)
+		setHistories((prev) => prev.filter((h) => h.id !== id))
 	}, [])
 
 	return {
