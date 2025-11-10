@@ -8,18 +8,11 @@ import {
 } from "@/lib/chat-history-api"
 import { getSessionId } from "@/lib/session"
 import { handleError } from "@/lib/error-handler"
-import type { CRUDHook } from "@/types/hooks"
 
-interface CreateHistoryInput {
-	firstMessage: string
-}
-
-interface UpdateHistoryInput {
-	title: string
-}
-
-interface UseChatHistoryReturn extends Omit<CRUDHook<ChatHistory, CreateHistoryInput, UpdateHistoryInput>, 'data' | 'create' | 'update' | 'delete' | 'refresh'> {
+interface UseChatHistoryReturn {
 	histories: ChatHistory[]
+	isLoading: boolean
+	error: string | null
 	createHistory: (firstMessage: string) => Promise<ChatHistory>
 	renameHistory: (id: string, newTitle: string) => Promise<ChatHistory>
 	deleteHistory: (id: string) => Promise<void>

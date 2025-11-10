@@ -9,9 +9,8 @@ import {
   updateLastActive,
   isSessionExpired
 } from "@/lib/auth-session"
-import type { AuthHook } from "@/types/hooks"
 
-interface UseAuthReturn extends Omit<AuthHook, 'login'> {
+interface UseAuthReturn {
   isAuthenticated: boolean
   isLoading: boolean
   error: string | null

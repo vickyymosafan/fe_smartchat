@@ -135,7 +135,7 @@ export default function Sidebar({
                   <HistoryItem
                     key={history.id}
                     history={history}
-                    onRename={renameHistory}
+                    onRename={async (id, title) => { await renameHistory(id, title) }}
                     onDelete={deleteHistory}
                     onHistoryClick={(h) => onHistoryClick?.(h.sessionId)}
                     isActive={history.sessionId === currentSessionId}

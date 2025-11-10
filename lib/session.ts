@@ -1,20 +1,15 @@
 import { SESSION_ID_KEY } from "./constants"
-
-function generateSessionId(): string {
-	const timestamp = Date.now()
-	const random = Math.random().toString(36).substring(2, 9)
-	return `session-${timestamp}-${random}`
-}
+import { generateIdWithPrefix } from "./id-generator"
 
 export function getSessionId(): string {
 	if (typeof window === "undefined") {
-		return generateSessionId()
+		return generateIdWithPrefix("session")
 	}
 
 	let sessionId = sessionStorage.getItem(SESSION_ID_KEY)
 
 	if (!sessionId) {
-		sessionId = generateSessionId()
+		sessionId = generateIdWithPrefix("session")
 		sessionStorage.setItem(SESSION_ID_KEY, sessionId)
 	}
 
