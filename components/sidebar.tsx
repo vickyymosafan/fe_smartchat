@@ -119,14 +119,30 @@ export default function Sidebar({
           </div>
         ) : (
           <div className="hidden md:flex flex-col items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-10 h-10 hover:bg-sidebar-accent"
-              title="Riwayat"
-            >
-              <MessageCircle className="h-5 w-5 text-sidebar-foreground/60" />
-            </Button>
+            {isLoading ? (
+              <div className="w-10 h-10 flex items-center justify-center">
+                <div className="w-4 h-4 border-2 border-sidebar-foreground/20 border-t-sidebar-primary rounded-full animate-spin" />
+              </div>
+            ) : histories.length === 0 ? (
+              <div className="text-center py-4">
+                <MessageCircle className="h-5 w-5 text-sidebar-foreground/30 mx-auto" />
+              </div>
+            ) : (
+              histories.map((history) => (
+                <Button
+                  key={history.id}
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onHistoryClick?.(history.sessionId)}
+                  className={`w-10 h-10 hover:bg-sidebar-accent ${
+                    history.sessionId === currentSessionId ? "bg-sidebar-accent" : ""
+                  }`}
+                  title={history.title}
+                >
+                  <MessageCircle className="h-5 w-5 text-sidebar-foreground/60" />
+                </Button>
+              ))
+            )}
           </div>
         )}
       </div>
