@@ -5,6 +5,5 @@
 
 export { chatService } from "./chat-service"
 export { chatHistoryService } from "./chat-history-service"
-export { authService } from "./auth-service"
 
-export type { IChatService, IChatHistoryService, IAuthService } from "@/types/services"
+export type { IChatService, IChatHistoryService } from "@/types/services"

@@ -48,7 +48,6 @@ export const APP_CONFIG = {
 		newChatLabel: "Percakapan Baru",
 		historyLabel: "RIWAYAT",
 		aboutLabel: "Tentang",
-		logoutLabel: "Logout",
 		loadingText: "Loading...",
 	},
 
@@ -85,15 +84,7 @@ export const APP_CONFIG = {
 		exitAnimationDuration: 800,
 	},
 
-	// PIN Auth Configuration
-	auth: {
-		pinLength: 6,
-		pinPrompt: "Masukkan PIN untuk melanjutkan",
-		pinHelperText: "PIN terdiri dari 6 digit angka",
-		pinTip: "💡 Tip: Anda bisa paste PIN langsung",
-		retryButtonText: "Coba Lagi",
-		verifyingText: "Memverifikasi PIN...",
-	},
+
 } as const
 
 export type AppConfig = typeof APP_CONFIG

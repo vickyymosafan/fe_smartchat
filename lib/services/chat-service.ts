@@ -11,16 +11,15 @@ import type { ChatMessage, ChatApiRequest, ChatApiResponse, ChatApiError } from 
 import { API_BASE_URL, createHeaders } from "../api-config"
 import { getSessionId } from "../session"
 import { convertBackendMessages } from "../message-converter"
-import { fetchWithAuth } from "../api-interceptor"
 
 export class ChatService implements IChatService {
 	async sendMessage(message: string, sessionId?: string): Promise<string> {
 		try {
 			const sid = sessionId || getSessionId()
 			
-			const response = await fetchWithAuth(`${API_BASE_URL}/api/chat`, {
+			const response = await fetch(`${API_BASE_URL}/api/chat`, {
 				method: "POST",
-				headers: createHeaders(true),
+				headers: createHeaders(),
 				body: JSON.stringify({
 					message,
 					userId: sid,
@@ -84,9 +83,9 @@ export class ChatService implements IChatService {
 			url.searchParams.append("limit", limit.toString())
 		}
 
-		const response = await fetchWithAuth(url.toString(), {
+		const response = await fetch(url.toString(), {
 			method: "GET",
-			headers: createHeaders(true),
+			headers: createHeaders(),
 		})
 
 		if (!response.ok) {

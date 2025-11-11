@@ -1,5 +1,3 @@
-import { getAuthToken } from "./auth-session"
-
 /**
  * API Base URL Configuration
  * Reads from NEXT_PUBLIC_API_BASE_URL environment variable
@@ -27,17 +25,8 @@ if (
 	)
 }
 
-export function createHeaders(includeAuth: boolean = true): HeadersInit {
-	const headers: HeadersInit = {
+export function createHeaders(): HeadersInit {
+	return {
 		"Content-Type": "application/json",
 	}
-
-	if (includeAuth) {
-		const token = getAuthToken()
-		if (token) {
-			headers["Authorization"] = `Bearer ${token}`
-		}
-	}
-
-	return headers
 }

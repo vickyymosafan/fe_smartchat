@@ -5,7 +5,6 @@
 
 import type { IChatHistoryService, ChatHistory } from "@/types/services"
 import { API_BASE_URL, createHeaders } from "../api-config"
-import { fetchWithAuth } from "../api-interceptor"
 
 async function handleResponse<T>(response: Response, errorMessage: string): Promise<T> {
 	if (!response.ok) {
@@ -18,7 +17,7 @@ async function handleResponse<T>(response: Response, errorMessage: string): Prom
 
 export class ChatHistoryService implements IChatHistoryService {
 	async getAll(): Promise<ChatHistory[]> {
-		const response = await fetchWithAuth(
+		const response = await fetch(
 			`${API_BASE_URL}/api/chat/histories`,
 			{
 				headers: createHeaders(),
@@ -29,7 +28,7 @@ export class ChatHistoryService implements IChatHistoryService {
 	}
 
 	async create(sessionId: string, firstMessage: string): Promise<ChatHistory> {
-		const response = await fetchWithAuth(`${API_BASE_URL}/api/chat/histories`, {
+		const response = await fetch(`${API_BASE_URL}/api/chat/histories`, {
 			method: "POST",
 			headers: createHeaders(),
 			body: JSON.stringify({
@@ -42,7 +41,7 @@ export class ChatHistoryService implements IChatHistoryService {
 	}
 
 	async rename(id: string, newTitle: string): Promise<ChatHistory> {
-		const response = await fetchWithAuth(`${API_BASE_URL}/api/chat/histories/${id}`, {
+		const response = await fetch(`${API_BASE_URL}/api/chat/histories/${id}`, {
 			method: "PATCH",
 			headers: createHeaders(),
 			body: JSON.stringify({
@@ -54,7 +53,7 @@ export class ChatHistoryService implements IChatHistoryService {
 	}
 
 	async delete(id: string): Promise<void> {
-		const response = await fetchWithAuth(`${API_BASE_URL}/api/chat/histories/${id}`, {
+		const response = await fetch(`${API_BASE_URL}/api/chat/histories/${id}`, {
 			method: "DELETE",
 			headers: createHeaders(),
 		})

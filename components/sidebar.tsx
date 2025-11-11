@@ -1,8 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { MessageCircle, Plus, ChevronLeft, X, LogOut, Info } from "lucide-react"
-import { useAuth } from "@/hooks/useAuth"
+import { MessageCircle, Plus, ChevronLeft, X, Info } from "lucide-react"
 import { useChatHistory } from "@/hooks/useChatHistory"
 import HistoryItem from "./history-item"
 import { useEffect, useState } from "react"
@@ -21,7 +20,6 @@ interface SidebarProps {
     newChat?: string
     history?: string
     about?: string
-    logout?: string
     loading?: string
     emptyHistory?: string
   }
@@ -41,7 +39,6 @@ export default function Sidebar({
   showAbout = true,
   aboutConfig = APP_CONFIG.about,
 }: SidebarProps) {
-  const { logout } = useAuth()
   const { histories, isLoading, renameHistory, deleteHistory, refreshHistories } = useChatHistory()
   const [showAboutDialog, setShowAboutDialog] = useState(false)
 
@@ -49,7 +46,6 @@ export default function Sidebar({
     newChat: labels.newChat || APP_CONFIG.sidebar.newChatLabel,
     history: labels.history || APP_CONFIG.sidebar.historyLabel,
     about: labels.about || APP_CONFIG.sidebar.aboutLabel,
-    logout: labels.logout || APP_CONFIG.sidebar.logoutLabel,
     loading: labels.loading || APP_CONFIG.sidebar.loadingText,
     emptyHistory: labels.emptyHistory || APP_CONFIG.chat.emptyHistoryText,
   }
@@ -186,17 +182,6 @@ export default function Sidebar({
               {sidebarLabels.about}
             </Button>
           )}
-          
-          {/* Logout Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={logout}
-            className="w-full justify-start text-[10px] sm:text-xs text-destructive hover:text-destructive hover:bg-destructive/10 active:scale-95 transition-transform"
-          >
-            <LogOut className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1.5 sm:mr-2" />
-            {sidebarLabels.logout}
-          </Button>
         </div>
       )}
 

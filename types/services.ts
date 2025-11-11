@@ -36,15 +36,6 @@ export interface IChatHistoryService {
 }
 
 /**
- * Auth service abstraction
- * Defines contract for authentication operations
- */
-export interface IAuthService {
-	verifyPin(pin: string): Promise<string>
-	logout(): Promise<void>
-}
-
-/**
  * Chat history entity
  */
 export interface ChatHistory {
