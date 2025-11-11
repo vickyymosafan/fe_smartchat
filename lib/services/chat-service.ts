@@ -18,6 +18,12 @@ export class ChatService implements IChatService {
 		try {
 			const sid = sessionId || getSessionId()
 			
+			console.log('[ChatService] Sending message:', { 
+				url: `${API_BASE_URL}/api/chat`,
+				sessionId: sid,
+				messageLength: message.length 
+			})
+			
 			const response = await fetch(`${API_BASE_URL}/api/chat`, {
 				method: "POST",
 				headers: createHeaders(),
@@ -26,6 +32,8 @@ export class ChatService implements IChatService {
 					userId: sid,
 				} as ChatApiRequest),
 			})
+
+			console.log('[ChatService] Response status:', response.status)
 
 			if (!response.ok) {
 				const errorData: ChatApiError | null = await response
@@ -36,12 +44,15 @@ export class ChatService implements IChatService {
 					errorData?.message ||
 					`HTTP ${response.status}: ${response.statusText}`
 
+				console.error('[ChatService] Error response:', errorData)
 				throw new Error(errorMessage)
 			}
 
 			const data: ChatApiResponse = await response.json()
+			console.log('[ChatService] Success response received')
 			return parseAIResponse(data.data)
 		} catch (error) {
+			console.error('[ChatService] Exception:', error)
 			if (error instanceof Error) {
 				throw error
 			}
