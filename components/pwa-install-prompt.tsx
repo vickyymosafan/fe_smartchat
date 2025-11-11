@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { X, Download } from "lucide-react"
 import { detectDeviceType, isAppInstalled, type DeviceType } from "@/lib/device-detection"
 import { PWA_INSTALL_DISMISSED_KEY, PWA_INSTALL_COOLDOWN_DAYS } from "@/lib/constants"
-import { localStorage } from "@/lib/storage"
+import { localStorageAdapter } from "@/lib/storage"
 import IOSInstallInstructions from "./ios-install-instructions"
 
 interface BeforeInstallPromptEvent extends Event {
@@ -28,7 +28,7 @@ export default function PWAInstallPrompt() {
     const device = detectDeviceType()
     setDeviceType(device)
 
-    const dismissed = localStorage.getItem(PWA_INSTALL_DISMISSED_KEY)
+    const dismissed = localStorageAdapter.getItem(PWA_INSTALL_DISMISSED_KEY)
     const dismissedTime = dismissed ? parseInt(dismissed) : 0
     const daysSinceDismissed = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24)
 
@@ -75,7 +75,7 @@ export default function PWAInstallPrompt() {
 
   const handleDismiss = () => {
     setShowPrompt(false)
-    localStorage.setItem(PWA_INSTALL_DISMISSED_KEY, Date.now().toString())
+    localStorageAdapter.setItem(PWA_INSTALL_DISMISSED_KEY, Date.now().toString())
   }
 
   if (isInstalled || !showPrompt) return null

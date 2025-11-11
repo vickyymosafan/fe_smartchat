@@ -16,17 +16,17 @@ export interface IStorage {
 class SessionStorageAdapter implements IStorage {
 	getItem(key: string): string | null {
 		if (typeof window === "undefined") return null
-		return sessionStorage.getItem(key)
+		return window.sessionStorage.getItem(key)
 	}
 
 	setItem(key: string, value: string): void {
 		if (typeof window === "undefined") return
-		sessionStorage.setItem(key, value)
+		window.sessionStorage.setItem(key, value)
 	}
 
 	removeItem(key: string): void {
 		if (typeof window === "undefined") return
-		sessionStorage.removeItem(key)
+		window.sessionStorage.removeItem(key)
 	}
 }
 
@@ -36,20 +36,20 @@ class SessionStorageAdapter implements IStorage {
 class LocalStorageAdapter implements IStorage {
 	getItem(key: string): string | null {
 		if (typeof window === "undefined") return null
-		return localStorage.getItem(key)
+		return window.localStorage.getItem(key)
 	}
 
 	setItem(key: string, value: string): void {
 		if (typeof window === "undefined") return
-		localStorage.setItem(key, value)
+		window.localStorage.setItem(key, value)
 	}
 
 	removeItem(key: string): void {
 		if (typeof window === "undefined") return
-		localStorage.removeItem(key)
+		window.localStorage.removeItem(key)
 	}
 }
 
-// Export singleton instances
-export const sessionStorage = new SessionStorageAdapter()
-export const localStorage = new LocalStorageAdapter()
+// Export singleton instances with different names to avoid shadowing global objects
+export const sessionStorageAdapter = new SessionStorageAdapter()
+export const localStorageAdapter = new LocalStorageAdapter()

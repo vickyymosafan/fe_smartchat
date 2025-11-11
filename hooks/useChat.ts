@@ -6,7 +6,7 @@ import type { IChatService, IChatHistoryService } from "@/types/services"
 import { chatService, chatHistoryService } from "@/lib/services"
 import { createMessage } from "@/lib/message-factory"
 import { getSessionId, resetSessionId } from "@/lib/session"
-import { sessionStorage } from "@/lib/storage"
+import { sessionStorageAdapter } from "@/lib/storage"
 import { SESSION_ID_KEY } from "@/lib/constants"
 
 interface UseChatProps {
@@ -110,7 +110,7 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 			setCurrentSessionId(sessionId)
 			
 			historyCreatedRef.current = messages.length > 0
-			sessionStorage.setItem(SESSION_ID_KEY, sessionId)
+			sessionStorageAdapter.setItem(SESSION_ID_KEY, sessionId)
 		} catch (err) {
 			console.error("Failed to load history messages:", err)
 			setError("Gagal memuat riwayat chat")

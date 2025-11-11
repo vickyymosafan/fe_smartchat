@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { detectDeviceType, isAppInstalled, type DeviceType } from "@/lib/device-detection"
 import { PWA_INSTALL_DISMISSED_KEY } from "@/lib/constants"
-import { localStorage } from "@/lib/storage"
+import { localStorageAdapter } from "@/lib/storage"
 
 interface BeforeInstallPromptEvent extends Event {
 	prompt: () => Promise<void>
@@ -72,7 +72,7 @@ export function usePWAInstall(): UsePWAInstallReturn {
 	}
 
 	const dismissPrompt = () => {
-		localStorage.setItem(PWA_INSTALL_DISMISSED_KEY, Date.now().toString())
+		localStorageAdapter.setItem(PWA_INSTALL_DISMISSED_KEY, Date.now().toString())
 	}
 
 	return {
