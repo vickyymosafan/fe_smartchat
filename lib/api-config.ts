@@ -1,6 +1,6 @@
 import { getAuthToken } from "./auth-session"
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "http://localhost:3001"
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "https://be-chatsmart.vercel.app"
 
 if (
 	typeof window !== "undefined" &&
