@@ -58,9 +58,7 @@ export default function Sidebar({
   }, [refreshTrigger, refreshHistories])
 
   const handleNewChat = () => {
-    if (onNewChat) {
-      onNewChat()
-    }
+    onNewChat?.()
   }
 
   return (
@@ -128,9 +126,9 @@ export default function Sidebar({
                   <HistoryItem
                     key={history.id}
                     history={history}
-                    onRename={async (id, title) => { await renameHistory(id, title) }}
-                    onDelete={deleteHistory}
                     onHistoryClick={(h) => onHistoryClick?.(h.sessionId)}
+                    onRename={renameHistory}
+                    onDelete={deleteHistory}
                     isActive={history.sessionId === currentSessionId}
                   />
                 ))

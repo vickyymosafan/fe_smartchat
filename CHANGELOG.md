@@ -5,6 +5,40 @@ All notable changes to the Smartchat frontend will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.2] - 2025-11-11
+
+### Removed
+- **History Management**: Removed rename and delete functionality from chat history
+  - Removed rename history feature
+  - Removed delete history feature
+  - Simplified history item UI (read-only display)
+  - History list now only supports viewing and switching between conversations
+
+- **New Chat Logic**: Removed "Percakapan Baru" (New Chat) functionality
+  - Button UI retained for consistency
+  - Reset chat logic disabled
+  - Session reset functionality removed
+  - Users can only navigate between existing conversations
+
+### Changed
+- **History Item**: Simplified to display-only component
+  - Removed edit mode
+  - Removed action menu (rename/delete buttons)
+  - Cleaner, simpler UI focused on navigation
+
+- **Chat Interface**: New Chat button now non-functional
+  - Button remains visible for UI consistency
+  - No action triggered on click
+  - Focus shifted to history navigation only
+
+## [3.0.1] - 2025-11-11
+
+### Fixed
+- **Session Reset Bug**: Fixed 500 error when sending message after deleting chat history
+  - Chat now automatically resets when deleting the currently active history
+  - Prevents sending messages with deleted sessionId
+  - Ensures clean state after history deletion
+
 ## [3.0.0] - 2025-11-10
 
 ### Added

@@ -36,15 +36,26 @@ export class ChatService implements IChatService {
 			console.log('[ChatService] Response status:', response.status)
 
 			if (!response.ok) {
-				const errorData: ChatApiError | null = await response
-					.json()
-					.catch(() => null)
+				let errorData: ChatApiError | null = null
+				let errorText = ''
+				
+				try {
+					errorText = await response.text()
+					errorData = JSON.parse(errorText)
+				} catch (e) {
+					console.error('[ChatService] Failed to parse error response:', errorText)
+				}
 
 				const errorMessage =
 					errorData?.message ||
 					`HTTP ${response.status}: ${response.statusText}`
 
-				console.error('[ChatService] Error response:', errorData)
+				console.error('[ChatService] Error response:', {
+					status: response.status,
+					statusText: response.statusText,
+					errorData,
+					rawText: errorText
+				})
 				throw new Error(errorMessage)
 			}
 

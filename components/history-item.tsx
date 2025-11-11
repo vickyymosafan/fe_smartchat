@@ -1,73 +1,74 @@
 "use client"
 
-import { useState } from "react"
-import { MessageCircle, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { MessageCircle, Pencil, Trash2 } from "lucide-react"
 import type { ChatHistory } from "@/types/services"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
 
 interface HistoryItemProps {
 	history: ChatHistory
-	onRename: (id: string, newTitle: string) => Promise<void>
-	onDelete: (id: string) => Promise<void>
 	onHistoryClick?: (history: ChatHistory) => void
+	onRename?: (id: string, newTitle: string) => Promise<ChatHistory>
+	onDelete?: (id: string) => Promise<void>
 	isActive?: boolean
 }
 
 export default function HistoryItem({
 	history,
+	onHistoryClick,
 	onRename,
 	onDelete,
-	onHistoryClick,
 	isActive = false,
 }: HistoryItemProps) {
 	const [isEditing, setIsEditing] = useState(false)
 	const [editTitle, setEditTitle] = useState(history.title)
-	const [showMenu, setShowMenu] = useState(false)
 	const [isDeleting, setIsDeleting] = useState(false)
 
-	const handleSaveRename = async () => {
-		if (editTitle.trim() && editTitle !== history.title) {
-			try {
-				await onRename(history.id, editTitle.trim())
-			} catch (error) {
-				setEditTitle(history.title)
-			}
-		} else {
-			setEditTitle(history.title)
+	const handleHistoryClick = () => {
+		if (!isEditing && onHistoryClick) {
+			onHistoryClick(history)
 		}
-		setIsEditing(false)
 	}
 
-	const handleCancelEdit = () => {
-		setIsEditing(false)
-		setEditTitle(history.title)
+	const handleSaveRename = async () => {
+		const trimmedTitle = editTitle.trim()
+		
+		// If empty or unchanged, just cancel
+		if (!trimmedTitle || trimmedTitle === history.title) {
+			setIsEditing(false)
+			setEditTitle(history.title)
+			return
+		}
+
+		try {
+			await onRename?.(history.id, trimmedTitle)
+			setIsEditing(false)
+		} catch (error) {
+			console.error("Failed to rename:", error)
+			setEditTitle(history.title)
+			setIsEditing(false)
+		}
 	}
 
 	const handleDelete = async () => {
+		if (!onDelete) return
+		
 		setIsDeleting(true)
 		try {
 			await onDelete(history.id)
 		} catch (error) {
+			console.error("Failed to delete:", error)
 			setIsDeleting(false)
-		}
-	}
-
-	const handleHistoryClick = () => {
-		if (!isEditing && !isDeleting && onHistoryClick) {
-			onHistoryClick(history)
 		}
 	}
 
 	return (
 		<div
-			onClick={handleHistoryClick}
-			className={`group relative flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-lg transition-colors cursor-pointer ${
-				isDeleting ? "opacity-50" : ""
-			} ${
+			className={`group relative flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-lg transition-colors ${
 				isActive 
 					? "bg-sidebar-accent" 
 					: "hover:bg-sidebar-accent"
-			}`}
+			} ${isDeleting ? "opacity-50" : ""}`}
 		>
 			<MessageCircle className={`h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 ${
 				isActive ? "text-sidebar-primary" : "text-sidebar-foreground/60"
@@ -78,69 +79,59 @@ export default function HistoryItem({
 					type="text"
 					value={editTitle}
 					onChange={(e) => setEditTitle(e.target.value)}
-					onClick={(e) => e.stopPropagation()}
 					onKeyDown={(e) => {
-						if (e.key === "Enter") handleSaveRename()
-						if (e.key === "Escape") handleCancelEdit()
+						if (e.key === "Enter") {
+							e.preventDefault()
+							handleSaveRename()
+						}
+						if (e.key === "Escape") {
+							setIsEditing(false)
+							setEditTitle(history.title)
+						}
 					}}
 					onBlur={handleSaveRename}
-					className="flex-1 bg-sidebar-accent text-sidebar-foreground text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded border border-sidebar-border focus:outline-none focus:ring-1 focus:ring-sidebar-primary min-w-0"
+					className="flex-1 text-[10px] sm:text-xs bg-sidebar border border-sidebar-primary rounded px-1.5 py-0.5 text-sidebar-foreground focus:outline-none focus:ring-1 focus:ring-sidebar-primary"
 					autoFocus
 					disabled={isDeleting}
 				/>
 			) : (
 				<>
-					<p className={`flex-1 text-[10px] sm:text-xs truncate min-w-0 ${
-						isActive ? "text-sidebar-primary font-medium" : "text-sidebar-foreground"
-					}`}>
+					<p
+						onClick={handleHistoryClick}
+						className={`flex-1 text-[10px] sm:text-xs truncate min-w-0 cursor-pointer ${
+							isActive ? "text-sidebar-primary font-medium" : "text-sidebar-foreground"
+						}`}
+					>
 						{history.title}
 					</p>
-
-					<div className="relative flex-shrink-0">
-						<Button
-							size="icon"
-							variant="ghost"
-							onClick={(e) => {
-								e.stopPropagation()
-								setShowMenu(!showMenu)
-							}}
-							className="h-5 w-5 sm:h-6 sm:w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-							disabled={isDeleting}
-						>
-							<MoreHorizontal className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-						</Button>
-
-						{showMenu && (
-							<>
-								<div
-									className="fixed inset-0 z-[60]"
-									onClick={() => setShowMenu(false)}
-								/>
-								<div className="absolute right-0 top-full mt-1 bg-sidebar border border-sidebar-border rounded-lg shadow-lg z-[70] py-1 min-w-[100px] sm:min-w-[120px]">
-									<button
-										onClick={(e) => {
-											e.stopPropagation()
-											setIsEditing(true)
-											setShowMenu(false)
-										}}
-										className="w-full flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
-									>
-										<Pencil className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-										Rename
-									</button>
-									<button
-										onClick={(e) => {
-											e.stopPropagation()
-											setShowMenu(false)
-											handleDelete()
-										}}
-										className="w-full flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs text-destructive hover:bg-destructive/10 transition-colors"
-									>
-										<Trash2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-										Delete
-									</button>
-								</div>
-							</>
+					<div className="hidden group-hover:flex items-center gap-0.5">
+						{onRename && (
+							<Button
+								size="icon"
+								variant="ghost"
+								onClick={(e) => {
+									e.stopPropagation()
+									setIsEditing(true)
+								}}
+								className="h-5 w-5 sm:h-6 sm:w-6 hover:bg-sidebar-accent"
+								disabled={isDeleting}
+							>
+								<Pencil className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-sidebar-foreground/60" />
+							</Button>
+						)}
+						{onDelete && (
+							<Button
+								size="icon"
+								variant="ghost"
+								onClick={(e) => {
+									e.stopPropagation()
+									handleDelete()
+								}}
+								className="h-5 w-5 sm:h-6 sm:w-6 hover:bg-sidebar-accent"
+								disabled={isDeleting}
+							>
+								<Trash2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-red-500" />
+							</Button>
 						)}
 					</div>
 				</>

@@ -120,12 +120,11 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 	}
 
 	const resetChat = (): void => {
-		const newSessionId = resetSessionId()
 		setMessages([])
 		setError(null)
-		setIsLoading(false)
-		setCurrentSessionId(newSessionId)
 		historyCreatedRef.current = false
+		const newSessionId = resetSessionId()
+		setCurrentSessionId(newSessionId)
 	}
 
 	return {

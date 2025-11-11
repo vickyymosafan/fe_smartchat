@@ -52,20 +52,38 @@ export function useChatHistory(props?: UseChatHistoryProps): UseChatHistoryRetur
 		[injectedService]
 	)
 
-	const renameHistory = useCallback(async (id: string, newTitle: string): Promise<ChatHistory> => {
-		setError(null)
-		const updated = await injectedService.rename(id, newTitle)
-		setHistories((prev) =>
-			prev.map((h) => (h.id === id ? updated : h))
-		)
-		return updated
-	}, [injectedService])
+	const renameHistory = useCallback(
+		async (id: string, newTitle: string): Promise<ChatHistory> => {
+			try {
+				setError(null)
+				const updated = await injectedService.rename(id, newTitle)
+				setHistories((prev) =>
+					prev.map((h) => (h.id === id ? updated : h))
+				)
+				return updated
+			} catch (err: any) {
+				const errorMsg = handleError(err, "Failed to rename chat history")
+				setError(errorMsg)
+				throw new Error(errorMsg)
+			}
+		},
+		[injectedService]
+	)
 
-	const deleteHistory = useCallback(async (id: string): Promise<void> => {
-		setError(null)
-		await injectedService.delete(id)
-		setHistories((prev) => prev.filter((h) => h.id !== id))
-	}, [injectedService])
+	const deleteHistory = useCallback(
+		async (id: string): Promise<void> => {
+			try {
+				setError(null)
+				await injectedService.delete(id)
+				setHistories((prev) => prev.filter((h) => h.id !== id))
+			} catch (err: any) {
+				const errorMsg = handleError(err, "Failed to delete chat history")
+				setError(errorMsg)
+				throw new Error(errorMsg)
+			}
+		},
+		[injectedService]
+	)
 
 	return {
 		histories,
