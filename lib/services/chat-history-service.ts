@@ -4,16 +4,7 @@
  */
 
 import type { IChatHistoryService, ChatHistory } from "@/types/services"
-import { API_BASE_URL, createHeaders } from "../api-config"
-
-async function handleResponse<T>(response: Response, errorMessage: string): Promise<T> {
-	if (!response.ok) {
-		const error = await response.json()
-		throw new Error(error.message || errorMessage)
-	}
-	const result = await response.json()
-	return result.data
-}
+import { API_BASE_URL, createHeaders, handleApiResponse } from "../api-config"
 
 export class ChatHistoryService implements IChatHistoryService {
 	async getAll(): Promise<ChatHistory[]> {
@@ -24,7 +15,7 @@ export class ChatHistoryService implements IChatHistoryService {
 			}
 		)
 
-		return handleResponse<ChatHistory[]>(response, "Failed to get chat histories")
+		return handleApiResponse<ChatHistory[]>(response, "Failed to get chat histories")
 	}
 
 	async create(sessionId: string, firstMessage: string): Promise<ChatHistory> {
@@ -37,7 +28,7 @@ export class ChatHistoryService implements IChatHistoryService {
 			}),
 		})
 
-		return handleResponse<ChatHistory>(response, "Failed to create chat history")
+		return handleApiResponse<ChatHistory>(response, "Failed to create chat history")
 	}
 
 	async rename(id: string, newTitle: string): Promise<ChatHistory> {
@@ -49,7 +40,7 @@ export class ChatHistoryService implements IChatHistoryService {
 			}),
 		})
 
-		return handleResponse<ChatHistory>(response, "Failed to rename chat history")
+		return handleApiResponse<ChatHistory>(response, "Failed to rename chat history")
 	}
 
 	async delete(id: string): Promise<void> {
@@ -59,7 +50,7 @@ export class ChatHistoryService implements IChatHistoryService {
 		})
 
 		if (!response.ok) {
-			const error = await response.json()
+			const error = await response.json().catch(() => ({ message: "Failed to delete chat history" }))
 			throw new Error(error.message || "Failed to delete chat history")
 		}
 	}

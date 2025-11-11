@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { X, Download } from "lucide-react"
 import { detectDeviceType, isAppInstalled, type DeviceType } from "@/lib/device-detection"
 import { PWA_INSTALL_DISMISSED_KEY, PWA_INSTALL_COOLDOWN_DAYS } from "@/lib/constants"
+import { localStorage } from "@/lib/storage"
 import IOSInstallInstructions from "./ios-install-instructions"
 
 interface BeforeInstallPromptEvent extends Event {

@@ -11,6 +11,7 @@ import type { ChatMessage, ChatApiRequest, ChatApiResponse, ChatApiError } from 
 import { API_BASE_URL, createHeaders } from "../api-config"
 import { getSessionId } from "../session"
 import { convertBackendMessages } from "../message-converter"
+import { parseAIResponse } from "../response-parser"
 
 export class ChatService implements IChatService {
 	async sendMessage(message: string, sessionId?: string): Promise<string> {
@@ -39,33 +40,7 @@ export class ChatService implements IChatService {
 			}
 
 			const data: ChatApiResponse = await response.json()
-			const aiResponse = data.data
-
-			if (typeof aiResponse === "string") {
-				return aiResponse
-			}
-
-			if (typeof aiResponse === "object" && aiResponse !== null) {
-				if ("output" in aiResponse && typeof aiResponse.output === "string") {
-					return aiResponse.output
-				}
-
-				if ("message" in aiResponse && typeof aiResponse.message === "string") {
-					return aiResponse.message
-				}
-
-				if ("text" in aiResponse && typeof aiResponse.text === "string") {
-					return aiResponse.text
-				}
-
-				if ("response" in aiResponse && typeof aiResponse.response === "string") {
-					return aiResponse.response
-				}
-
-				return JSON.stringify(aiResponse)
-			}
-
-			return String(aiResponse)
+			return parseAIResponse(data.data)
 		} catch (error) {
 			if (error instanceof Error) {
 				throw error

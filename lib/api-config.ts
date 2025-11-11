@@ -30,3 +30,19 @@ export function createHeaders(): HeadersInit {
 		"Content-Type": "application/json",
 	}
 }
+
+/**
+ * Generic API response handler
+ * Centralizes error handling and response parsing
+ */
+export async function handleApiResponse<T>(
+	response: Response,
+	errorMessage: string
+): Promise<T> {
+	if (!response.ok) {
+		const error = await response.json().catch(() => ({ message: errorMessage }))
+		throw new Error(error.message || errorMessage)
+	}
+	const result = await response.json()
+	return result.data
+}

@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from "react"
 import { SPLASH_SHOWN_KEY } from "@/lib/constants"
+import { sessionStorage } from "@/lib/storage"
 
 interface UseSplashScreenReturn {
 	showSplash: boolean
@@ -16,8 +17,6 @@ export function useSplashScreen(): UseSplashScreenReturn {
 	const [showSplash, setShowSplash] = useState(true)
 
 	useEffect(() => {
-		if (typeof window === "undefined") return
-
 		const splashShown = sessionStorage.getItem(SPLASH_SHOWN_KEY)
 		if (splashShown) {
 			setShowSplash(false)
@@ -25,9 +24,7 @@ export function useSplashScreen(): UseSplashScreenReturn {
 	}, [])
 
 	const completeSplash = () => {
-		if (typeof window !== "undefined") {
-			sessionStorage.setItem(SPLASH_SHOWN_KEY, "true")
-		}
+		sessionStorage.setItem(SPLASH_SHOWN_KEY, "true")
 		setShowSplash(false)
 	}
 

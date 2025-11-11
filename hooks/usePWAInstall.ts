@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { detectDeviceType, isAppInstalled, type DeviceType } from "@/lib/device-detection"
 import { PWA_INSTALL_DISMISSED_KEY } from "@/lib/constants"
+import { localStorage } from "@/lib/storage"
 
 interface BeforeInstallPromptEvent extends Event {
 	prompt: () => Promise<void>

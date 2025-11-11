@@ -1,11 +1,13 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import type { ChatMessage } from "@/types/chat"
 import type { IChatService, IChatHistoryService } from "@/types/services"
 import { chatService, chatHistoryService } from "@/lib/services"
 import { createMessage } from "@/lib/message-factory"
-import { resetSessionId } from "@/lib/session"
+import { getSessionId, resetSessionId } from "@/lib/session"
+import { sessionStorage } from "@/lib/storage"
+import { SESSION_ID_KEY } from "@/lib/constants"
 
 interface UseChatProps {
 	onHistoryCreated?: () => void
@@ -30,6 +32,7 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 		chatService: injectedChatService = chatService,
 		chatHistoryService: injectedHistoryService = chatHistoryService,
 	} = props || {}
+	
 	const [messages, setMessages] = useState<ChatMessage[]>([])
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [isLoadingHistory, setIsLoadingHistory] = useState<boolean>(false)
@@ -37,29 +40,40 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 	const [currentSessionId, setCurrentSessionId] = useState<string | null>(null)
 	const historyCreatedRef = useRef<boolean>(false)
 
+	const loadHistory = useCallback(async () => {
+		setIsLoadingHistory(true)
+		try {
+			const sessionId = getSessionId()
+			setCurrentSessionId(sessionId)
+			
+			const messages = await injectedChatService.loadHistory(sessionId)
+			setMessages(messages)
+			
+			if (messages.length > 0) {
+				historyCreatedRef.current = true
+			}
+		} catch (err) {
+			console.error("Failed to load chat history:", err)
+		} finally {
+			setIsLoadingHistory(false)
+		}
+	}, [injectedChatService])
+
 	useEffect(() => {
-		const loadHistory = async () => {
-			setIsLoadingHistory(true)
+		loadHistory()
+	}, [loadHistory])
+
+	const createHistoryIfNeeded = useCallback(async (sessionId: string, content: string) => {
+		if (messages.length === 0 && !historyCreatedRef.current) {
 			try {
-				const { getSessionId } = await import("@/lib/session")
-				const sessionId = getSessionId()
-				setCurrentSessionId(sessionId)
-				
-				const messages = await injectedChatService.loadHistory(sessionId)
-				setMessages(messages)
-				
-				if (messages.length > 0) {
-					historyCreatedRef.current = true
-				}
-			} catch (err) {
-				console.error("Failed to load chat history:", err)
-			} finally {
-				setIsLoadingHistory(false)
+				await injectedHistoryService.create(sessionId, content)
+				historyCreatedRef.current = true
+				onHistoryCreated?.()
+			} catch (historyError) {
+				console.error("Failed to create chat history:", historyError)
 			}
 		}
-
-		loadHistory()
-	}, [injectedChatService])
+	}, [messages.length, injectedHistoryService, onHistoryCreated])
 
 	const sendMessage = async (content: string): Promise<void> => {
 		const userMessage = createMessage("user", content)
@@ -68,23 +82,11 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 		setError(null)
 
 		try {
-			const sessionId = currentSessionId || (await import("@/lib/session")).getSessionId()
+			const sessionId = currentSessionId || getSessionId()
 			
-			if (messages.length === 0 && !historyCreatedRef.current) {
-				try {
-					await injectedHistoryService.create(sessionId, content)
-					historyCreatedRef.current = true
-					
-					if (onHistoryCreated) {
-						onHistoryCreated()
-					}
-				} catch (historyError) {
-					console.error("Failed to create chat history:", historyError)
-				}
-			}
+			await createHistoryIfNeeded(sessionId, content)
 
 			const aiResponse = await injectedChatService.sendMessage(content, sessionId)
-			
 			const aiMessage = createMessage("ai", aiResponse)
 			setMessages((prev) => [...prev, aiMessage])
 		} catch (error) {
@@ -108,10 +110,7 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 			setCurrentSessionId(sessionId)
 			
 			historyCreatedRef.current = messages.length > 0
-			
-			if (typeof window !== "undefined") {
-				sessionStorage.setItem("chat_session_id", sessionId)
-			}
+			sessionStorage.setItem(SESSION_ID_KEY, sessionId)
 		} catch (err) {
 			console.error("Failed to load history messages:", err)
 			setError("Gagal memuat riwayat chat")
