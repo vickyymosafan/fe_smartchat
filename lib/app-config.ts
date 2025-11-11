@@ -36,10 +36,10 @@ export const APP_CONFIG = {
 		loadingText: "Memuat riwayat chat...",
 		emptyHistoryText: "Belum ada riwayat",
 		suggestions: [
-			"Tanyakan tentang coding",
-			"Minta ide project",
-			"Jelaskan konsep",
-			"Bantu debug code",
+			"Apa saja jalur pendaftaran yang tersedia untuk calon mahasiswa baru Unmuh Jember?",
+			"Kapan Universitas Muhammadiyah Jember didirikan dan siapa yang mendirikannya?",
+			"Apa saja jenis beasiswa yang tersedia di Unmuh Jember?",
+			"Dengan siapa saja Program Studi Pendidikan Olahraga menjalin kerjasama di tingkat lokal?",
 		],
 	},
 

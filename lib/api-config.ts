@@ -5,7 +5,7 @@
  * Development (.env.local): http://localhost:3001
  * Production: https://be-smartchat.vercel.app
  */
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "http://localhost:3001"
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "https://be-smartchat.vercel.app"
 
 // Log current API URL in development for debugging
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
