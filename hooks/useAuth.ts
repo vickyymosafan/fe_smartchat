@@ -20,7 +20,7 @@ interface UseAuthReturn {
   isLoading: boolean
   error: string | null
   verifyPin: (pin: string) => Promise<void>
-  logout: () => void
+  logout: () => Promise<void>
 }
 
 export function useAuth(props?: UseAuthProps): UseAuthReturn {
@@ -40,7 +40,7 @@ export function useAuth(props?: UseAuthProps): UseAuthReturn {
   useEffect(() => {
     const handleTokenExpired = () => {
       console.log("[Auth] Token expired event received - logging out")
-      logout()
+      logout().catch(err => console.error("[Auth] Logout error:", err))
     }
 
     if (typeof window !== "undefined") {
@@ -62,7 +62,7 @@ export function useAuth(props?: UseAuthProps): UseAuthReturn {
       if (document.visibilityState === "visible") {
         if (isSessionExpired()) {
           console.log("[Auth] Session expired due to inactivity")
-          logout()
+          logout().catch(err => console.error("[Auth] Logout error:", err))
         } else {
           updateLastActive()
         }
@@ -107,21 +107,28 @@ export function useAuth(props?: UseAuthProps): UseAuthReturn {
     }
   }
 
-  const logout = (): void => {
+  const logout = async (): Promise<void> => {
     console.log("[Auth] Logging out - clearing token and session")
     
-    // Clear client-side token immediately (synchronous)
-    clearAuthToken()
-    
-    // Update state immediately - this triggers instant re-render
-    setIsAuthenticated(false)
-    setError(null)
-    setIsLoading(false)
-    
-    // Call backend logout endpoint (fire and forget - async, non-blocking)
-    injectedService.logout().catch((err) => {
+    try {
+      // Call backend logout endpoint first (with timeout)
+      await Promise.race([
+        injectedService.logout(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("Logout timeout")), 3000)
+        )
+      ])
+    } catch (err) {
       console.warn("[Auth] Backend logout failed:", err)
-    })
+    } finally {
+      // Always clear client-side token
+      clearAuthToken()
+      
+      // Reload page to reset all state and show PIN screen
+      if (typeof window !== "undefined") {
+        window.location.reload()
+      }
+    }
   }
 
   return {
