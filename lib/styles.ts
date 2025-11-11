@@ -4,13 +4,7 @@
  */
 
 /**
- * Container max-width classes
- */
-export const containerMaxWidth = "max-w-3xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl"
-
-/**
  * Message and input max-width for consistent chat UI
- * Narrower than container for better readability
  */
 export const messageMaxWidth = "max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl"
 
@@ -51,31 +45,6 @@ export const textSizes = {
 	base: "text-xs sm:text-sm md:text-base",
 	lg: "text-sm sm:text-base md:text-lg",
 	xl: "text-base sm:text-lg md:text-xl lg:text-2xl",
-} as const
-
-/**
- * Modal/Dialog responsive classes
- */
-export const modalContainer = "fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4"
-export const modalContent = "relative bg-card rounded-lg shadow-2xl w-full max-w-[calc(100vw-1.5rem)] sm:max-w-[calc(100vw-2rem)] md:max-w-md lg:max-w-lg max-h-[90vh] overflow-y-auto"
-export const modalPadding = "p-4 sm:p-5 md:p-6"
-
-/**
- * Button size variants for responsive design
- */
-export const buttonSizes = {
-	sm: "h-7 w-7 sm:h-8 sm:w-8",
-	md: "h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10",
-	lg: "h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11",
-} as const
-
-/**
- * Input/Form element responsive classes
- */
-export const inputSizes = {
-	sm: "h-8 sm:h-9 text-xs sm:text-sm",
-	md: "h-9 sm:h-10 md:h-11 text-sm sm:text-base",
-	lg: "h-10 sm:h-11 md:h-12 text-base sm:text-lg",
 } as const
 
 
