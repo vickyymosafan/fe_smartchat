@@ -90,7 +90,7 @@ export default function HistoryItem({
 						}
 					}}
 					onBlur={handleSaveRename}
-					className="flex-1 text-[10px] sm:text-xs bg-sidebar border border-sidebar-primary rounded px-1.5 py-0.5 text-sidebar-foreground focus:outline-none focus:ring-1 focus:ring-sidebar-primary"
+					className="flex-1 text-sm sm:text-base bg-sidebar border border-sidebar-primary rounded px-1.5 py-0.5 text-sidebar-foreground focus:outline-none focus:ring-1 focus:ring-sidebar-primary"
 					autoFocus
 					disabled={isDeleting}
 				/>
@@ -98,7 +98,7 @@ export default function HistoryItem({
 				<>
 					<p
 						onClick={handleHistoryClick}
-						className={`flex-1 text-[10px] sm:text-xs truncate min-w-0 cursor-pointer ${
+						className={`flex-1 text-sm sm:text-base truncate min-w-0 cursor-pointer ${
 							isActive ? "text-sidebar-primary font-medium" : "text-sidebar-foreground"
 						}`}
 					>
