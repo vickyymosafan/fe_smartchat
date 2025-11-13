@@ -104,7 +104,37 @@ export default function HistoryItem({
 					>
 						{history.title}
 					</p>
-					<div className="hidden group-hover:flex items-center gap-0.5">
+					<div className="flex md:hidden items-center gap-0.5 flex-shrink-0">
+						{onRename && (
+							<Button
+								size="icon"
+								variant="ghost"
+								onClick={(e) => {
+									e.stopPropagation()
+									setIsEditing(true)
+								}}
+								className="h-5 w-5 sm:h-6 sm:w-6 hover:bg-sidebar-accent"
+								disabled={isDeleting}
+							>
+								<Pencil className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-sidebar-foreground/60" />
+							</Button>
+						)}
+						{onDelete && (
+							<Button
+								size="icon"
+								variant="ghost"
+								onClick={(e) => {
+									e.stopPropagation()
+									handleDelete()
+								}}
+								className="h-5 w-5 sm:h-6 sm:w-6 hover:bg-sidebar-accent"
+								disabled={isDeleting}
+							>
+								<Trash2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-red-500" />
+							</Button>
+						)}
+					</div>
+					<div className="hidden md:group-hover:flex items-center gap-0.5 flex-shrink-0">
 						{onRename && (
 							<Button
 								size="icon"
