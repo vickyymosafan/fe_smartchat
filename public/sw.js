@@ -1,7 +1,7 @@
 // Service Worker for UMJ Assistant PWA
 // Realtime update strategy with auto-reload
 
-const CACHE_NAME = 'umj-assistant-v1'; // Increment version for updates
+const CACHE_NAME = 'Smartchat-v3'; // Increment version for updates
 const urlsToCache = [
   '/',
   '/manifest.json',
