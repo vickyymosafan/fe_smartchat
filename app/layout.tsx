@@ -12,26 +12,26 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: "Smartchat - AI Chat Interface",
-  description: "Professional chat interface powered by AI",
+  description: "Professional chat interface powered by vickymosafan untuk Universitas Muhammadiyah Jember",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Smartchat",
+    title: "Smartchat Assistant",
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: "website",
-    siteName: "Smartchat",
-    title: "Smartchat - AI Assistant",
-    description: "Professional AI chat interface untuk bantuan, saran, dan pertanyaan",
+    siteName: "Smartchat AI Assistant",
+    title: "Smartchat AI Assistant",
+    description: "Professional AI Smartchat interface untuk bantuan, saran, dan pertanyaan tentang Universitas Muhammadiyah Jember",
   },
   twitter: {
     card: "summary",
     title: "Smartchat - AI Assistant",
-    description: "Professional AI chat interface untuk bantuan, saran, dan pertanyaan",
+    description: "Professional AI Smartchat interface untuk bantuan, saran, dan pertanyaan",
   },
 };
 
@@ -43,8 +43,8 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="/smartchat4.png?v=2" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/smartchat4.png?v=2" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/UMJ.png?v=2" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/UMJ.png?v=2" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
         <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
         <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png" />

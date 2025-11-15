@@ -184,10 +184,10 @@ export default function SplashScreen({
             className="relative z-10 flex flex-col items-center gap-6 sm:gap-8"
             style={!isMobile ? { x: logoX, y: logoY, willChange: "transform" } : {}}
           >
-            {/* SmartChat Logo - Large & Prominent */}
+            {/* UMJ Logo - Large & Prominent */}
             <motion.img
-              src="/smartchat4.png"
-              alt="SmartChat Logo"
+              src="/UMJ.png"
+              alt="UMJ Logo"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ 
                 opacity: 1, 

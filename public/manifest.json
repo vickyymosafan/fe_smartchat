@@ -1,6 +1,6 @@
 {
-  "name": "SmartChat - AI Assistant",
-  "short_name": "SmartChat",
+  "name": "Smartchat AI Assistant",
+  "short_name": "Smartchat Assistant",
   "description": "Professional AI chat interface untuk bantuan, saran, dan pertanyaan tentang Universitas Muhammadiyah Jember",
   "start_url": "/",
   "display": "standalone",

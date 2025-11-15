@@ -1,12 +1,12 @@
 /**
  * SmartChat Icon Generator Script
- * Generates PWA icons from smartchat4.png logo
+ * Generates PWA icons from UMJ.png logo
  * 
  * Usage: 
  * 1. Install sharp: npm install --save-dev sharp
  * 2. Run: node scripts/generate-icons.js
  * 
- * This script resizes smartchat4.png to all required PWA icon sizes
+ * This script resizes UMJ.png to all required PWA icon sizes
  */
 
 const fs = require('fs');
@@ -28,13 +28,13 @@ try {
 const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
 
 // Paths
-const sourceImage = path.join(__dirname, '../public/smartchat4.png');
+const sourceImage = path.join(__dirname, '../public/UMJ.png');
 const iconsDir = path.join(__dirname, '../public/icons');
 
 // Check if source image exists
 if (!fs.existsSync(sourceImage)) {
-  console.error('❌ Error: smartchat4.png not found in public folder!');
-  console.log('\n📁 Please make sure smartchat4.png exists at:');
+  console.error('❌ Error: UMJ.png not found in public folder!');
+  console.log('\n📁 Please make sure UMJ.png exists at:');
   console.log(`   ${sourceImage}`);
   process.exit(1);
 }
@@ -44,7 +44,7 @@ if (!fs.existsSync(iconsDir)) {
   fs.mkdirSync(iconsDir, { recursive: true });
 }
 
-console.log('🎨 Generating PWA icons from smartchat4.png...\n');
+console.log('🎨 Generating PWA icons from UMJ.png...\n');
 
 // Generate PNG icons for each size
 const generateIcons = async () => {
@@ -84,10 +84,10 @@ const generateIcons = async () => {
     console.error(`❌ Failed to generate favicon.ico:`, error.message);
   }
   
-  console.log('\n🎉 All SmartChat icons generated successfully!');
+  console.log('\n🎉 All UMJ icons generated successfully!');
   console.log('📁 PWA Icons: public/icons/');
   console.log('📁 Favicon: public/favicon.ico');
-  console.log('\n✨ Your PWA now uses the SmartChat logo!');
+  console.log('\n✨ Your PWA now uses the UMJ logo!');
   console.log('\n💡 Clear browser cache (Ctrl+Shift+R) to see the new favicon');
 };
 

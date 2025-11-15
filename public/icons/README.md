@@ -1,49 +1,48 @@
 # PWA Icons
 
-Folder ini berisi icon untuk Progressive Web App (PWA).
+This folder contains Progressive Web App (PWA) icons generated from the UMJ logo.
 
-## Required Icons
+## Icon Sizes
 
-Anda perlu membuat icon dengan ukuran berikut:
-- icon-72x72.png
-- icon-96x96.png
-- icon-128x128.png
-- icon-144x144.png
-- icon-152x152.png
-- icon-192x192.png
-- icon-384x384.png
-- icon-512x512.png
+All icons are generated from `/public/UMJ.png`:
 
-## Cara Membuat Icons
+- `icon-72x72.png` - Small mobile icon
+- `icon-96x96.png` - Mobile icon
+- `icon-128x128.png` - Standard mobile icon
+- `icon-144x144.png` - High-res mobile icon
+- `icon-152x152.png` - iOS icon
+- `icon-192x192.png` - Standard PWA icon
+- `icon-384x384.png` - Large PWA icon
+- `icon-512x512.png` - Extra large PWA icon
 
-### Opsi 1: Menggunakan Online Tool
-1. Buka https://www.pwabuilder.com/imageGenerator
-2. Upload logo Anda (minimal 512x512px)
-3. Download semua ukuran icon
-4. Letakkan di folder ini
+## Regenerating Icons
 
-### Opsi 2: Menggunakan Figma/Photoshop
-1. Buat artboard dengan ukuran yang dibutuhkan
-2. Export sebagai PNG dengan nama yang sesuai
-3. Pastikan background transparan atau sesuai brand
+To regenerate all icons from the source logo:
 
-### Opsi 3: Menggunakan CLI Tool
 ```bash
-npm install -g pwa-asset-generator
-pwa-asset-generator logo.png ./public/icons
+npm run generate-icons
 ```
 
-## Design Guidelines
+This script will:
+1. Read `/public/UMJ.png` as the source image
+2. Generate all required PWA icon sizes
+3. Create a new `favicon.ico` file
 
-- **Maskable Icons**: Pastikan elemen penting berada di safe zone (80% dari canvas)
-- **Background**: Gunakan warna solid atau gradient yang sesuai brand
-- **Padding**: Berikan padding 10-20% untuk maskable icons
-- **Format**: PNG dengan transparansi
-- **Quality**: High resolution, optimized untuk web
+## Source Logo
 
-## Testing
+- **Source File**: `/public/UMJ.png`
+- **Logo**: Universitas Muhammadiyah Jember (UMJ)
+- **Format**: PNG with transparency
 
-Setelah menambahkan icons, test dengan:
-1. Chrome DevTools > Application > Manifest
-2. Lighthouse PWA audit
-3. Install di device untuk melihat hasil actual
+## Usage
+
+These icons are referenced in:
+- `/public/manifest.json` - PWA manifest
+- `/app/layout.tsx` - HTML head links
+- `/public/sw.js` - Service worker cache
+
+## Notes
+
+- Icons are automatically generated with transparent backgrounds
+- All icons maintain the aspect ratio of the source logo
+- Icons use `contain` fit to preserve logo proportions

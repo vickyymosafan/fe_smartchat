@@ -1,45 +1,67 @@
 # PWA Screenshots
 
-Folder ini berisi screenshots untuk PWA app listing.
+This folder contains screenshots for the Progressive Web App (PWA) installation prompts.
 
 ## Required Screenshots
 
-1. **desktop.png** (1280x720px)
-   - Wide format untuk desktop/tablet
-   - Tampilkan fitur utama aplikasi
-   - Landscape orientation
+For optimal PWA experience, you should provide:
 
-2. **mobile.png** (750x1334px)
-   - Narrow format untuk mobile
-   - Tampilkan UI mobile
-   - Portrait orientation
+### Desktop Screenshot
+- **Filename**: `desktop.png`
+- **Size**: 1280x720 pixels (16:9 ratio)
+- **Form Factor**: `wide`
+- **Purpose**: Shown in desktop PWA installation prompts
 
-## How to Create
+### Mobile Screenshot
+- **Filename**: `mobile.png`
+- **Size**: 750x1334 pixels (9:16 ratio)
+- **Form Factor**: `narrow`
+- **Purpose**: Shown in mobile PWA installation prompts
 
-### Method 1: Take Actual Screenshots
-1. Open app in browser
-2. Use browser DevTools device emulation
-3. Take screenshot (Ctrl+Shift+P > "Capture screenshot")
-4. Resize to exact dimensions
-5. Save as PNG
+## Current Status
 
-### Method 2: Design in Figma
-1. Create frames with exact dimensions
-2. Design app mockups
-3. Export as PNG
-4. Optimize file size
+⚠️ Screenshots need to be created for UMJ Assistant application.
 
-## Guidelines
+## How to Create Screenshots
 
-- **Quality**: High resolution, clear text
-- **Content**: Show actual app features
-- **Branding**: Include logo and brand colors
-- **Context**: Show real use cases
-- **File Size**: Optimize (< 500KB each)
+1. **Desktop Screenshot**:
+   - Open the app in a desktop browser
+   - Set viewport to 1280x720
+   - Take a screenshot of the main interface
+   - Save as `desktop.png`
 
-## Testing
+2. **Mobile Screenshot**:
+   - Open the app in mobile view (DevTools)
+   - Set viewport to 750x1334
+   - Take a screenshot of the main interface
+   - Save as `mobile.png`
 
-View screenshots in:
-- Chrome DevTools > Application > Manifest
-- PWA install dialog
-- App store listings (if published)
+## Usage
+
+These screenshots are referenced in `/public/manifest.json`:
+
+```json
+"screenshots": [
+  {
+    "src": "/screenshots/desktop.png",
+    "sizes": "1280x720",
+    "type": "image/png",
+    "form_factor": "wide"
+  },
+  {
+    "src": "/screenshots/mobile.png",
+    "sizes": "750x1334",
+    "type": "image/png",
+    "form_factor": "narrow"
+  }
+]
+```
+
+## Best Practices
+
+- Use actual app screenshots, not mockups
+- Show the main features of the app
+- Ensure good contrast and readability
+- Include the UMJ branding
+- Avoid text-heavy screenshots
+- Show the app in use, not empty states

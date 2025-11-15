@@ -1,12 +1,13 @@
-// Service Worker for ChatSmart PWA
+// Service Worker for UMJ Assistant PWA
 // Realtime update strategy with auto-reload
 
-const CACHE_NAME = 'chatsmart-v2'; // Increment version for updates
+const CACHE_NAME = 'umj-assistant-v1'; // Increment version for updates
 const urlsToCache = [
   '/',
   '/manifest.json',
-  '/icons/icon-192x192.svg',
-  '/icons/icon-512x512.svg',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
+  '/UMJ.png',
 ];
 
 // Install event - cache essential files and skip waiting

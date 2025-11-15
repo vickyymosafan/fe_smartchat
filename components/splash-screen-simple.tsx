@@ -60,8 +60,8 @@ export default function SplashScreenSimple({
 					{/* Logo */}
 					<motion.div className="relative z-10 flex flex-col items-center gap-6 sm:gap-8">
 						<motion.img
-							src="/smartchat4.png"
-							alt="SmartChat Logo"
+							src="/UMJ.png"
+							alt="UMJ Logo"
 							initial={{ opacity: 0, scale: 0.8 }}
 							animate={{ opacity: 1, scale: 1 }}
 							transition={{

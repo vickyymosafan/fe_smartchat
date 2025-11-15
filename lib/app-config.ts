@@ -6,11 +6,11 @@
 export const APP_CONFIG = {
 	// Branding
 	branding: {
-		appName: "Smartchat",
-		appTitle: "Smartchat Assistant",
+		appName: "Smartchat Assistant",
+		appTitle: "Smartchat AI Assistant",
 		tagline: "Mulai percakapan dengan AI untuk bantuan, saran, dan pertanyaan",
 		chatTitle: "Chat",
-		logoText: "SC",
+		logoText: "Smartchat",
 		subtitle: "AI Assistant",
 	},
 
@@ -31,7 +31,7 @@ export const APP_CONFIG = {
 	// Chat Configuration
 	chat: {
 		placeholder: "Tanyakan sesuatu... (Enter untuk kirim, Shift+Enter untuk baris baru)",
-		helperText: "Smartchat Assistant siap membantu Anda",
+		helperText: "Smartchat AI Assistant siap membantu Anda",
 		maxInputHeight: 120,
 		loadingText: "Memuat riwayat chat...",
 		emptyHistoryText: "Belum ada riwayat",
@@ -53,10 +53,10 @@ export const APP_CONFIG = {
 
 	// About Dialog Configuration
 	about: {
-		title: "Tentang Smartchat",
+		title: "Tentang UMJ Assistant",
 		description: "Chatbot cerdas untuk informasi Universitas Muhammadiyah Jember",
 		teamTitle: "Tim Pengembang",
-		copyright: "© 2025 Smartchat - Universitas Muhammadiyah Jember",
+		copyright: "© 2025 UMJ AI Assistant - Universitas Muhammadiyah Jember",
 		credits: "vickymosafan x adrianreswara",
 		team: [
 			{
