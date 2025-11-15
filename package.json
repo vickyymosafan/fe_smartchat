@@ -1,6 +1,9 @@
 {
-  "name": "my-v0-project",
-  "version": "0.1.0",
+  "name": "smartchat-frontend",
+  "version": "3.0.3",
+  "description": "AI Chat Application Frontend - Next.js web interface for Smartchat",
+  "author": "Vicky Mosafan",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "next dev",

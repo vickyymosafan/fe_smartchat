@@ -5,6 +5,31 @@ All notable changes to the Smartchat frontend will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.3] - 2025-11-15
+
+### Fixed
+- **History Loading Bug**: Fixed critical issue where chat history messages were not loading
+  - Corrected field name mismatch: frontend was sending `userId` but backend expected `sessionId`
+  - Messages now properly saved with correct session references
+  - History messages load correctly when clicking history items
+  - Added comprehensive logging for debugging session and message retrieval
+
+### Added
+- **Diagnostic Tools**: Added script to analyze and fix session data inconsistencies
+  - `npm run fix-session-data` to analyze session data
+  - `npm run fix-session-data -- --fix` to repair message counts
+  - Detailed logging for session lookup and message retrieval
+
+### Changed
+- **API Interface**: Updated `ChatApiRequest` interface to use `sessionId` instead of `userId`
+- **Backend Logging**: Enhanced logging in `getChatHistory` for better debugging
+- **Frontend Logging**: Added detailed request/response logging in chat service
+
+### Technical Details
+- Fixed session ID mapping between user-facing ID and internal database ID
+- Ensured messages are saved with correct internal session ID reference
+- Improved error tracking for session-related operations
+
 ## [3.0.2] - 2025-11-11
 
 ### Removed
