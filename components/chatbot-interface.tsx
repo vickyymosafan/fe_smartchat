@@ -91,16 +91,13 @@ export default function ChatbotInterface() {
             {isLoading && (
               <div className="flex justify-start w-full">
                 <div className="rounded-lg bg-muted px-3 py-2.5 sm:px-4 sm:py-3">
-                  <div className="flex gap-1.5 sm:gap-2">
-                    <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-muted-foreground animate-bounce" />
-                    <div
-                      className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-muted-foreground animate-bounce"
-                      style={{ animationDelay: "0.1s" }}
-                    />
-                    <div
-                      className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-muted-foreground animate-bounce"
-                      style={{ animationDelay: "0.2s" }}
-                    />
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground font-medium">Thinking</span>
+                    <div className="flex gap-1">
+                      <span className="animate-bounce" style={{ animationDelay: "0s" }}>.</span>
+                      <span className="animate-bounce" style={{ animationDelay: "0.2s" }}>.</span>
+                      <span className="animate-bounce" style={{ animationDelay: "0.4s" }}>.</span>
+                    </div>
                   </div>
                 </div>
               </div>
