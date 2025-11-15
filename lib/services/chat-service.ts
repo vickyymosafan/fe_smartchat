@@ -7,7 +7,7 @@
  */
 
 import type { IChatService } from "@/types/services"
-import type { ChatMessage, ChatApiRequest, ChatApiResponse, ChatApiError } from "@/types/chat"
+import type { ChatMessage, ChatApiResponse, ChatApiError } from "@/types/chat"
 import { API_BASE_URL, createHeaders } from "../api-config"
 import { getSessionId } from "../session"
 import { convertBackendMessages } from "../message-converter"
@@ -18,52 +18,34 @@ export class ChatService implements IChatService {
 		try {
 			const sid = sessionId || getSessionId()
 			
-			console.log('[ChatService] Sending message:', { 
-				url: `${API_BASE_URL}/api/chat`,
-				sessionId: sid,
-				messageLength: message.length 
-			})
-			
 			const response = await fetch(`${API_BASE_URL}/api/chat`, {
 				method: "POST",
 				headers: createHeaders(),
 				body: JSON.stringify({
 					message,
-					userId: sid,
-				} as ChatApiRequest),
+					sessionId: sid,
+				}),
 			})
-
-			console.log('[ChatService] Response status:', response.status)
 
 			if (!response.ok) {
 				let errorData: ChatApiError | null = null
-				let errorText = ''
 				
 				try {
-					errorText = await response.text()
-					errorData = JSON.parse(errorText)
+					errorData = await response.json()
 				} catch (e) {
-					console.error('[ChatService] Failed to parse error response:', errorText)
+					// Failed to parse error response
 				}
 
 				const errorMessage =
 					errorData?.message ||
 					`HTTP ${response.status}: ${response.statusText}`
 
-				console.error('[ChatService] Error response:', {
-					status: response.status,
-					statusText: response.statusText,
-					errorData,
-					rawText: errorText
-				})
 				throw new Error(errorMessage)
 			}
 
 			const data: ChatApiResponse = await response.json()
-			console.log('[ChatService] Success response received')
 			return parseAIResponse(data.data)
 		} catch (error) {
-			console.error('[ChatService] Exception:', error)
 			if (error instanceof Error) {
 				throw error
 			}
@@ -80,19 +62,44 @@ export class ChatService implements IChatService {
 			url.searchParams.append("limit", limit.toString())
 		}
 
+		console.log('[ChatService.loadHistory] Request:', { 
+			sessionId: sid, 
+			url: url.toString() 
+		})
+
 		const response = await fetch(url.toString(), {
 			method: "GET",
 			headers: createHeaders(),
 		})
 
 		if (!response.ok) {
+			console.error('[ChatService.loadHistory] Failed:', response.status)
 			throw new Error(`Failed to load chat history: ${response.statusText}`)
 		}
 
 		const data = await response.json()
-		const messages = data.data?.messages || []
+		console.log('[ChatService.loadHistory] Response:', { 
+			sessionId: sid,
+			dataStructure: {
+				ok: data.ok,
+				hasData: !!data.data,
+				messageCount: data.data?.messages?.length || 0,
+				sessionIdInResponse: data.data?.sessionId
+			},
+			fullData: data
+		})
 		
-		return convertBackendMessages(messages)
+		const messages = data.data?.messages || []
+		const converted = convertBackendMessages(messages)
+		
+		console.log('[ChatService.loadHistory] Converted:', { 
+			sessionId: sid,
+			originalCount: messages.length,
+			convertedCount: converted.length,
+			firstMessage: converted[0] || null
+		})
+		
+		return converted
 	}
 }
 

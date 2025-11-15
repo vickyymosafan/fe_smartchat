@@ -66,8 +66,8 @@ export default function HistoryItem({
 		<div
 			className={`group relative flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-lg transition-colors ${
 				isActive 
-					? "bg-sidebar-accent" 
-					: "hover:bg-sidebar-accent"
+					? "" 
+					: ""
 			} ${isDeleting ? "opacity-50" : ""}`}
 		>
 			<MessageCircle className={`h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 ${
@@ -90,7 +90,7 @@ export default function HistoryItem({
 						}
 					}}
 					onBlur={handleSaveRename}
-					className="flex-1 text-sm sm:text-base bg-sidebar border border-sidebar-primary rounded px-1.5 py-0.5 text-sidebar-foreground focus:outline-none focus:ring-1 focus:ring-sidebar-primary"
+					className="flex-1 text-[10px] sm:text-xs bg-sidebar border border-sidebar-primary rounded px-1.5 py-0.5 text-sidebar-foreground focus:outline-none focus:ring-1 focus:ring-sidebar-primary"
 					autoFocus
 					disabled={isDeleting}
 				/>
@@ -98,7 +98,7 @@ export default function HistoryItem({
 				<>
 					<p
 						onClick={handleHistoryClick}
-						className={`flex-1 text-sm sm:text-base truncate min-w-0 cursor-pointer ${
+						className={`flex-1 text-[10px] sm:text-xs truncate min-w-0 cursor-pointer ${
 							isActive ? "text-sidebar-primary font-medium" : "text-sidebar-foreground"
 						}`}
 					>
@@ -113,7 +113,7 @@ export default function HistoryItem({
 									e.stopPropagation()
 									setIsEditing(true)
 								}}
-								className="h-5 w-5 sm:h-6 sm:w-6 hover:bg-sidebar-accent"
+								className="h-5 w-5 sm:h-6 sm:w-6"
 								disabled={isDeleting}
 							>
 								<Pencil className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-sidebar-foreground/60" />
@@ -127,7 +127,7 @@ export default function HistoryItem({
 									e.stopPropagation()
 									handleDelete()
 								}}
-								className="h-5 w-5 sm:h-6 sm:w-6 hover:bg-sidebar-accent"
+								className="h-5 w-5 sm:h-6 sm:w-6"
 								disabled={isDeleting}
 							>
 								<Trash2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-red-500" />
@@ -143,7 +143,7 @@ export default function HistoryItem({
 									e.stopPropagation()
 									setIsEditing(true)
 								}}
-								className="h-5 w-5 sm:h-6 sm:w-6 hover:bg-sidebar-accent"
+								className="h-5 w-5 sm:h-6 sm:w-6"
 								disabled={isDeleting}
 							>
 								<Pencil className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-sidebar-foreground/60" />
@@ -157,7 +157,7 @@ export default function HistoryItem({
 									e.stopPropagation()
 									handleDelete()
 								}}
-								className="h-5 w-5 sm:h-6 sm:w-6 hover:bg-sidebar-accent"
+								className="h-5 w-5 sm:h-6 sm:w-6"
 								disabled={isDeleting}
 							>
 								<Trash2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-red-500" />

@@ -9,7 +9,7 @@ export interface ChatMessage {
 
 export interface ChatApiRequest {
 	message: string;
-	userId?: string;
+	sessionId?: string;
 	metadata?: Record<string, any>;
 }
 
