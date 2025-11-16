@@ -86,8 +86,10 @@ export function useChat(props?: UseChatProps): UseChatReturn {
 			
 			await createHistoryIfNeeded(sessionId, content)
 
-			const aiResponse = await injectedChatService.sendMessage(content, sessionId)
-			const aiMessage = createMessage("ai", aiResponse)
+			const response = await injectedChatService.sendMessage(content, sessionId)
+			const aiMessage = createMessage("ai", response.content, {
+				fromCache: response.fromCache,
+			})
 			setMessages((prev) => [...prev, aiMessage])
 		} catch (error) {
 			const errorContent = error instanceof Error ? error.message : "Terjadi kesalahan, silakan coba lagi"

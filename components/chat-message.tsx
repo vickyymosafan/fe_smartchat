@@ -13,6 +13,7 @@ interface ChatMessageProps extends Omit<MessageComponentProps, 'message'> {
 export default function ChatMessage({ message, className }: ChatMessageProps) {
   const isUser = message.role === "user"
   const isError = message.role === "error"
+  const fromCache = message.metadata?.fromCache
 
   return (
     <div className={cn("flex w-full", isUser ? "justify-end" : "justify-start", className)}>
@@ -36,6 +37,12 @@ export default function ChatMessage({ message, className }: ChatMessageProps) {
         ) : (
           <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm md:text-base">
             <MarkdownContent content={message.content} />
+            {fromCache && (
+              <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-muted-foreground/70 mt-2 pt-2 border-t border-border/30">
+                <span className="text-yellow-500">⚡</span>
+                <span>Instant response</span>
+              </div>
+            )}
           </div>
         )}
       </div>

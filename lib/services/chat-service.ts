@@ -7,14 +7,14 @@
  */
 
 import type { IChatService } from "@/types/services"
-import type { ChatMessage, ChatApiResponse, ChatApiError } from "@/types/chat"
+import type { ChatMessage, ChatApiResponse, ChatApiError, ParsedAIResponse } from "@/types/chat"
 import { API_BASE_URL, createHeaders } from "../api-config"
 import { getSessionId } from "../session"
 import { convertBackendMessages } from "../message-converter"
 import { parseAIResponse } from "../response-parser"
 
 export class ChatService implements IChatService {
-	async sendMessage(message: string, sessionId?: string): Promise<string> {
+	async sendMessage(message: string, sessionId?: string): Promise<ParsedAIResponse> {
 		try {
 			const sid = sessionId || getSessionId()
 			

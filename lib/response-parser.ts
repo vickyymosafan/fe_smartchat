@@ -4,7 +4,12 @@
  * Follows SRP by separating parsing logic from service layer
  */
 
-export function parseAIResponse(data: any): string {
+import type { ParsedAIResponse } from "@/types/chat"
+
+/**
+ * Extract content string from response data
+ */
+function extractContent(data: any): string {
 	if (typeof data === "string") {
 		return data
 	}
@@ -24,4 +29,15 @@ export function parseAIResponse(data: any): string {
 	}
 
 	return String(data)
+}
+
+/**
+ * Parse AI response with metadata
+ * Returns content and cache status
+ */
+export function parseAIResponse(data: any): ParsedAIResponse {
+	return {
+		content: extractContent(data),
+		fromCache: data?.fromCache || false,
+	}
 }

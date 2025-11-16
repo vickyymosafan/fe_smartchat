@@ -13,14 +13,14 @@
  * - No tight coupling between layers
  */
 
-import type { ChatMessage } from "./chat"
+import type { ChatMessage, ParsedAIResponse } from "./chat"
 
 /**
  * Chat service abstraction
  * Defines contract for chat operations without implementation details
  */
 export interface IChatService {
-	sendMessage(message: string, sessionId?: string): Promise<string>
+	sendMessage(message: string, sessionId?: string): Promise<ParsedAIResponse>
 	loadHistory(sessionId?: string, limit?: number): Promise<ChatMessage[]>
 }
 

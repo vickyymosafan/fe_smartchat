@@ -5,6 +5,14 @@ export interface ChatMessage {
 	role: ChatRole;
 	content: string;
 	timestamp: Date;
+	metadata?: {
+		fromCache?: boolean;
+	};
+}
+
+export interface ParsedAIResponse {
+	content: string;
+	fromCache: boolean;
 }
 
 export interface ChatApiRequest {
