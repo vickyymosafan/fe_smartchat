@@ -45,9 +45,9 @@ export default function RootLayout({
       <head>
         <link rel="icon" type="image/png" sizes="32x32" href="/UMJ.png?v=2" />
         <link rel="icon" type="image/png" sizes="16x16" href="/UMJ.png?v=2" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/UMJ.png?v=2" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/UMJ.png?v=2" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/UMJ.png?v=2" />
         <meta name="theme-color" content="#000000" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
