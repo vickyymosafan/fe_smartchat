@@ -17,7 +17,7 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
 if (
 	typeof window !== "undefined" &&
 	process.env.NODE_ENV === "production" &&
-	!API_BASE_URL.startsWith("https://be-smartchat.vercel.app")
+	!API_BASE_URL.startsWith("https://")
 ) {
 	console.warn(
 		"⚠️ WARNING: Backend API tidak menggunakan HTTPS di production environment. " +
