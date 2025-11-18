@@ -2,7 +2,7 @@
 
 import type { ChatMessage as ChatMessageType } from "@/types/chat"
 import type { MessageComponentProps } from "@/types/components"
-import MarkdownContent from "./markdown/markdown-content"
+import EnhancedMarkdownRenderer from "./markdown/EnhancedMarkdownRenderer"
 import { messageMaxWidth } from "@/lib/styles"
 import { cn } from "@/lib/utils"
 
@@ -36,7 +36,7 @@ export default function ChatMessage({ message, className }: ChatMessageProps) {
           </div>
         ) : (
           <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm md:text-base">
-            <MarkdownContent content={message.content} />
+            <EnhancedMarkdownRenderer content={message.content} />
             {fromCache && (
               <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-muted-foreground/70 mt-2 pt-2 border-t border-border/30">
                 <span className="text-yellow-500">⚡</span>
