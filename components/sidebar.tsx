@@ -7,6 +7,7 @@ import HistoryItem from "./history-item"
 import { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { APP_CONFIG } from "@/lib/app-config"
+import MusicSettings from "./music-settings"
 
 interface SidebarProps {
   isOpen: boolean
@@ -164,6 +165,9 @@ export default function Sidebar({
           </div>
         )}
       </div>
+
+      {/* Music Settings Section */}
+      <MusicSettings isOpen={isOpen} />
 
       {/* Footer Section */}
       {isOpen && (
