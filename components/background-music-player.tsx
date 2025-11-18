@@ -2,9 +2,16 @@
 
 import { useState } from "react"
 import { useBackgroundMusic } from "@/hooks/useBackgroundMusic"
-import { Button } from "./ui/button"
 import { cn } from "@/lib/utils"
 import { formatTime } from "@/lib/utils/time-format"
+import {
+	MusicIcon,
+	PlayIcon,
+	PauseIcon,
+	SkipNextIcon,
+	SkipPreviousIcon,
+	CloseIcon,
+} from "./icons/music-icon"
 
 export default function BackgroundMusicPlayer() {
 	const {
@@ -27,8 +34,8 @@ export default function BackgroundMusicPlayer() {
 	// Loading state
 	if (isLoading) {
 		return (
-			<div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
-				<div className="w-14 h-14 bg-background/95 backdrop-blur-sm border rounded-lg shadow-lg animate-pulse" />
+			<div className="fixed top-4 right-4 z-40">
+				<div className="w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg animate-pulse" />
 			</div>
 		)
 	}
@@ -42,283 +49,113 @@ export default function BackgroundMusicPlayer() {
 
 	return (
 		<>
-			{/* Mobile: Bottom sheet */}
-			<div
-				className={cn(
-					"fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 sm:hidden",
-					isExpanded ? "translate-y-0" : "translate-y-full"
-				)}
-			>
-				<div className="bg-background/98 backdrop-blur-md border-t shadow-2xl">
-					{/* Drag handle */}
-					<div className="flex justify-center pt-2 pb-1">
-						<button
-							onClick={() => setIsExpanded(false)}
-							className="w-12 h-1 bg-muted-foreground/30 rounded-full"
-							aria-label="Close player"
-						/>
-					</div>
+			{/* Minimized Button - Top Right */}
+			{!isExpanded && (
+				<button
+					onClick={() => setIsExpanded(true)}
+					className={cn(
+						"fixed top-4 right-4 z-40",
+						"w-12 h-12 sm:w-14 sm:h-14",
+						"bg-white hover:bg-gray-50",
+						"border border-gray-200",
+						"rounded-full shadow-lg",
+						"flex items-center justify-center",
+						"transition-all duration-200",
+						"hover:scale-105 active:scale-95",
+						isPlaying && "animate-pulse"
+					)}
+					aria-label="Open music player"
+				>
+					{isPlaying ? (
+						<PauseIcon className="text-black" size={20} />
+					) : (
+						<MusicIcon className="text-black" size={20} />
+					)}
+				</button>
+			)}
 
-					<div className="px-4 pb-6 space-y-4">
-						{/* Track info */}
-						<div className="text-center space-y-1">
-							<h3 className="text-base font-semibold truncate">
-								{currentTrack.title}
-							</h3>
-							{currentTrack.artist && (
-								<p className="text-sm text-muted-foreground truncate">
-									{currentTrack.artist}
-								</p>
-							)}
-						</div>
-
-						{/* Progress bar */}
-						<div className="space-y-2">
-							<input
-								type="range"
-								min="0"
-								max={duration || 100}
-								value={currentTime}
-								onChange={(e) => seek(Number(e.target.value))}
-								className="w-full h-1 bg-muted rounded-lg appearance-none cursor-pointer"
-								style={{
-									background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${progress}%, hsl(var(--muted)) ${progress}%, hsl(var(--muted)) 100%)`,
-								}}
-								aria-label="Seek"
-							/>
-							<div className="flex justify-between text-xs text-muted-foreground">
-								<span>{formatTime(currentTime)}</span>
-								<span>{formatTime(duration)}</span>
+			{/* Expanded Player - Minimalist Pill Design */}
+			{isExpanded && (
+				<div className="fixed top-4 right-4 z-40">
+					<div
+						className={cn(
+							"bg-white/30 backdrop-blur-lg",
+							"border border-gray-200/30",
+							"rounded-full shadow-xl",
+							"px-4 py-3",
+							"animate-in slide-in-from-top-2 duration-300",
+							"flex items-center gap-3"
+						)}
+					>
+						{/* Track info - Compact */}
+						<div className="flex flex-col min-w-0">
+							<div className="flex items-center gap-2">
+								<MusicIcon className="text-white flex-shrink-0" size={14} />
+								<h3 className="text-xs font-semibold text-white truncate">
+									{currentTrack.title}
+								</h3>
+							</div>
+							<div className="flex items-center gap-2 mt-0.5">
+								<span className="text-[10px] text-white/70">
+									{formatTime(currentTime)}
+								</span>
+								<div className="flex-1 h-0.5 bg-white/30 rounded-full overflow-hidden min-w-[80px]">
+									<div
+										className="h-full bg-white transition-all duration-300"
+										style={{ width: `${progress}%` }}
+									/>
+								</div>
+								<span className="text-[10px] text-white/70">
+									{formatTime(duration)}
+								</span>
 							</div>
 						</div>
 
-						{/* Controls */}
-						<div className="flex items-center justify-center gap-4">
-							<Button
-								variant="ghost"
-								size="lg"
+						{/* Controls - Inline */}
+						<div className="flex items-center gap-1 flex-shrink-0">
+							<button
 								onClick={previousTrack}
-								className="h-12 w-12 p-0 rounded-full"
+								className="p-1 hover:bg-white/10 rounded-full transition-colors"
 								aria-label="Previous track"
 							>
-								<span className="text-xl">⏮</span>
-							</Button>
+								<SkipPreviousIcon className="text-white" size={16} />
+							</button>
 
-							<Button
-								variant="default"
-								size="lg"
+							<button
 								onClick={togglePlay}
 								className={cn(
-									"h-16 w-16 p-0 rounded-full shadow-lg",
+									"p-2 bg-white hover:bg-white/90 rounded-full transition-all",
+									"hover:scale-110 active:scale-95",
 									isPlaying && "animate-pulse"
 								)}
 								aria-label={isPlaying ? "Pause" : "Play"}
 							>
-								<span className="text-2xl">{isPlaying ? "⏸" : "▶"}</span>
-							</Button>
+								{isPlaying ? (
+									<PauseIcon className="text-black" size={14} />
+								) : (
+									<PlayIcon className="text-black" size={14} />
+								)}
+							</button>
 
-							<Button
-								variant="ghost"
-								size="lg"
+							<button
 								onClick={nextTrack}
-								className="h-12 w-12 p-0 rounded-full"
+								className="p-1 hover:bg-white/10 rounded-full transition-colors"
 								aria-label="Next track"
 							>
-								<span className="text-xl">⏭</span>
-							</Button>
-						</div>
-
-						{/* Volume control */}
-						<div className="flex items-center gap-3">
-							<button
-								onClick={() => setVolume(volume === 0 ? 0.5 : 0)}
-								className="text-lg"
-								aria-label={volume === 0 ? "Unmute" : "Mute"}
-							>
-								{volume === 0 ? "🔇" : volume < 0.5 ? "🔉" : "🔊"}
+								<SkipNextIcon className="text-white" size={16} />
 							</button>
-							<input
-								type="range"
-								min="0"
-								max="100"
-								value={volume * 100}
-								onChange={(e) => setVolume(Number(e.target.value) / 100)}
-								className="flex-1 h-1 bg-muted rounded-lg appearance-none cursor-pointer"
-								style={{
-									background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${volume * 100}%, hsl(var(--muted)) ${volume * 100}%, hsl(var(--muted)) 100%)`,
-								}}
-								aria-label="Volume"
-							/>
-							<span className="text-xs text-muted-foreground w-8 text-right">
-								{Math.round(volume * 100)}%
-							</span>
+
+							<button
+								onClick={() => setIsExpanded(false)}
+								className="p-1 hover:bg-white/10 rounded-full transition-colors ml-1"
+								aria-label="Close player"
+							>
+								<CloseIcon className="text-white" size={14} />
+							</button>
 						</div>
 					</div>
 				</div>
-			</div>
-
-			{/* Desktop: Floating card */}
-			<div className="hidden sm:block fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50">
-				<div
-					className={cn(
-						"bg-background/95 backdrop-blur-md border rounded-xl shadow-2xl transition-all duration-300 ease-in-out",
-						isExpanded
-							? "w-80 md:w-96 p-4 md:p-5"
-							: "w-14 h-14 md:w-16 md:h-16 p-0 hover:scale-105"
-					)}
-				>
-					{isExpanded ? (
-						// Expanded view
-						<div className="space-y-3 md:space-y-4">
-							{/* Header */}
-							<div className="flex items-center justify-between">
-								<div className="flex items-center gap-2">
-									<span className="text-lg md:text-xl">🎵</span>
-									<span className="text-xs md:text-sm font-medium text-muted-foreground">
-										Now Playing
-									</span>
-								</div>
-								<Button
-									variant="ghost"
-									size="sm"
-									onClick={() => setIsExpanded(false)}
-									className="h-7 w-7 p-0 hover:bg-muted"
-									aria-label="Minimize player"
-								>
-									<span className="text-sm">✕</span>
-								</Button>
-							</div>
-
-							{/* Track info */}
-							<div className="space-y-1">
-								<h3 className="text-sm md:text-base font-semibold truncate">
-									{currentTrack.title}
-								</h3>
-								{currentTrack.artist && (
-									<p className="text-xs md:text-sm text-muted-foreground truncate">
-										{currentTrack.artist}
-									</p>
-								)}
-							</div>
-
-							{/* Progress bar */}
-							<div className="space-y-2">
-								<input
-									type="range"
-									min="0"
-									max={duration || 100}
-									value={currentTime}
-									onChange={(e) => seek(Number(e.target.value))}
-									className="w-full h-1 bg-muted rounded-lg appearance-none cursor-pointer hover:h-1.5 transition-all"
-									style={{
-										background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${progress}%, hsl(var(--muted)) ${progress}%, hsl(var(--muted)) 100%)`,
-									}}
-									aria-label="Seek"
-								/>
-								<div className="flex justify-between text-xs text-muted-foreground">
-									<span>{formatTime(currentTime)}</span>
-									<span>{formatTime(duration)}</span>
-								</div>
-							</div>
-
-							{/* Controls */}
-							<div className="flex items-center justify-center gap-2 md:gap-3">
-								<Button
-									variant="ghost"
-									size="sm"
-									onClick={previousTrack}
-									className="h-9 w-9 md:h-10 md:w-10 p-0 rounded-full hover:bg-muted"
-									aria-label="Previous track"
-								>
-									<span className="text-base md:text-lg">⏮</span>
-								</Button>
-
-								<Button
-									variant="default"
-									size="sm"
-									onClick={togglePlay}
-									className={cn(
-										"h-12 w-12 md:h-14 md:w-14 p-0 rounded-full shadow-lg hover:scale-105 transition-transform",
-										isPlaying && "animate-pulse"
-									)}
-									aria-label={isPlaying ? "Pause" : "Play"}
-								>
-									<span className="text-xl md:text-2xl">
-										{isPlaying ? "⏸" : "▶"}
-									</span>
-								</Button>
-
-								<Button
-									variant="ghost"
-									size="sm"
-									onClick={nextTrack}
-									className="h-9 w-9 md:h-10 md:w-10 p-0 rounded-full hover:bg-muted"
-									aria-label="Next track"
-								>
-									<span className="text-base md:text-lg">⏭</span>
-								</Button>
-							</div>
-
-							{/* Volume control */}
-							<div className="flex items-center gap-2 md:gap-3">
-								<button
-									onClick={() => setVolume(volume === 0 ? 0.5 : 0)}
-									className="text-base md:text-lg hover:scale-110 transition-transform"
-									aria-label={volume === 0 ? "Unmute" : "Mute"}
-								>
-									{volume === 0 ? "🔇" : volume < 0.5 ? "🔉" : "🔊"}
-								</button>
-								<input
-									type="range"
-									min="0"
-									max="100"
-									value={volume * 100}
-									onChange={(e) => setVolume(Number(e.target.value) / 100)}
-									className="flex-1 h-1 bg-muted rounded-lg appearance-none cursor-pointer hover:h-1.5 transition-all"
-									style={{
-										background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${volume * 100}%, hsl(var(--muted)) ${volume * 100}%, hsl(var(--muted)) 100%)`,
-									}}
-									aria-label="Volume"
-								/>
-								<span className="text-xs text-muted-foreground w-8 text-right">
-									{Math.round(volume * 100)}%
-								</span>
-							</div>
-						</div>
-					) : (
-						// Minimized view
-						<Button
-							variant="default"
-							size="sm"
-							onClick={() => setIsExpanded(true)}
-							className="h-full w-full p-0 rounded-xl"
-							aria-label="Open music player"
-						>
-							<span className="text-2xl md:text-3xl">
-								{isPlaying ? "⏸" : "🎵"}
-							</span>
-						</Button>
-					)}
-				</div>
-			</div>
-
-			{/* Mobile: Floating button (when collapsed) */}
-			<div className="sm:hidden fixed bottom-4 right-4 z-50">
-				{!isExpanded && (
-					<Button
-						variant="default"
-						size="lg"
-						onClick={() => setIsExpanded(true)}
-						className={cn(
-							"h-14 w-14 p-0 rounded-full shadow-lg",
-							isPlaying && "animate-pulse"
-						)}
-						aria-label="Open music player"
-					>
-						<span className="text-2xl">{isPlaying ? "⏸" : "🎵"}</span>
-					</Button>
-				)}
-			</div>
+			)}
 		</>
 	)
 }
