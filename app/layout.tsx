@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import PWAInstallPrompt from "@/components/pwa-install-prompt";
 import ServiceWorkerRegister from "@/components/service-worker-register";
+import BackgroundMusicPlayer from "@/components/background-music-player";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -58,6 +59,7 @@ export default function RootLayout({
         <ServiceWorkerRegister />
         {children}
         <PWAInstallPrompt />
+        <BackgroundMusicPlayer />
       </body>
     </html>
   );
