@@ -223,7 +223,35 @@ After (FIXED):
 
 ## Update Log
 
-### Version 3.0 - Inline Editing for Mobile (Latest)
+### Version 4.0 - Disable Rename on Mobile (Latest)
+
+**Date:** Removed rename functionality from mobile devices
+
+**Changes:**
+1. ✅ **Removed rename button from mobile** - Pencil icon hidden on mobile
+2. ✅ **Removed mobile editing UI** - Save/Cancel buttons, mobile-specific styling
+3. ✅ **Added safety guards** - Auto-cancel editing if window resized to mobile
+4. ✅ **Cleaned up dead code** - Removed unused imports (Check, X icons)
+5. ✅ **Simplified code** - Single rendering path for desktop only
+
+**Rationale:**
+- Rename is advanced feature, rarely used on mobile
+- Mobile UX focus on core features (view, delete)
+- Better to disable than provide poor experience
+- Desktop provides full functionality for management tasks
+
+**Impact:**
+- **MOBILE:** Rename button hidden, only delete available
+- **DESKTOP:** Full functionality unchanged
+- **CODE:** ~25 lines removed, cleaner implementation
+- **UX:** Simpler mobile interface, focus on consumption
+
+**Files Modified:**
+- `frontend/components/history-item.tsx` - Disabled rename for mobile
+
+---
+
+### Version 3.0 - Inline Editing for Mobile
 
 **Date:** Removed modal, improved mobile inline editing UI
 
@@ -435,3 +463,194 @@ const handleEditClick = () => {
 - ⚠️ Keyboard may overlap (acceptable)
 
 **Conclusion:** Inline editing with improved UI provides better overall UX for mobile.
+
+
+---
+
+## Version 4.0 - Technical Details
+
+### What Changed
+
+**Before (Version 3.0):**
+```tsx
+// Mobile had rename button and editing UI
+<div className="flex md:hidden ...">
+  {onRename && <Button><Pencil /></Button>}  // Rename button
+  {onDelete && <Button><Trash2 /></Button>}
+</div>
+
+{isEditing ? (
+  <>
+    <input className={isMobile ? "text-xs px-2 py-1" : "..."} />
+    {isMobile && (
+      <div>
+        <Button><Check /></Button>  // Save
+        <Button><X /></Button>      // Cancel
+      </div>
+    )}
+  </>
+) : (...)}
+```
+
+**After (Version 4.0):**
+```tsx
+// Mobile: No rename button, only delete
+<div className="flex md:hidden ...">
+  {/* Rename disabled on mobile */}
+  {onDelete && <Button><Trash2 /></Button>}
+</div>
+
+// Desktop only: Simple inline editing
+{isEditing && !isMobile ? (
+  <input className="text-[10px] sm:text-xs px-1.5 py-0.5" onBlur={handleSaveRename} />
+) : (...)}
+
+// Safety guard
+useEffect(() => {
+  if (isMobile && isEditing) {
+    setIsEditing(false)  // Auto-cancel
+  }
+}, [isMobile, isEditing])
+```
+
+### Code Reduction
+
+**Lines Removed:**
+- Mobile rename button: 10 lines
+- Mobile Save/Cancel buttons: 25 lines
+- Mobile-specific input styling: 2 lines
+- Unused imports (Check, X): 1 line
+- Conditional mobile logic: 5 lines
+- **Total: ~43 lines removed**
+
+**Complexity Reduction:**
+- No mobile editing UI
+- No conditional styling based on isMobile
+- Single rendering path (desktop only)
+- Simpler state management
+
+### Feature Matrix
+
+| Feature | Mobile (< 768px) | Desktop (≥ 768px) |
+|---------|------------------|-------------------|
+| View history | ✅ Always visible | ✅ Always visible |
+| Click to open | ✅ Enabled | ✅ Enabled |
+| Delete chat | ✅ Button visible | ✅ Button on hover |
+| **Rename chat** | **❌ Disabled** | **✅ Button on hover** |
+
+### Safety Guards Implemented
+
+**Guard 1: Conditional Render**
+```tsx
+{isEditing && !isMobile ? (
+  // Editing UI only for desktop
+) : (
+  // Normal UI
+)}
+```
+Prevents editing UI from rendering on mobile even if state is true.
+
+**Guard 2: Auto-Cancel on Resize**
+```tsx
+useEffect(() => {
+  if (isMobile && isEditing) {
+    setIsEditing(false)
+    setEditTitle(history.title)
+  }
+}, [isMobile, isEditing])
+```
+Automatically cancels editing if window resized from desktop to mobile.
+
+**Guard 3: Click Prevention**
+```tsx
+const handleEditClick = (e: React.MouseEvent) => {
+  if (isMobile) return  // Early exit
+  // ... rest of logic
+}
+```
+Prevents editing state from being set on mobile (extra safety).
+
+### Mobile UX Philosophy
+
+**Progressive Enhancement:**
+- Mobile: Core features with excellent UX
+- Desktop: Core + advanced features
+
+**Feature Prioritization:**
+| Priority | Feature | Mobile | Desktop |
+|----------|---------|--------|---------|
+| P0 | View/Read | ✅ | ✅ |
+| P0 | Navigate | ✅ | ✅ |
+| P1 | Delete | ✅ | ✅ |
+| P2 | Rename | ❌ | ✅ |
+
+**Rationale:**
+- Rename requires comfortable text editing
+- Mobile keyboards, small screens make editing difficult
+- Rename is infrequent operation
+- Users can rename on desktop when needed
+
+### Comparison with Other Apps
+
+**Gmail:**
+- Mobile: Read, delete, archive ✅
+- Mobile: Complex filters, labels ❌
+- Desktop: Full functionality ✅
+
+**Slack:**
+- Mobile: Chat, read, react ✅
+- Mobile: Workspace settings ❌
+- Desktop: Full functionality ✅
+
+**Notion:**
+- Mobile: View, basic edit ✅
+- Mobile: Complex database, relations ❌
+- Desktop: Full functionality ✅
+
+**Our App:**
+- Mobile: View, delete ✅
+- Mobile: Rename ❌
+- Desktop: Full functionality ✅
+
+### Performance Impact
+
+**Before:**
+- Conditional rendering based on isMobile
+- Mobile-specific button rendering
+- Conditional styling calculations
+
+**After:**
+- Single rendering path
+- No mobile editing UI overhead
+- Simpler component tree
+
+**Result:** Slightly better performance, cleaner React tree
+
+### User Impact
+
+**Mobile Users:**
+- ✅ Simpler, cleaner interface
+- ✅ Focus on core features
+- ✅ No frustrating editing experience
+- ⚠️ Must use desktop to rename (acceptable trade-off)
+
+**Desktop Users:**
+- ✅ No changes
+- ✅ Full functionality preserved
+- ✅ Same UX as before
+
+### Migration Notes
+
+**Breaking Changes:**
+- None for API/props
+- Behavioral change: Mobile users cannot rename
+
+**Backward Compatibility:**
+- Component interface unchanged
+- Props unchanged
+- Desktop behavior unchanged
+
+**Rollback:**
+- Easy to rollback by reverting commit
+- No database changes
+- No API changes

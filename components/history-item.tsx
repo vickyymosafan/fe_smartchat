@@ -1,6 +1,6 @@
 "use client"
 
-import { MessageCircle, Pencil, Trash2, Check, X } from "lucide-react"
+import { MessageCircle, Pencil, Trash2 } from "lucide-react"
 import type { ChatHistory } from "@/types/services"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -32,6 +32,14 @@ export default function HistoryItem({
 	useEffect(() => {
 		onEditingChange?.(isEditing)
 	}, [isEditing, onEditingChange])
+
+	// Safety guard: Auto-cancel editing if window resized to mobile
+	useEffect(() => {
+		if (isMobile && isEditing) {
+			setIsEditing(false)
+			setEditTitle(history.title)
+		}
+	}, [isMobile, isEditing, history.title])
 
 	const handleHistoryClick = () => {
 		if (!isEditing && onHistoryClick) {
@@ -67,11 +75,14 @@ export default function HistoryItem({
 	const handleEditClick = (e: React.MouseEvent) => {
 		e.stopPropagation()
 		
+		// Safety guard: Prevent editing on mobile
+		if (isMobile) return
+		
 		// CRITICAL: Notify parent BEFORE state update (synchronous)
 		// This ensures backdrop protection is active before editing starts
 		onEditingChange?.(true)
 		
-		// All devices use inline editing now
+		// Desktop only: inline editing
 		setIsEditing(true)
 	}
 
@@ -100,7 +111,7 @@ export default function HistoryItem({
 					isActive ? "text-sidebar-primary" : "text-sidebar-foreground/60"
 				}`} />
 
-				{isEditing ? (
+				{isEditing && !isMobile ? (
 					<>
 						<input
 							type="text"
@@ -115,46 +126,11 @@ export default function HistoryItem({
 									handleCancelRename()
 								}
 							}}
-							onBlur={isMobile ? undefined : handleSaveRename}
-							className={`flex-1 bg-sidebar border border-sidebar-primary rounded text-sidebar-foreground focus:outline-none focus:ring-1 focus:ring-sidebar-primary ${
-								isMobile 
-									? "text-xs px-2 py-1" // Mobile: larger text and padding
-									: "text-[10px] sm:text-xs px-1.5 py-0.5" // Desktop: compact
-							}`}
+							onBlur={handleSaveRename}
+							className="flex-1 text-[10px] sm:text-xs bg-sidebar border border-sidebar-primary rounded px-1.5 py-0.5 text-sidebar-foreground focus:outline-none focus:ring-1 focus:ring-sidebar-primary"
 							autoFocus
 							disabled={isDeleting}
 						/>
-						{/* Explicit Save/Cancel buttons for mobile, auto-save for desktop */}
-						{isMobile && (
-							<div className="flex items-center gap-1.5 flex-shrink-0">
-								<Button
-									size="icon"
-									variant="ghost"
-									onClick={(e) => {
-										e.stopPropagation()
-										handleSaveRename()
-									}}
-									className="h-9 w-9 hover:bg-sidebar-accent"
-									disabled={isDeleting}
-									title="Save"
-								>
-									<Check className="h-5 w-5 text-green-500" />
-								</Button>
-								<Button
-									size="icon"
-									variant="ghost"
-									onClick={(e) => {
-										e.stopPropagation()
-										handleCancelRename()
-									}}
-									className="h-9 w-9 hover:bg-sidebar-accent"
-									disabled={isDeleting}
-									title="Cancel"
-								>
-									<X className="h-5 w-5 text-red-500" />
-								</Button>
-							</div>
-						)}
 					</>
 				) : (
 				<>
@@ -166,18 +142,8 @@ export default function HistoryItem({
 					>
 						{history.title}
 					</p>
+					{/* Mobile: Only show delete button (rename disabled on mobile) */}
 					<div className="flex md:hidden items-center gap-0.5 flex-shrink-0">
-						{onRename && (
-							<Button
-								size="icon"
-								variant="ghost"
-								onClick={handleEditClick}
-								className="h-5 w-5 sm:h-6 sm:w-6"
-								disabled={isDeleting}
-							>
-								<Pencil className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-sidebar-foreground/60" />
-							</Button>
-						)}
 						{onDelete && (
 							<Button
 								size="icon"
