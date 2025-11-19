@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { createPortal } from "react-dom"
 import { X } from "lucide-react"
 import { Button } from "./button"
 
@@ -11,18 +12,28 @@ interface DialogProps {
 }
 
 export function Dialog({ open, onOpenChange, children }: DialogProps) {
-  if (!open) return null
+  const [mounted, setMounted] = React.useState(false)
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+  React.useEffect(() => {
+    setMounted(true)
+    return () => setMounted(false)
+  }, [])
+
+  if (!open || !mounted) return null
+
+  // Use Portal to render outside parent DOM hierarchy
+  // This prevents CSS containment issues (overflow-hidden, etc.)
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4">
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm"
         onClick={() => onOpenChange(false)}
       />
-      <div className="relative bg-[#1a1a1a] rounded-lg shadow-2xl w-full max-w-[calc(100vw-1.5rem)] sm:max-w-[calc(100vw-2rem)] md:max-w-md lg:max-w-lg max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-[#1a1a1a] rounded-lg shadow-2xl w-full max-w-[calc(100vw-1.5rem)] sm:max-w-[calc(100vw-2rem)] md:max-w-md lg:max-w-lg max-h-[90vh] overflow-y-auto z-[101]">
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 

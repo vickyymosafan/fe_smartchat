@@ -4,7 +4,6 @@ import { MessageCircle, Pencil, Trash2, Check, X } from "lucide-react"
 import type { ChatHistory } from "@/types/services"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { useMobile } from "@/hooks/useMobile"
 
 interface HistoryItemProps {
@@ -14,7 +13,6 @@ interface HistoryItemProps {
 	onDelete?: (id: string) => Promise<void>
 	isActive?: boolean
 	onEditingChange?: (isEditing: boolean) => void
-	useModalOnMobile?: boolean // Optional: use modal instead of inline editing on mobile
 }
 
 export default function HistoryItem({
@@ -24,18 +22,16 @@ export default function HistoryItem({
 	onDelete,
 	isActive = false,
 	onEditingChange,
-	useModalOnMobile = true, // Default to modal on mobile for better UX
 }: HistoryItemProps) {
 	const [isEditing, setIsEditing] = useState(false)
-	const [showRenameModal, setShowRenameModal] = useState(false)
 	const [editTitle, setEditTitle] = useState(history.title)
 	const [isDeleting, setIsDeleting] = useState(false)
 	const isMobile = useMobile()
 
 	// Notify parent when editing state changes
 	useEffect(() => {
-		onEditingChange?.(isEditing || showRenameModal)
-	}, [isEditing, showRenameModal, onEditingChange])
+		onEditingChange?.(isEditing)
+	}, [isEditing, onEditingChange])
 
 	const handleHistoryClick = () => {
 		if (!isEditing && onHistoryClick) {
@@ -49,7 +45,6 @@ export default function HistoryItem({
 		// If empty or unchanged, just cancel
 		if (!trimmedTitle || trimmedTitle === history.title) {
 			setIsEditing(false)
-			setShowRenameModal(false)
 			setEditTitle(history.title)
 			return
 		}
@@ -57,28 +52,27 @@ export default function HistoryItem({
 		try {
 			await onRename?.(history.id, trimmedTitle)
 			setIsEditing(false)
-			setShowRenameModal(false)
 		} catch (error) {
 			console.error("Failed to rename:", error)
 			setEditTitle(history.title)
 			setIsEditing(false)
-			setShowRenameModal(false)
 		}
 	}
 
 	const handleCancelRename = () => {
 		setIsEditing(false)
-		setShowRenameModal(false)
 		setEditTitle(history.title)
 	}
 
 	const handleEditClick = (e: React.MouseEvent) => {
 		e.stopPropagation()
-		if (isMobile && useModalOnMobile) {
-			setShowRenameModal(true)
-		} else {
-			setIsEditing(true)
-		}
+		
+		// CRITICAL: Notify parent BEFORE state update (synchronous)
+		// This ensures backdrop protection is active before editing starts
+		onEditingChange?.(true)
+		
+		// All devices use inline editing now
+		setIsEditing(true)
 	}
 
 	const handleDelete = async () => {
@@ -122,13 +116,17 @@ export default function HistoryItem({
 								}
 							}}
 							onBlur={isMobile ? undefined : handleSaveRename}
-							className="flex-1 text-[10px] sm:text-xs bg-sidebar border border-sidebar-primary rounded px-1.5 py-0.5 text-sidebar-foreground focus:outline-none focus:ring-1 focus:ring-sidebar-primary"
+							className={`flex-1 bg-sidebar border border-sidebar-primary rounded text-sidebar-foreground focus:outline-none focus:ring-1 focus:ring-sidebar-primary ${
+								isMobile 
+									? "text-xs px-2 py-1" // Mobile: larger text and padding
+									: "text-[10px] sm:text-xs px-1.5 py-0.5" // Desktop: compact
+							}`}
 							autoFocus
 							disabled={isDeleting}
 						/>
-						{/* Explicit Save/Cancel buttons for mobile */}
+						{/* Explicit Save/Cancel buttons for mobile, auto-save for desktop */}
 						{isMobile && (
-							<div className="flex items-center gap-0.5 flex-shrink-0">
+							<div className="flex items-center gap-1.5 flex-shrink-0">
 								<Button
 									size="icon"
 									variant="ghost"
@@ -136,10 +134,11 @@ export default function HistoryItem({
 										e.stopPropagation()
 										handleSaveRename()
 									}}
-									className="h-6 w-6 hover:bg-sidebar-accent"
+									className="h-9 w-9 hover:bg-sidebar-accent"
 									disabled={isDeleting}
+									title="Save"
 								>
-									<Check className="h-4 w-4 text-green-500" />
+									<Check className="h-5 w-5 text-green-500" />
 								</Button>
 								<Button
 									size="icon"
@@ -148,10 +147,11 @@ export default function HistoryItem({
 										e.stopPropagation()
 										handleCancelRename()
 									}}
-									className="h-6 w-6 hover:bg-sidebar-accent"
+									className="h-9 w-9 hover:bg-sidebar-accent"
 									disabled={isDeleting}
+									title="Cancel"
 								>
-									<X className="h-4 w-4 text-red-500" />
+									<X className="h-5 w-5 text-red-500" />
 								</Button>
 							</div>
 						)}
@@ -223,58 +223,6 @@ export default function HistoryItem({
 				</>
 			)}
 			</div>
-
-			{/* Rename Modal for Mobile (Optional Enhancement) */}
-			{useModalOnMobile && (
-				<Dialog open={showRenameModal} onOpenChange={setShowRenameModal}>
-					<DialogContent onClose={handleCancelRename}>
-						<DialogHeader>
-							<DialogTitle>Rename Chat</DialogTitle>
-							<DialogDescription>
-								Enter a new name for this chat conversation.
-							</DialogDescription>
-						</DialogHeader>
-						<div className="space-y-4 py-4">
-							<input
-								type="text"
-								value={editTitle}
-								onChange={(e) => setEditTitle(e.target.value)}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										e.preventDefault()
-										handleSaveRename()
-									}
-									if (e.key === "Escape") {
-										handleCancelRename()
-									}
-								}}
-								className="w-full px-3 py-2 text-sm bg-sidebar border border-sidebar-border rounded-md text-sidebar-foreground focus:outline-none focus:ring-2 focus:ring-sidebar-primary"
-								placeholder="Enter chat name..."
-								autoFocus
-								disabled={isDeleting}
-							/>
-						</div>
-						<div className="flex justify-end gap-2">
-							<Button
-								variant="outline"
-								onClick={handleCancelRename}
-								disabled={isDeleting}
-								size="sm"
-							>
-								Cancel
-							</Button>
-							<Button
-								onClick={handleSaveRename}
-								disabled={isDeleting}
-								size="sm"
-								className="bg-sidebar-primary hover:bg-sidebar-primary/90"
-							>
-								Save
-							</Button>
-						</div>
-					</DialogContent>
-				</Dialog>
-			)}
 		</>
 	)
 }
