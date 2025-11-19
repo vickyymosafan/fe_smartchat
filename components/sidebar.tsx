@@ -42,6 +42,7 @@ export default function Sidebar({
 }: SidebarProps) {
   const { histories, isLoading, renameHistory, deleteHistory, refreshHistories } = useChatHistory()
   const [showAboutDialog, setShowAboutDialog] = useState(false)
+  const [editingItemId, setEditingItemId] = useState<string | null>(null)
 
   const sidebarLabels = {
     newChat: labels.newChat || APP_CONFIG.sidebar.newChatLabel,
@@ -67,8 +68,15 @@ export default function Sidebar({
       {/* Backdrop overlay untuk mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={onToggle}
+          className={`fixed inset-0 z-40 md:hidden transition-opacity duration-200 ${
+            editingItemId ? "bg-black/30" : "bg-black/50"
+          }`}
+          onClick={() => {
+            // Don't close sidebar if user is editing an item
+            if (!editingItemId) {
+              onToggle()
+            }
+          }}
         />
       )}
       
@@ -131,6 +139,9 @@ export default function Sidebar({
                     onRename={renameHistory}
                     onDelete={deleteHistory}
                     isActive={history.sessionId === currentSessionId}
+                    onEditingChange={(isEditing) => {
+                      setEditingItemId(isEditing ? history.id : null)
+                    }}
                   />
                 ))
               )}
